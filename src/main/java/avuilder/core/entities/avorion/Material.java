@@ -1,4 +1,4 @@
-package entities.avorion;
+package avuilder.core.entities.avorion;
 
 /**
  * Immutable Avorion material reference.
@@ -8,23 +8,28 @@ public class Material {
 	/**
 	 * Material's index in game.
 	 */
-	private int index;
+	protected int index;
+	/**
+	 * Material's name.
+	 */
+	protected String name;
 	/**
 	 * Material's density in t/m^3.
 	 */
-	private double density;
+	protected double density;
 	/**
 	 * Material's durability in hp/m^3.
 	 */
-	private double durability;
+	protected double durability;
 	/**
 	 * Material's credit cost in credits/m^3.
 	 */
-	private double creditCost;
+	protected double creditCost;
 	/**
 	 * Material's material cost in ore/m^3.
 	 */
-	private double materialCost;
+	protected double materialCost;
+
 
 	/**
 	 * Material reference constructor.
@@ -35,14 +40,16 @@ public class Material {
 	 * @param creditCost   the {@link #creditCost}
 	 * @param materialCost the {@link #materialCost}
 	 */
-	public Material(int index, double density, double durability, double creditCost, double materialCost) {
+	protected Material(int index, String name, double density, double durability, double creditCost, double materialCost) {
 		super();
 		this.index = index;
+		this.name = name;
 		this.density = density;
 		this.durability = durability;
 		this.creditCost = creditCost;
 		this.materialCost = materialCost;
 	}
+
 
 	/**
 	 * Gets the {@link #index}.
@@ -88,5 +95,17 @@ public class Material {
 	public double getMaterialCost() {
 		return materialCost;
 	}
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Material [index=" + index + ", name=" + name + ", density=" + density + ", durability=" + durability
+				+ ", creditCost=" + creditCost + ", materialCost=" + materialCost + "]";
+	}
+	
+	
 
 }

@@ -1,44 +1,44 @@
-package entities.avorion;
+package avuilder.core.entities.avorion;
 
 /**
  * Immutable Avorion block type reference.
  */
-public class BlockType {
+public class TypeBlock {
 
 	/**
 	 * Block type index in game.
 	 */
-	private int index;
+	protected int index;
 
 	/**
 	 * Material density modificator of the block type.
 	 */
-	private Double density;
+	protected Double density;
 	
 	/**
 	 * Material durability modificator of the block type.
 	 */
-	private Double durability;
+	protected Double durability;
 	
 	/**
 	 * Material credit cost modificator of the block type.
 	 */
-	private Double creditCost;
+	protected Double creditCost;
 	
 	/**
 	 * Material cost modificator of the block type.
 	 */
-	private Double materialCost;
+	protected Double materialCost;
 	
 	/**
 	 * Mechanics cost in crew/m^3.
 	 */
-	private Double mechanics;
+	protected Double mechanics;
 	
 	/**
 	 * Engineers cost in crew/m^3.
 	 */
-	private Double engineers;
+	protected Double engineers;
 
 	/**
 	 * Block type reference constructor.
@@ -51,7 +51,7 @@ public class BlockType {
 	 * @param mechanics    the {@link #mechanics}
 	 * @param engineers    the {@link #engineers}
 	 */
-	public BlockType(int index, Double density, Double durability, Double creditCost, Double materialCost,
+	protected TypeBlock(int index, Double density, Double durability, Double creditCost, Double materialCost,
 			Double mechanics, Double engineers) {
 		super();
 		this.index = index;

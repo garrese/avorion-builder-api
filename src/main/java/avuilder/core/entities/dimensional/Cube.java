@@ -1,4 +1,4 @@
-package entities.dimensional;
+package avuilder.core.entities.dimensional;
 
 /**
  * Represents a cube in a Cartesian coordinate system.
@@ -19,6 +19,20 @@ public class Cube {
 	 * Z axis line.
 	 */
 	private AxisLine lineZ;
+	
+	public Cube() {
+	}
+	
+	/**
+	 * @param lineX the {@link #lineX}
+	 * @param lineY the {@link #lineY}
+	 * @param lineZ the {@link #lineZ}
+	 */
+	public Cube(AxisLine lineX, AxisLine lineY, AxisLine lineZ) {
+		this.lineX = lineX;
+		this.lineY = lineY;
+		this.lineZ = lineZ;
+	}
 
 	/**
 	 * Calculates the central point of the cube.

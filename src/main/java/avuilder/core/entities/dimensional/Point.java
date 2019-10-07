@@ -1,4 +1,4 @@
-package entities.dimensional;
+package avuilder.core.entities.dimensional;
 
 /**
  * Represents a point in a Cartesian coordinate system.

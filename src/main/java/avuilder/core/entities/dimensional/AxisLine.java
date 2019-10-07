@@ -1,4 +1,4 @@
-package entities.dimensional;
+package avuilder.core.entities.dimensional;
 
 /**
  * Line on a coordinate axis.
