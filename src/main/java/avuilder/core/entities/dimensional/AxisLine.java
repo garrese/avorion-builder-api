@@ -1,13 +1,17 @@
 package avuilder.core.entities.dimensional;
 
+import java.io.Serializable;
+
 import avuilder.core.error.AvuilderCoreRuntimeException;
+import avuilder.core.error.Errors;
 
 /**
- * Represents a line on a single coordinate axis.
+ * Represents a line in a single coordinate axis.
  * <p>
  * The line is defined by an upper and a lower point in the coordinate axis.
  */
-public class AxisLine {
+public class AxisLine implements Serializable {
+	private static final long serialVersionUID = 1186136799589694838L;
 
 	/**
 	 * Lower point of the line in the coordinate axis.
@@ -42,26 +46,19 @@ public class AxisLine {
 	}
 
 	/**
-	 * Checks if the line is completely defined in order to perform operations with it imminently.
-	 * 
-	 * @throws IllegalStateException if {@link #uP} or {@link #lP} are null.
-	 */
-	public void checkState() {
-		if (uP == null)
-			throw new AvuilderCoreRuntimeException("Upper point is not defined");
-		if (lP == null)
-			throw new AvuilderCoreRuntimeException("Lower point is not defined");
-	}
-
-	/**
 	 * Calculates the center of the line.
 	 * 
 	 * @return the center of the line in the coordinate axis.
 	 * @throws IllegalStateException if {@link #uP} or {@link #lP} are null.
 	 */
 	public Double getCenter() {
-		checkState();
-		return lP + (uP - lP) / 2;
+		double l;
+		try {
+			l = lP + (uP - lP) / 2;
+		} catch (Exception e) {
+			throw new AvuilderCoreRuntimeException(Errors.IMPOSSIBLE_TO_CALCULATE, e);
+		}
+		return l;
 	}
 
 	/**
@@ -71,8 +68,13 @@ public class AxisLine {
 	 * @throws IllegalStateException if {@link #uP} or {@link #lP} are null.
 	 */
 	public Double getLength() {
-		checkState();
-		return uP - lP;
+		double l;
+		try {
+			l = uP -lP;
+		}catch(Exception e) {
+			throw new AvuilderCoreRuntimeException(Errors.IMPOSSIBLE_TO_CALCULATE, e);
+		}
+		return l;
 	}
 
 	/**
@@ -115,6 +117,37 @@ public class AxisLine {
 		if (uP != null && lP != null && uP <= lP)
 			throw new IllegalArgumentException("Upper point must be higher than lower point.");
 		this.uP = uP;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((lP == null) ? 0 : lP.hashCode());
+		result = prime * result + ((uP == null) ? 0 : uP.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AxisLine other = (AxisLine) obj;
+		if (lP == null) {
+			if (other.lP != null)
+				return false;
+		} else if (!lP.equals(other.lP))
+			return false;
+		if (uP == null) {
+			if (other.uP != null)
+				return false;
+		} else if (!uP.equals(other.uP))
+			return false;
+		return true;
 	}
 
 	/*
