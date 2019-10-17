@@ -2,6 +2,9 @@ package avuilder.core.entities.dimensional;
 
 import java.io.Serializable;
 
+import avuilder.core.error.AvuilderCoreRuntimeException;
+import avuilder.core.error.Errors;
+
 /**
  * Represents a point in a Cartesian coordinate system.
  */
@@ -22,6 +25,19 @@ public class Point implements Serializable {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+
+	public static boolean isDefined(Point p) {
+		if (p.x != null && p.y != null && p.z != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static void validate(Point p) {
+		if (p.x != null && p.y != null && p.z != null)
+			throw new AvuilderCoreRuntimeException(Errors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	/*

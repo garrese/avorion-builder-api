@@ -19,4 +19,12 @@ public class ValidationUtils {
 			}
 		}
 	}
+
+	public static void validateRatioArgs(Double... ratio) {
+		for (Double rat : ratio) {
+			if (rat == null || rat <= 0) {
+				throw new IllegalArgumentException(Errors.INVALID_RATIO);
+			}
+		}
+	}
 }

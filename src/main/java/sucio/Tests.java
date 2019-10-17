@@ -2,7 +2,7 @@ package sucio;
 
 import avuilder.core.entities.dimensional.AxisLine;
 import avuilder.core.entities.dimensional.Cuboid;
-import avuilder.core.utils.K;
+import avuilder.core.managers.BuildHelper;
 
 public class Tests {
 
@@ -13,20 +13,29 @@ public class Tests {
 //		Material m = mf.getAllMaterials().get(Mats.AVORION);
 //		System.out.println(m);
 
-
 		Cuboid o = new Cuboid();
 		o.setAxisX(new AxisLine(-1.0, 1.0));
 		o.setAxisY(new AxisLine(-1.0, 1.0));
-		o.setAxisZ(new AxisLine(null, 1.0));
+		o.setAxisZ(new AxisLine(-1.0, 1.0));
 
-		System.out.println(o.getCenter());
-		System.out.println(o.getCorner(K.CORNER_BASE_1));
-		System.out.println(o.getFaceCenter(K.FACE_BASE));
+		System.out.println(o.getAxisX().getLength());
+
+		System.out.println();
+
+		BuildHelper b = new BuildHelper();
+
+		b.escalate(o, 1.5);
+		System.out.println(o);
+		System.out.println(o.getAxisX().getLength());
+
+//		System.out.println(o.getCenter());
+//		System.out.println(o.getCorner(K.CORNER_BASE_1));
+//		System.out.println(o.getFaceCenter(K.FACE_BASE));
 
 		// Line line = new Line(new Point(null, 0.0, 0.0), new Point(-1.0, -1.0, -1.0));
 		// System.out.println(line.getLength());
 		// System.out.println(line.getCenter());
-		
+
 		// System.out.println(o.getFaceCenter(K.FACE_BASE));
 		// System.out.println(o.getFaceCenter(K.FACE_TOP));
 		// System.out.println(o.getFaceCenter(K.FACE_WALL_1));

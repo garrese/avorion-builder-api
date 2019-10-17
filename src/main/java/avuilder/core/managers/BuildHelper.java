@@ -8,7 +8,6 @@ import avuilder.core.utils.ValidationUtils;
 
 public class BuildHelper {
 
-
 	public void shapeCube(Cuboid cuboid, double lengthX, double lengthY, double lengthZ) {
 		ValidationUtils.validateLengthArgs(lengthX, lengthY, lengthZ);
 		Point c = getTrivialCenter(cuboid);
@@ -28,11 +27,24 @@ public class BuildHelper {
 		shapeCube(cuboid, side, side, side);
 	}
 
-	public void growToVolume(Cuboid cuboid, double volume) {
+	public void escalateToVolume(Cuboid cuboid, double volume) {
 		Cuboid.validate(cuboid);
 		ValidationUtils.validateVolumeArgs(volume);
 
 		// double a =
+	}
+
+	public void escalate(Cuboid cuboid, double ratio, int... dimensions) {
+		Cuboid.validate(cuboid);
+		ValidationUtils.validateRatioArgs(ratio);
+
+		if (dimensions.length == 0) {
+			dimensions = K.ALL_DIMENSIONS;
+		}
+		for (int d : dimensions) {
+			cuboid.setUD(d, cuboid.getUD(d) * ratio);
+			cuboid.setLD(d, cuboid.getLD(d) * ratio);
+		}
 	}
 
 	public Point getTrivialCenter(Cuboid cuboid) {

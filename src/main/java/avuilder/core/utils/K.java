@@ -30,5 +30,13 @@ public class K {
 	public static final String CORNER_TOP_3 = "CORNER_TOP_3";
 	public static final String CORNER_TOP_4 = "CORNER_TOP_4";
 
+	public static final int DIMENSIONS = 3;
+	public static final int X = 0;
+	public static final int Y = 1;
+	public static final int Z = 2;
+	public static final int[] ALL_DIMENSIONS = new int[] { X, Y, Z };
+
+	public static final int UPPER = 0;
+	public static final int LOWER = 1;
 
 }

@@ -9,7 +9,7 @@ import avuilder.core.utils.K;
  * <p>
  * The cuboid is defined by one {@link AxisLine} in each of the three coordinate axis.
  */
-public class Cuboid implements Serializable{
+public class Cuboid implements Serializable {
 	private static final long serialVersionUID = -5598838939653504628L;
 
 	/**
@@ -218,6 +218,141 @@ public class Cuboid implements Serializable{
 	 */
 	public void setAxisZ(AxisLine lineZ) {
 		this.axisZ = lineZ;
+	}
+
+	/**
+	 * Sets the {@link #axisX} upper point
+	 * 
+	 * @return the {@link #axisX} upper point
+	 */
+	public Double getUX() {
+		return getAxisX().getUP();
+	}
+
+	public void setUX(Double uX) {
+		getAxisX().setUP(uX);
+	}
+
+	public Double getLX() {
+		return getAxisX().getLP();
+	}
+
+	public void setLX(Double lX) {
+		getAxisX().setLP(lX);
+	}
+
+	public Double getUY() {
+		return getAxisY().getUP();
+	}
+
+	public void setUY(Double uY) {
+		getAxisY().setUP(uY);
+	}
+
+	public Double getLY() {
+		return getAxisY().getLP();
+	}
+
+	public void setLY(Double lY) {
+		getAxisY().setLP(lY);
+	}
+
+	public Double getUZ() {
+		return getAxisZ().getUP();
+	}
+
+	public void setUZ(Double uZ) {
+		getAxisZ().setUP(uZ);
+	}
+
+	public Double getLZ() {
+		return getAxisZ().getLP();
+	}
+
+	public void setLZ(Double lZ) {
+		getAxisZ().setLP(lZ);
+	}
+
+	public Double getUD(int dimension) {
+		switch (dimension) {
+		case K.X:
+			return getUX();
+		case K.Y:
+			return getUY();
+		case K.Z:
+			return getUZ();
+		default:
+			throw new IllegalArgumentException("Illegal dimension: " + dimension + ".");
+		}
+	}
+
+	public void setUD(int dimension, Double uD) {
+		switch (dimension) {
+		case K.X:
+			setUX(uD);
+			break;
+		case K.Y:
+			setUY(uD);
+			break;
+		case K.Z:
+			setUZ(uD);
+			break;
+		default:
+			throw new IllegalArgumentException("Illegal dimension: " + dimension + ".");
+		}
+	}
+
+	public Double getLD(int dimension) {
+		switch (dimension) {
+		case K.X:
+			return getLX();
+		case K.Y:
+			return getLY();
+		case K.Z:
+			return getLZ();
+		default:
+			throw new IllegalArgumentException("Illegal dimension: " + dimension + ".");
+		}
+	}
+
+	public void setLD(int dimension, Double lD) {
+		switch (dimension) {
+		case K.X:
+			setLX(lD);
+			break;
+		case K.Y:
+			setLY(lD);
+			break;
+		case K.Z:
+			setLZ(lD);
+			break;
+		default:
+			throw new IllegalArgumentException("Illegal dimension: " + dimension + ".");
+		}
+	}
+
+	public Double getD(int dimension, int side) {
+		switch (side) {
+		case K.UPPER:
+			return getUD(dimension);
+		case K.LOWER:
+			return getLD(dimension);
+		default:
+			throw new IllegalArgumentException("Illegal side: " + side + ".");
+		}
+	}
+
+	public void setL(int dimension, int side, Double l) {
+		switch (side) {
+		case K.UPPER:
+			setUD(dimension, l);
+			break;
+		case K.LOWER:
+			setLD(dimension, l);
+			break;
+		default:
+			throw new IllegalArgumentException("Illegal side: " + side + ".");
+		}
 	}
 
 	@Override
