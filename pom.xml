@@ -5,4 +5,10 @@
   <version>0.1.0</version>
   <name>avorion-builder-api</name>
   <description>Programmatically building API for Avorion game</description>
+  
+  <properties>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+</properties>
+  
 </project>
