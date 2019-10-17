@@ -28,7 +28,7 @@ public class Line implements Serializable {
 		try {
 			l = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(p1.z - p2.z, 2));
 		} catch (Exception e) {
-			throw new AvuilderCoreRuntimeException(Errors.IMPOSSIBLE_TO_CALCULATE, e);
+			throw new AvuilderCoreRuntimeException(Errors.NOT_SUFFICIENTLY_DEFINED, e);
 		}
 		return l;
 	}
@@ -40,7 +40,7 @@ public class Line implements Serializable {
 			p.y = (p1.y + p2.y) / 2;
 			p.z = (p1.z + p2.z) / 2;
 		} catch (Exception e) {
-			throw new AvuilderCoreRuntimeException(Errors.IMPOSSIBLE_TO_CALCULATE, e);
+			throw new AvuilderCoreRuntimeException(Errors.NOT_SUFFICIENTLY_DEFINED, e);
 		}
 		return p;
 	}

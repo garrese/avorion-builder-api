@@ -2,8 +2,6 @@ package avuilder.core.entities.dimensional;
 
 import java.io.Serializable;
 
-import avuilder.core.error.AvuilderCoreRuntimeException;
-import avuilder.core.error.Errors;
 import avuilder.core.utils.K;
 
 /**
@@ -54,109 +52,119 @@ public class Cuboid implements Serializable{
 		return c;
 	}
 
+	public Double getVolume() {
+		validate(this);
+		return axisX.getLength() * axisY.getLength() * axisZ.getLength();
+	}
+
 	/**
 	 * Calculates the central point of the cuboid.
 	 * 
 	 * @return the central point of the cuboid.
 	 */
 	public Point getCenter() {
+		validate(this);
 		Point p = new Point();
-		try {
-			p.x = axisX.getCenter();
-			p.y = axisY.getCenter();
-			p.z = axisZ.getCenter();
-		} catch (Exception e) {
-			throw new AvuilderCoreRuntimeException(Errors.IMPOSSIBLE_TO_CALCULATE, e);
-		}
+		p.x = axisX.getCenter();
+		p.y = axisY.getCenter();
+		p.z = axisZ.getCenter();
 		return p;
 	}
 
 	public Point getFaceCenter(String face) {
-		Point p = null;
-		try {
-			p = getCenter();
-			switch (face) {
-			case K.FACE_BASE:
-				p.y = getAxisY().getLP();
-				break;
-			case K.FACE_TOP:
-				p.y = getAxisY().getUP();
-				break;
-			case K.FACE_WALL_1:
-				p.z = getAxisZ().getUP();
-				break;
-			case K.FACE_WALL_2:
-				p.x = getAxisX().getUP();
-				break;
-			case K.FACE_WALL_3:
-				p.z = getAxisZ().getLP();
-				break;
-			case K.FACE_WALL_4:
-				p.x = getAxisX().getLP();
-				break;
-			default:
-				throw new IllegalArgumentException("Illegal face: " + face + ".");
-			}
-		} catch (Exception e) {
-			throw new AvuilderCoreRuntimeException(Errors.IMPOSSIBLE_TO_CALCULATE, e);
+		validate(this);
+		Point p = getCenter();
+
+		switch (face) {
+		case K.FACE_BASE:
+			p.y = getAxisY().getLP();
+			break;
+		case K.FACE_TOP:
+			p.y = getAxisY().getUP();
+			break;
+		case K.FACE_WALL_1:
+			p.z = getAxisZ().getUP();
+			break;
+		case K.FACE_WALL_2:
+			p.x = getAxisX().getUP();
+			break;
+		case K.FACE_WALL_3:
+			p.z = getAxisZ().getLP();
+			break;
+		case K.FACE_WALL_4:
+			p.x = getAxisX().getLP();
+			break;
+		default:
+			throw new IllegalArgumentException("Illegal face: " + face + ".");
 		}
+
 		return p;
 	}
 
 	public Point getCorner(String corner) {
+		validate(this);
 		Point p = new Point();
-		try {
-			switch (corner) {
-			case K.CORNER_BASE_1:
-				p.x = getAxisX().getLP();
-				p.y = getAxisY().getLP();
-				p.z = getAxisZ().getLP();
-				break;
-			case K.CORNER_BASE_2:
-				p.x = getAxisX().getUP();
-				p.y = getAxisY().getLP();
-				p.z = getAxisZ().getLP();
-				break;
-			case K.CORNER_BASE_3:
-				p.x = getAxisX().getUP();
-				p.y = getAxisY().getLP();
-				p.z = getAxisZ().getUP();
-				break;
-			case K.CORNER_BASE_4:
-				p.x = getAxisX().getLP();
-				p.y = getAxisY().getLP();
-				p.z = getAxisZ().getUP();
-				break;
-			case K.CORNER_TOP_1:
-				p.x = getAxisX().getLP();
-				p.y = getAxisY().getUP();
-				p.z = getAxisZ().getLP();
-				break;
-			case K.CORNER_TOP_2:
-				p.x = getAxisX().getUP();
-				p.y = getAxisY().getUP();
-				p.z = getAxisZ().getLP();
-				break;
-			case K.CORNER_TOP_3:
-				p.x = getAxisX().getUP();
-				p.y = getAxisY().getUP();
-				p.z = getAxisZ().getUP();
-				break;
-			case K.CORNER_TOP_4:
-				p.x = getAxisX().getLP();
-				p.y = getAxisY().getUP();
-				p.z = getAxisZ().getUP();
-				break;
-			default:
-				throw new IllegalArgumentException("Illegal corner: " + corner + ".");
-			}
-		} catch (Exception e) {
-			throw new AvuilderCoreRuntimeException(Errors.IMPOSSIBLE_TO_CALCULATE, e);
 
+		switch (corner) {
+		case K.CORNER_BASE_1:
+			p.x = getAxisX().getLP();
+			p.y = getAxisY().getLP();
+			p.z = getAxisZ().getLP();
+			break;
+		case K.CORNER_BASE_2:
+			p.x = getAxisX().getUP();
+			p.y = getAxisY().getLP();
+			p.z = getAxisZ().getLP();
+			break;
+		case K.CORNER_BASE_3:
+			p.x = getAxisX().getUP();
+			p.y = getAxisY().getLP();
+			p.z = getAxisZ().getUP();
+			break;
+		case K.CORNER_BASE_4:
+			p.x = getAxisX().getLP();
+			p.y = getAxisY().getLP();
+			p.z = getAxisZ().getUP();
+			break;
+		case K.CORNER_TOP_1:
+			p.x = getAxisX().getLP();
+			p.y = getAxisY().getUP();
+			p.z = getAxisZ().getLP();
+			break;
+		case K.CORNER_TOP_2:
+			p.x = getAxisX().getUP();
+			p.y = getAxisY().getUP();
+			p.z = getAxisZ().getLP();
+			break;
+		case K.CORNER_TOP_3:
+			p.x = getAxisX().getUP();
+			p.y = getAxisY().getUP();
+			p.z = getAxisZ().getUP();
+			break;
+		case K.CORNER_TOP_4:
+			p.x = getAxisX().getLP();
+			p.y = getAxisY().getUP();
+			p.z = getAxisZ().getUP();
+			break;
+		default:
+			throw new IllegalArgumentException("Illegal corner: " + corner + ".");
 		}
+
 		return p;
 	}
 
+	public static boolean isDefined(Cuboid cuboid) {
+		boolean x = cuboid.getAxisX() != null && AxisLine.isDefined(cuboid.getAxisX());
+		boolean y = cuboid.getAxisY() != null && AxisLine.isDefined(cuboid.getAxisY());
+		boolean z = cuboid.getAxisZ() != null && AxisLine.isDefined(cuboid.getAxisZ());
+		return x && y && z;
+	}
+
+	public static void validate(Cuboid cuboid) {
+		AxisLine.validate(cuboid.getAxisX());
+		AxisLine.validate(cuboid.getAxisY());
+		AxisLine.validate(cuboid.getAxisZ());
+	}
 
 	/**
 	 * Gets the {@link #axisX}.

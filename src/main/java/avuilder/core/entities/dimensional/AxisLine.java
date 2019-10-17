@@ -56,7 +56,7 @@ public class AxisLine implements Serializable {
 		try {
 			l = lP + (uP - lP) / 2;
 		} catch (Exception e) {
-			throw new AvuilderCoreRuntimeException(Errors.IMPOSSIBLE_TO_CALCULATE, e);
+			throw new AvuilderCoreRuntimeException(Errors.NOT_SUFFICIENTLY_DEFINED, e);
 		}
 		return l;
 	}
@@ -72,9 +72,22 @@ public class AxisLine implements Serializable {
 		try {
 			l = uP -lP;
 		}catch(Exception e) {
-			throw new AvuilderCoreRuntimeException(Errors.IMPOSSIBLE_TO_CALCULATE, e);
+			throw new AvuilderCoreRuntimeException(Errors.NOT_SUFFICIENTLY_DEFINED, e);
 		}
 		return l;
+	}
+
+	public static boolean isDefined(AxisLine axisLine) {
+		if (axisLine.getUP() != null && axisLine.getLP() != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static void validate(AxisLine axisLine) {
+		if (axisLine.getUP() == null || axisLine.getLP() == null)
+			throw new AvuilderCoreRuntimeException(Errors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	/**
