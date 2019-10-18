@@ -6,5 +6,7 @@ public class Errors {
 	public static final String INVALID_VOLUME = "Invalid volume. Volume must be greather than 0.";
 	public static final String INVALID_LENGTH = "Invalid length. Length must be greather than 0.";
 	public static final String INVALID_RATIO = "Invalid ratio. Ratio must be greather than 0.";
+	public static final String INVALID_DIMENSION = "Invalid dimension. Dimension does not exist.";
+	public static final String INVALID_DIMENSION_REPEATED = "Invalid dimension. Dimension is repeated.";
 
 }

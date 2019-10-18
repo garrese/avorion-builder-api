@@ -1,7 +1,7 @@
 package avuilder.core.entities.game;
 
 /**
- * Piece orientation
+ * Block orientation
  */
 public class Orientation {
 
@@ -17,10 +17,10 @@ public class Orientation {
 
 	public Orientation() {
 	}
-	
+
 	/**
 	 * @param look the {@link #look}
-	 * @param up the {@link #up}
+	 * @param up   the {@link #up}
 	 */
 	public Orientation(Integer look, Integer up) {
 		this.look = look;
@@ -39,6 +39,7 @@ public class Orientation {
 
 	/**
 	 * Gets the {@link #look}.
+	 * 
 	 * @return the {@link #look}.
 	 */
 	public Integer getLook() {
@@ -47,6 +48,7 @@ public class Orientation {
 
 	/**
 	 * Sets the {@link #look}.
+	 * 
 	 * @param look the {@link #look} to set.
 	 */
 	public void setLook(Integer look) {
@@ -55,6 +57,7 @@ public class Orientation {
 
 	/**
 	 * Gets the {@link #up}.
+	 * 
 	 * @return the {@link #up}.
 	 */
 	public Integer getUp() {
@@ -63,11 +66,11 @@ public class Orientation {
 
 	/**
 	 * Sets the {@link #up}.
+	 * 
 	 * @param up the {@link #up} to set.
 	 */
 	public void setUp(Integer up) {
 		this.up = up;
 	}
-	
-	
+
 }

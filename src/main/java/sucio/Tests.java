@@ -18,15 +18,13 @@ public class Tests {
 		o.setAxisY(new AxisLine(-1.0, 1.0));
 		o.setAxisZ(new AxisLine(-1.0, 1.0));
 
-		System.out.println(o.getAxisX().getLength());
-
-		System.out.println();
-
 		BuildHelper b = new BuildHelper();
 
-		b.escalate(o, 1.5);
 		System.out.println(o);
-		System.out.println(o.getAxisX().getLength());
+		System.out.println(o.getVolume());
+		b.escalateByVolume(o, 100);
+		System.out.println(o.getVolume());
+		System.out.println(o);
 
 //		System.out.println(o.getCenter());
 //		System.out.println(o.getCorner(K.CORNER_BASE_1));
