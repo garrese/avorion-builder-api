@@ -3,6 +3,7 @@ package avuilder.core.entities.dimensional;
 import java.io.Serializable;
 
 import avuilder.core.error.AvuilderCoreRuntimeException;
+import avuilder.core.error.AvuilderEntityException;
 import avuilder.core.error.Errors;
 
 public class Line implements Serializable {
@@ -23,23 +24,25 @@ public class Line implements Serializable {
 		this.p2 = p2;
 	}
 
-	public static boolean isDefined(Line line) {
-		boolean p1 = Point.isDefined(line.getP1());
-		boolean p2 = Point.isDefined(line.getP2());
-		return p1 && p2;
+	public boolean isDefined() {
+		if (p1 != null && p2 != null && p1.isDefined() && p2.isDefined())
+			return true;
+		else
+			return false;
 	}
 
-	public static void validate(Line line) {
-		Point.validate(line.getP1());
-		Point.validate(line.getP2());
+	public void validate() {
+		if (p1 == null || p2 == null || !p1.isDefined() || !p2.isDefined())
+			throw new AvuilderEntityException(Errors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	public double getLength() {
 		double l = 0;
 		try {
+			validate();
 			l = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(p1.z - p2.z, 2));
 		} catch (Exception e) {
-			throw new AvuilderCoreRuntimeException(Errors.NOT_SUFFICIENTLY_DEFINED, e);
+			throw new AvuilderEntityException(e);
 		}
 		return l;
 	}

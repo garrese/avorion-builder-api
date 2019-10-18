@@ -6,7 +6,11 @@ public class AvuilderCoreRuntimeException extends RuntimeException {
 	public AvuilderCoreRuntimeException(String msg) {
 		super(msg);
 	}
-	
+
+	public AvuilderCoreRuntimeException(Throwable cause) {
+		super(cause);
+	}
+
 	public AvuilderCoreRuntimeException(String msg, Throwable cause) {
 		super(msg, cause);
 	}

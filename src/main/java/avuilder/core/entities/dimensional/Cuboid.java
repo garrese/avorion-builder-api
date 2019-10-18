@@ -2,374 +2,388 @@ package avuilder.core.entities.dimensional;
 
 import java.io.Serializable;
 
+import avuilder.core.error.AvuilderEntityException;
+import avuilder.core.error.Errors;
 import avuilder.core.utils.K;
+import avuilder.core.utils.Validations;
 
 /**
  * Represents a cuboid in a Cartesian coordinate system.
- * <p>
- * The cuboid is defined by one {@link AxisLine} in each of the three coordinate axis.
  */
 public class Cuboid implements Serializable {
 	private static final long serialVersionUID = -5598838939653504628L;
 
-	/**
-	 * X axis line.
-	 */
-	private AxisLine axisX = new AxisLine();
-
-	/**
-	 * Y axis line.
-	 */
-	private AxisLine axisY = new AxisLine();
-
-	/**
-	 * Z axis line.
-	 */
-	private AxisLine axisZ = new AxisLine();
+	private Double lengthX;
+	private Double lengthY;
+	private Double lengthZ;
+	private Point center = new Point();
 
 	public Cuboid() {
 	}
 
 	/**
-	 * @param axisX the {@link #axisX}
-	 * @param axisY the {@link #axisY}
-	 * @param axisZ the {@link #axisZ}
+	 * @param lengthX
+	 * @param lengthY
+	 * @param lengthZ
 	 */
-	public Cuboid(AxisLine axisX, AxisLine axisY, AxisLine axisZ) {
-		this.axisX = axisX;
-		this.axisY = axisY;
-		this.axisZ = axisZ;
+	public Cuboid(Double lengthX, Double lengthY, Double lengthZ) {
+		setLengthX(lengthX);
+		setLengthY(lengthY);
+		setLengthZ(lengthZ);
+	}
+
+	/**
+	 * @param lengthX
+	 * @param lengthY
+	 * @param lengthZ
+	 * @param center
+	 */
+	public Cuboid(Double lengthX, Double lengthY, Double lengthZ, Point center) {
+		setLengthX(lengthX);
+		setLengthY(lengthY);
+		setLengthZ(lengthZ);
+		setCenter(center);
 	}
 
 	public static Cuboid deepCopy(Cuboid cuboid) {
 		Cuboid c = null;
 		if (cuboid != null) {
-			c = new Cuboid();
-			c.setAxisX(AxisLine.deepCopy(cuboid.getAxisX()));
-			c.setAxisY(AxisLine.deepCopy(cuboid.getAxisY()));
-			c.setAxisZ(AxisLine.deepCopy(cuboid.getAxisZ()));
+			c = new Cuboid(cuboid.getLengthX(), cuboid.getLengthY(), cuboid.getLengthZ(), cuboid.getCenter());
 		}
 		return c;
 	}
 
+	public void validate() {
+		validateLengths();
+		validateCenter();
+	}
+
+	public void validateLengths() {
+		if (!isLengths())
+			throw new AvuilderEntityException(Errors.NOT_SUFFICIENTLY_DEFINED);
+	}
+
+	public void validateCenter() {
+		if (!isCenter())
+			throw new AvuilderEntityException(Errors.NOT_SUFFICIENTLY_DEFINED);
+	}
+
+	public boolean isLengths() {
+		if (getLengthX() == null || getLengthY() == null || getLengthZ() == null)
+			return false;
+		else
+			return true;
+	}
+
+	public boolean isCenter() {
+		if (getCenter() != null)
+			return true;
+		else
+			return false;
+	}
+
+	public boolean isLengthsAndCenter() {
+		if (isLengths() && isCenter())
+			return true;
+		else
+			return false;
+	}
+
+	public void setLengths(Double lengthX, Double lengthY, Double lengthZ) {
+		setLengthX(lengthX);
+		setLengthY(lengthY);
+		setLengthZ(lengthZ);
+	}
+
 	public Double getVolume() {
-		validate(this);
-		return axisX.getLength() * axisY.getLength() * axisZ.getLength();
+		validateLengths();
+		return lengthX * lengthY * lengthZ;
+	}
+
+	public Point getFaceCenter(int face) {
+		Point p = null;
+		try {
+			validate();
+			Validations.validateFacesExistance(face);
+
+			p = getCenter();
+			switch (face) {
+			case K.FACE_BASE:
+				p.y = getLY();
+				break;
+			case K.FACE_TOP:
+				p.y = getUY();
+				break;
+			case K.FACE_WALL_1:
+				p.z = getUZ();
+				break;
+			case K.FACE_WALL_2:
+				p.x = getUX();
+				break;
+			case K.FACE_WALL_3:
+				p.z = getLZ();
+				break;
+			case K.FACE_WALL_4:
+				p.x = getLX();
+				break;
+			default:
+				throw new AvuilderEntityException(Errors.FACE_NOT_RECOGNIZED);
+			}
+		} catch (Exception e) {
+			throw new AvuilderEntityException(e);
+		}
+		return p;
+	}
+
+	public Point getCorner(int corner) {
+		Point p = null;
+		try {
+			validate();
+			Validations.validateCornersExistance(corner);
+
+			p = new Point();
+			switch (corner) {
+			case K.CORNER_BASE_1:
+				p.x = getLX();
+				p.y = getLY();
+				p.z = getLZ();
+				break;
+			case K.CORNER_BASE_2:
+				p.x = getUX();
+				p.y = getLY();
+				p.z = getLZ();
+				break;
+			case K.CORNER_BASE_3:
+				p.x = getUX();
+				p.y = getLY();
+				p.z = getUZ();
+				break;
+			case K.CORNER_BASE_4:
+				p.x = getLX();
+				p.y = getLY();
+				p.z = getUZ();
+				break;
+			case K.CORNER_TOP_1:
+				p.x = getLX();
+				p.y = getUY();
+				p.z = getLZ();
+				break;
+			case K.CORNER_TOP_2:
+				p.x = getUX();
+				p.y = getUY();
+				p.z = getLZ();
+				break;
+			case K.CORNER_TOP_3:
+				p.x = getUX();
+				p.y = getUY();
+				p.z = getUZ();
+				break;
+			case K.CORNER_TOP_4:
+				p.x = getLX();
+				p.y = getUY();
+				p.z = getUZ();
+				break;
+			default:
+				throw new AvuilderEntityException(Errors.CORNER_NOT_RECOGNIZED);
+			}
+		} catch (Exception e) {
+			throw new AvuilderEntityException(e);
+		}
+		return p;
 	}
 
 	/**
-	 * Calculates the central point of the cuboid.
+	 * Gets the {@link #lengthX}.
 	 * 
-	 * @return the central point of the cuboid.
+	 * @return the {@link #lengthX}.
+	 */
+	public Double getLengthX() {
+		return lengthX;
+	}
+
+	/**
+	 * Sets the {@link #lengthX}.
+	 * 
+	 * @param lengthX the {@link #lengthX} to set.
+	 */
+	public void setLengthX(Double lengthX) {
+		try {
+			Validations.validateLengths(lengthX);
+			this.lengthX = lengthX;
+		} catch (Exception e) {
+			throw new AvuilderEntityException(e);
+		}
+	}
+
+	/**
+	 * Gets the {@link #lengthY}.
+	 * 
+	 * @return the {@link #lengthY}.
+	 */
+	public Double getLengthY() {
+		return lengthY;
+	}
+
+	/**
+	 * Sets the {@link #lengthY}.
+	 * 
+	 * @param lengthY the {@link #lengthY} to set.
+	 */
+	public void setLengthY(Double lengthY) {
+		try {
+			Validations.validateLengths(lengthY);
+			this.lengthY = lengthY;
+		} catch (Exception e) {
+			throw new AvuilderEntityException(e);
+		}
+	}
+
+	/**
+	 * Gets the {@link #lengthZ}.
+	 * 
+	 * @return the {@link #lengthZ}.
+	 */
+	public Double getLengthZ() {
+		return lengthZ;
+	}
+
+	/**
+	 * Sets the {@link #lengthZ}.
+	 * 
+	 * @param lengthZ the {@link #lengthZ} to set.
+	 */
+	public void setLengthZ(Double lengthZ) {
+		try {
+			Validations.validateLengths(lengthZ);
+			this.lengthZ = lengthZ;
+		} catch (Exception e) {
+			throw new AvuilderEntityException(e);
+		}
+	}
+
+	public Double getLength(int dimension) {
+		try {
+			Validations.validateDimensionsExistance(dimension);
+			switch (dimension) {
+			case K.X:
+				return getLengthX();
+			case K.Y:
+				return getLengthY();
+			case K.Z:
+				return getLengthZ();
+			default:
+				throw new AvuilderEntityException(Errors.DIMENSION_NOT_RECOGNIZED);
+			}
+		} catch (Exception e) {
+			throw new AvuilderEntityException(e);
+		}
+	}
+
+	public void setLength(int dimension, Double length) {
+		try {
+			Validations.validateDimensionsExistance(dimension);
+			switch (dimension) {
+			case K.X:
+				setLengthX(length);
+				break;
+			case K.Y:
+				setLengthY(length);
+				break;
+			case K.Z:
+				setLengthZ(length);
+				break;
+			default:
+				System.out.println("ye");
+				throw new AvuilderEntityException(Errors.DIMENSION_NOT_RECOGNIZED);
+			}
+		} catch (Exception e) {
+			throw new AvuilderEntityException(e);
+		}
+	}
+
+	/**
+	 * Gets the {@link #center}.
+	 * 
+	 * @return the {@link #center}.
 	 */
 	public Point getCenter() {
-		validate(this);
-		Point p = new Point();
-		p.x = axisX.getCenter();
-		p.y = axisY.getCenter();
-		p.z = axisZ.getCenter();
-		return p;
-	}
-
-	public Point getFaceCenter(String face) {
-		validate(this);
-		Point p = getCenter();
-
-		switch (face) {
-		case K.FACE_BASE:
-			p.y = getAxisY().getLP();
-			break;
-		case K.FACE_TOP:
-			p.y = getAxisY().getUP();
-			break;
-		case K.FACE_WALL_1:
-			p.z = getAxisZ().getUP();
-			break;
-		case K.FACE_WALL_2:
-			p.x = getAxisX().getUP();
-			break;
-		case K.FACE_WALL_3:
-			p.z = getAxisZ().getLP();
-			break;
-		case K.FACE_WALL_4:
-			p.x = getAxisX().getLP();
-			break;
-		default:
-			throw new IllegalArgumentException("Illegal face: " + face + ".");
-		}
-
-		return p;
-	}
-
-	public Point getCorner(String corner) {
-		validate(this);
-		Point p = new Point();
-
-		switch (corner) {
-		case K.CORNER_BASE_1:
-			p.x = getAxisX().getLP();
-			p.y = getAxisY().getLP();
-			p.z = getAxisZ().getLP();
-			break;
-		case K.CORNER_BASE_2:
-			p.x = getAxisX().getUP();
-			p.y = getAxisY().getLP();
-			p.z = getAxisZ().getLP();
-			break;
-		case K.CORNER_BASE_3:
-			p.x = getAxisX().getUP();
-			p.y = getAxisY().getLP();
-			p.z = getAxisZ().getUP();
-			break;
-		case K.CORNER_BASE_4:
-			p.x = getAxisX().getLP();
-			p.y = getAxisY().getLP();
-			p.z = getAxisZ().getUP();
-			break;
-		case K.CORNER_TOP_1:
-			p.x = getAxisX().getLP();
-			p.y = getAxisY().getUP();
-			p.z = getAxisZ().getLP();
-			break;
-		case K.CORNER_TOP_2:
-			p.x = getAxisX().getUP();
-			p.y = getAxisY().getUP();
-			p.z = getAxisZ().getLP();
-			break;
-		case K.CORNER_TOP_3:
-			p.x = getAxisX().getUP();
-			p.y = getAxisY().getUP();
-			p.z = getAxisZ().getUP();
-			break;
-		case K.CORNER_TOP_4:
-			p.x = getAxisX().getLP();
-			p.y = getAxisY().getUP();
-			p.z = getAxisZ().getUP();
-			break;
-		default:
-			throw new IllegalArgumentException("Illegal corner: " + corner + ".");
-		}
-
-		return p;
-	}
-
-	public static boolean isDefined(Cuboid cuboid) {
-		boolean x = cuboid.getAxisX() != null && AxisLine.isDefined(cuboid.getAxisX());
-		boolean y = cuboid.getAxisY() != null && AxisLine.isDefined(cuboid.getAxisY());
-		boolean z = cuboid.getAxisZ() != null && AxisLine.isDefined(cuboid.getAxisZ());
-		return x && y && z;
-	}
-
-	public static void validate(Cuboid cuboid) {
-		AxisLine.validate(cuboid.getAxisX());
-		AxisLine.validate(cuboid.getAxisY());
-		AxisLine.validate(cuboid.getAxisZ());
+		return center;
 	}
 
 	/**
-	 * Gets the {@link #axisX}.
+	 * Sets the {@link #center}.
 	 * 
-	 * @return the {@link #axisX}.
+	 * @param center the {@link #center} to set.
 	 */
-	public AxisLine getAxisX() {
-		return axisX;
+	public void setCenter(Point center) {
+		this.center = center;
 	}
 
-	/**
-	 * Sets the {@link #axisX}.
-	 * 
-	 * @param lineX the {@link #axisX} to set.
+	public double getHX() {
+		return lengthX / 2;
+	}
+
+	public double getUX() {
+		return center.x + getHX();
+	}
+
+	public double getLX() {
+		return center.x - getHX();
+	}
+
+	public double getHY() {
+		return lengthX / 2;
+	}
+
+	public double getUY() {
+		return center.y + getHY();
+	}
+
+	public double getLY() {
+		return center.y - getHY();
+	}
+
+	public double getHZ() {
+		return lengthX / 2;
+	}
+
+	public double getUZ() {
+		return center.z + getHZ();
+	}
+
+	public double getLZ() {
+		return center.z - getHZ();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
 	 */
-	public void setAxisX(AxisLine lineX) {
-		this.axisX = lineX;
-	}
-
-	/**
-	 * Gets the {@link #axisY}.
-	 * 
-	 * @return the {@link #axisY}.
-	 */
-	public AxisLine getAxisY() {
-		return axisY;
-	}
-
-	/**
-	 * Sets the {@link #axisY}.
-	 * 
-	 * @param lineY the {@link #axisY} to set.
-	 */
-	public void setAxisY(AxisLine lineY) {
-		this.axisY = lineY;
-	}
-
-	/**
-	 * Gets the {@link #axisZ}.
-	 * 
-	 * @return the {@link #axisZ}.
-	 */
-	public AxisLine getAxisZ() {
-		return axisZ;
-	}
-
-	/**
-	 * Sets the {@link #axisZ}.
-	 * 
-	 * @param lineZ the {@link #axisZ} to set.
-	 */
-	public void setAxisZ(AxisLine lineZ) {
-		this.axisZ = lineZ;
-	}
-
-	/**
-	 * Sets the {@link #axisX} upper point
-	 * 
-	 * @return the {@link #axisX} upper point
-	 */
-	public Double getUX() {
-		return getAxisX().getUP();
-	}
-
-	public void setUX(Double uX) {
-		getAxisX().setUP(uX);
-	}
-
-	public Double getLX() {
-		return getAxisX().getLP();
-	}
-
-	public void setLX(Double lX) {
-		getAxisX().setLP(lX);
-	}
-
-	public Double getUY() {
-		return getAxisY().getUP();
-	}
-
-	public void setUY(Double uY) {
-		getAxisY().setUP(uY);
-	}
-
-	public Double getLY() {
-		return getAxisY().getLP();
-	}
-
-	public void setLY(Double lY) {
-		getAxisY().setLP(lY);
-	}
-
-	public Double getUZ() {
-		return getAxisZ().getUP();
-	}
-
-	public void setUZ(Double uZ) {
-		getAxisZ().setUP(uZ);
-	}
-
-	public Double getLZ() {
-		return getAxisZ().getLP();
-	}
-
-	public void setLZ(Double lZ) {
-		getAxisZ().setLP(lZ);
-	}
-
-	public Double getUD(int dimension) {
-		switch (dimension) {
-		case K.X:
-			return getUX();
-		case K.Y:
-			return getUY();
-		case K.Z:
-			return getUZ();
-		default:
-			throw new IllegalArgumentException("Illegal dimension: " + dimension + ".");
-		}
-	}
-
-	public void setUD(int dimension, Double uD) {
-		switch (dimension) {
-		case K.X:
-			setUX(uD);
-			break;
-		case K.Y:
-			setUY(uD);
-			break;
-		case K.Z:
-			setUZ(uD);
-			break;
-		default:
-			throw new IllegalArgumentException("Illegal dimension: " + dimension + ".");
-		}
-	}
-
-	public Double getLD(int dimension) {
-		switch (dimension) {
-		case K.X:
-			return getLX();
-		case K.Y:
-			return getLY();
-		case K.Z:
-			return getLZ();
-		default:
-			throw new IllegalArgumentException("Illegal dimension: " + dimension + ".");
-		}
-	}
-
-	public void setLD(int dimension, Double lD) {
-		switch (dimension) {
-		case K.X:
-			setLX(lD);
-			break;
-		case K.Y:
-			setLY(lD);
-			break;
-		case K.Z:
-			setLZ(lD);
-			break;
-		default:
-			throw new IllegalArgumentException("Illegal dimension: " + dimension + ".");
-		}
-	}
-
-	public Double getD(int dimension, int side) {
-		switch (side) {
-		case K.UPPER:
-			return getUD(dimension);
-		case K.LOWER:
-			return getLD(dimension);
-		default:
-			throw new IllegalArgumentException("Illegal side: " + side + ".");
-		}
-	}
-
-	public void setL(int dimension, int side, Double l) {
-		switch (side) {
-		case K.UPPER:
-			setUD(dimension, l);
-			break;
-		case K.LOWER:
-			setLD(dimension, l);
-			break;
-		default:
-			throw new IllegalArgumentException("Illegal side: " + side + ".");
-		}
-	}
-
 	@Override
 	public String toString() {
-		return "Cuboid [axisX=" + axisX + ", axisY=" + axisY + ", axisZ=" + axisZ + "]";
+		return "Cuboid [lengthX=" + lengthX + ", lengthY=" + lengthY + ", lengthZ=" + lengthZ + ", center=" + center
+				+ "]";
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((axisX == null) ? 0 : axisX.hashCode());
-		result = prime * result + ((axisY == null) ? 0 : axisY.hashCode());
-		result = prime * result + ((axisZ == null) ? 0 : axisZ.hashCode());
+		result = prime * result + ((center == null) ? 0 : center.hashCode());
+		result = prime * result + ((lengthX == null) ? 0 : lengthX.hashCode());
+		result = prime * result + ((lengthY == null) ? 0 : lengthY.hashCode());
+		result = prime * result + ((lengthZ == null) ? 0 : lengthZ.hashCode());
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -379,20 +393,25 @@ public class Cuboid implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Cuboid other = (Cuboid) obj;
-		if (axisX == null) {
-			if (other.axisX != null)
+		if (center == null) {
+			if (other.center != null)
 				return false;
-		} else if (!axisX.equals(other.axisX))
+		} else if (!center.equals(other.center))
 			return false;
-		if (axisY == null) {
-			if (other.axisY != null)
+		if (lengthX == null) {
+			if (other.lengthX != null)
 				return false;
-		} else if (!axisY.equals(other.axisY))
+		} else if (!lengthX.equals(other.lengthX))
 			return false;
-		if (axisZ == null) {
-			if (other.axisZ != null)
+		if (lengthY == null) {
+			if (other.lengthY != null)
 				return false;
-		} else if (!axisZ.equals(other.axisZ))
+		} else if (!lengthY.equals(other.lengthY))
+			return false;
+		if (lengthZ == null) {
+			if (other.lengthZ != null)
+				return false;
+		} else if (!lengthZ.equals(other.lengthZ))
 			return false;
 		return true;
 	}
