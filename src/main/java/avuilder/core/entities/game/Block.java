@@ -1,6 +1,6 @@
 package avuilder.core.entities.game;
 
-import avuilder.core.entities.dimensional.AxisLine;
+import avuilder.core.entities.dimensional.AxisEnds;
 import avuilder.core.entities.dimensional.Cuboid;
 
 /**
@@ -54,7 +54,7 @@ public class Block extends Cuboid {
 	 * @param lineY
 	 * @param lineZ
 	 */
-	public Block(AxisLine lineX, AxisLine lineY, AxisLine lineZ) {
+	public Block(AxisEnds lineX, AxisEnds lineY, AxisEnds lineZ) {
 		super(lineX, lineY, lineZ);
 	}
 
@@ -64,7 +64,7 @@ public class Block extends Cuboid {
 	 * @param lineZ
 	 * @param parent
 	 */
-	public Block(AxisLine lineX, AxisLine lineY, AxisLine lineZ, Block parent) {
+	public Block(AxisEnds lineX, AxisEnds lineY, AxisEnds lineZ, Block parent) {
 		super(lineX, lineY, lineZ);
 		this.parent = parent;
 	}

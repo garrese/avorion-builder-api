@@ -2,7 +2,7 @@ package avuilder.core.entities.dimensional;
 
 import java.io.Serializable;
 
-import avuilder.core.error.AvuilderCoreRuntimeException;
+import avuilder.core.error.AvuilderEntityException;
 import avuilder.core.error.Errors;
 
 public class Line implements Serializable {
@@ -23,36 +23,29 @@ public class Line implements Serializable {
 		this.p2 = p2;
 	}
 
-	public static boolean isDefined(Line line) {
-		boolean p1 = Point.isDefined(line.getP1());
-		boolean p2 = Point.isDefined(line.getP2());
-		return p1 && p2;
+	public boolean isDefined() {
+		if (p1 != null && p2 != null && p1.isDefined() && p2.isDefined())
+			return true;
+		else
+			return false;
 	}
 
-	public static void validate(Line line) {
-		Point.validate(line.getP1());
-		Point.validate(line.getP2());
+	public void validate() {
+		if (!isDefined())
+			throw new AvuilderEntityException(Errors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	public double getLength() {
-		double l = 0;
-		try {
-			l = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(p1.z - p2.z, 2));
-		} catch (Exception e) {
-			throw new AvuilderCoreRuntimeException(Errors.NOT_SUFFICIENTLY_DEFINED, e);
-		}
-		return l;
+		validate();
+		return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(p1.z - p2.z, 2));
 	}
 
 	public Point getCenter() {
+		validate();
 		Point p = new Point();
-		try {
-			p.x = (p1.x + p2.x) / 2;
-			p.y = (p1.y + p2.y) / 2;
-			p.z = (p1.z + p2.z) / 2;
-		} catch (Exception e) {
-			throw new AvuilderCoreRuntimeException(Errors.NOT_SUFFICIENTLY_DEFINED, e);
-		}
+		p.x = (p1.x + p2.x) / 2;
+		p.y = (p1.y + p2.y) / 2;
+		p.z = (p1.z + p2.z) / 2;
 		return p;
 	}
 

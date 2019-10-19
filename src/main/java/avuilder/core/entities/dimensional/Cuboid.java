@@ -1,13 +1,16 @@
 package avuilder.core.entities.dimensional;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
+import avuilder.core.error.AvuilderEntityException;
+import avuilder.core.error.Errors;
 import avuilder.core.utils.K;
 
 /**
  * Represents a cuboid in a Cartesian coordinate system.
  * <p>
- * The cuboid is defined by one {@link AxisLine} in each of the three coordinate axis.
+ * The cuboid is defined by one {@link AxisEnds} in each of the three coordinate axis.
  */
 public class Cuboid implements Serializable {
 	private static final long serialVersionUID = -5598838939653504628L;
@@ -15,17 +18,17 @@ public class Cuboid implements Serializable {
 	/**
 	 * X axis line.
 	 */
-	private AxisLine axisX = new AxisLine();
+	private AxisEnds axisX = new AxisEnds();
 
 	/**
 	 * Y axis line.
 	 */
-	private AxisLine axisY = new AxisLine();
+	private AxisEnds axisY = new AxisEnds();
 
 	/**
 	 * Z axis line.
 	 */
-	private AxisLine axisZ = new AxisLine();
+	private AxisEnds axisZ = new AxisEnds();
 
 	public Cuboid() {
 	}
@@ -35,7 +38,7 @@ public class Cuboid implements Serializable {
 	 * @param axisY the {@link #axisY}
 	 * @param axisZ the {@link #axisZ}
 	 */
-	public Cuboid(AxisLine axisX, AxisLine axisY, AxisLine axisZ) {
+	public Cuboid(AxisEnds axisX, AxisEnds axisY, AxisEnds axisZ) {
 		this.axisX = axisX;
 		this.axisY = axisY;
 		this.axisZ = axisZ;
@@ -45,15 +48,15 @@ public class Cuboid implements Serializable {
 		Cuboid c = null;
 		if (cuboid != null) {
 			c = new Cuboid();
-			c.setAxisX(AxisLine.deepCopy(cuboid.getAxisX()));
-			c.setAxisY(AxisLine.deepCopy(cuboid.getAxisY()));
-			c.setAxisZ(AxisLine.deepCopy(cuboid.getAxisZ()));
+			c.setAxisX(AxisEnds.deepCopy(cuboid.getAxisX()));
+			c.setAxisY(AxisEnds.deepCopy(cuboid.getAxisY()));
+			c.setAxisZ(AxisEnds.deepCopy(cuboid.getAxisZ()));
 		}
 		return c;
 	}
 
 	public Double getVolume() {
-		validate(this);
+		validate();
 		return axisX.getLength() * axisY.getLength() * axisZ.getLength();
 	}
 
@@ -63,7 +66,7 @@ public class Cuboid implements Serializable {
 	 * @return the central point of the cuboid.
 	 */
 	public Point getCenter() {
-		validate(this);
+		validate();
 		Point p = new Point();
 		p.x = axisX.getCenter();
 		p.y = axisY.getCenter();
@@ -71,99 +74,99 @@ public class Cuboid implements Serializable {
 		return p;
 	}
 
-	public Point getFaceCenter(String face) {
-		validate(this);
+	public Point getFaceCenter(int face) {
+		validate();
 		Point p = getCenter();
 
 		switch (face) {
 		case K.FACE_BASE:
-			p.y = getAxisY().getLP();
+			p.y = getAxisY().getLowerEnd();
 			break;
 		case K.FACE_TOP:
-			p.y = getAxisY().getUP();
+			p.y = getAxisY().getUpperEnd();
 			break;
 		case K.FACE_WALL_1:
-			p.z = getAxisZ().getUP();
+			p.z = getAxisZ().getUpperEnd();
 			break;
 		case K.FACE_WALL_2:
-			p.x = getAxisX().getUP();
+			p.x = getAxisX().getUpperEnd();
 			break;
 		case K.FACE_WALL_3:
-			p.z = getAxisZ().getLP();
+			p.z = getAxisZ().getLowerEnd();
 			break;
 		case K.FACE_WALL_4:
-			p.x = getAxisX().getLP();
+			p.x = getAxisX().getLowerEnd();
 			break;
 		default:
-			throw new IllegalArgumentException("Illegal face: " + face + ".");
+			throw new IllegalArgumentException(Errors.FACE_NOT_RECOGNIZED);
 		}
 
 		return p;
 	}
 
-	public Point getCorner(String corner) {
-		validate(this);
+	public Point getCorner(int corner) {
+		validate();
 		Point p = new Point();
 
 		switch (corner) {
 		case K.CORNER_BASE_1:
-			p.x = getAxisX().getLP();
-			p.y = getAxisY().getLP();
-			p.z = getAxisZ().getLP();
+			p.x = getAxisX().getLowerEnd();
+			p.y = getAxisY().getLowerEnd();
+			p.z = getAxisZ().getLowerEnd();
 			break;
 		case K.CORNER_BASE_2:
-			p.x = getAxisX().getUP();
-			p.y = getAxisY().getLP();
-			p.z = getAxisZ().getLP();
+			p.x = getAxisX().getUpperEnd();
+			p.y = getAxisY().getLowerEnd();
+			p.z = getAxisZ().getLowerEnd();
 			break;
 		case K.CORNER_BASE_3:
-			p.x = getAxisX().getUP();
-			p.y = getAxisY().getLP();
-			p.z = getAxisZ().getUP();
+			p.x = getAxisX().getUpperEnd();
+			p.y = getAxisY().getLowerEnd();
+			p.z = getAxisZ().getUpperEnd();
 			break;
 		case K.CORNER_BASE_4:
-			p.x = getAxisX().getLP();
-			p.y = getAxisY().getLP();
-			p.z = getAxisZ().getUP();
+			p.x = getAxisX().getLowerEnd();
+			p.y = getAxisY().getLowerEnd();
+			p.z = getAxisZ().getUpperEnd();
 			break;
 		case K.CORNER_TOP_1:
-			p.x = getAxisX().getLP();
-			p.y = getAxisY().getUP();
-			p.z = getAxisZ().getLP();
+			p.x = getAxisX().getLowerEnd();
+			p.y = getAxisY().getUpperEnd();
+			p.z = getAxisZ().getLowerEnd();
 			break;
 		case K.CORNER_TOP_2:
-			p.x = getAxisX().getUP();
-			p.y = getAxisY().getUP();
-			p.z = getAxisZ().getLP();
+			p.x = getAxisX().getUpperEnd();
+			p.y = getAxisY().getUpperEnd();
+			p.z = getAxisZ().getLowerEnd();
 			break;
 		case K.CORNER_TOP_3:
-			p.x = getAxisX().getUP();
-			p.y = getAxisY().getUP();
-			p.z = getAxisZ().getUP();
+			p.x = getAxisX().getUpperEnd();
+			p.y = getAxisY().getUpperEnd();
+			p.z = getAxisZ().getUpperEnd();
 			break;
 		case K.CORNER_TOP_4:
-			p.x = getAxisX().getLP();
-			p.y = getAxisY().getUP();
-			p.z = getAxisZ().getUP();
+			p.x = getAxisX().getLowerEnd();
+			p.y = getAxisY().getUpperEnd();
+			p.z = getAxisZ().getUpperEnd();
 			break;
 		default:
-			throw new IllegalArgumentException("Illegal corner: " + corner + ".");
+			throw new IllegalArgumentException(Errors.CORNER_NOT_RECOGNIZED);
 		}
 
 		return p;
 	}
 
-	public static boolean isDefined(Cuboid cuboid) {
-		boolean x = cuboid.getAxisX() != null && AxisLine.isDefined(cuboid.getAxisX());
-		boolean y = cuboid.getAxisY() != null && AxisLine.isDefined(cuboid.getAxisY());
-		boolean z = cuboid.getAxisZ() != null && AxisLine.isDefined(cuboid.getAxisZ());
-		return x && y && z;
+	public boolean isDefined() {
+		for (AxisEnds axis : getAllAxes()) {
+			if (!axis.isDefined())
+				return false;
+		}
+		return true;
 	}
 
-	public static void validate(Cuboid cuboid) {
-		AxisLine.validate(cuboid.getAxisX());
-		AxisLine.validate(cuboid.getAxisY());
-		AxisLine.validate(cuboid.getAxisZ());
+	public void validate() {
+		if (!isDefined())
+			throw new AvuilderEntityException(Errors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	/**
@@ -171,7 +174,7 @@ public class Cuboid implements Serializable {
 	 * 
 	 * @return the {@link #axisX}.
 	 */
-	public AxisLine getAxisX() {
+	public AxisEnds getAxisX() {
 		return axisX;
 	}
 
@@ -180,7 +183,7 @@ public class Cuboid implements Serializable {
 	 * 
 	 * @param lineX the {@link #axisX} to set.
 	 */
-	public void setAxisX(AxisLine lineX) {
+	public void setAxisX(AxisEnds lineX) {
 		this.axisX = lineX;
 	}
 
@@ -189,7 +192,7 @@ public class Cuboid implements Serializable {
 	 * 
 	 * @return the {@link #axisY}.
 	 */
-	public AxisLine getAxisY() {
+	public AxisEnds getAxisY() {
 		return axisY;
 	}
 
@@ -198,7 +201,7 @@ public class Cuboid implements Serializable {
 	 * 
 	 * @param lineY the {@link #axisY} to set.
 	 */
-	public void setAxisY(AxisLine lineY) {
+	public void setAxisY(AxisEnds lineY) {
 		this.axisY = lineY;
 	}
 
@@ -207,7 +210,7 @@ public class Cuboid implements Serializable {
 	 * 
 	 * @return the {@link #axisZ}.
 	 */
-	public AxisLine getAxisZ() {
+	public AxisEnds getAxisZ() {
 		return axisZ;
 	}
 
@@ -216,142 +219,150 @@ public class Cuboid implements Serializable {
 	 * 
 	 * @param lineZ the {@link #axisZ} to set.
 	 */
-	public void setAxisZ(AxisLine lineZ) {
+	public void setAxisZ(AxisEnds lineZ) {
 		this.axisZ = lineZ;
 	}
 
+	public ArrayList<AxisEnds> getAllAxes() {
+		ArrayList<AxisEnds> list = new ArrayList<AxisEnds>();
+		list.add(axisX);
+		list.add(axisY);
+		list.add(axisZ);
+		return list;
+	}
+
 	/**
-	 * Sets the {@link #axisX} upper point
+	 * Sets the {@link #axisX} upper end.
 	 * 
-	 * @return the {@link #axisX} upper point
+	 * @return the {@link #axisX} upper end.
 	 */
-	public Double getUX() {
-		return getAxisX().getUP();
+	public Double getUpperX() {
+		return getAxisX().getUpperEnd();
 	}
 
-	public void setUX(Double uX) {
-		getAxisX().setUP(uX);
+	public void setUpperX(Double uX) {
+		getAxisX().setUpperEnd(uX);
 	}
 
-	public Double getLX() {
-		return getAxisX().getLP();
+	public Double geLowerX() {
+		return getAxisX().getLowerEnd();
 	}
 
-	public void setLX(Double lX) {
-		getAxisX().setLP(lX);
+	public void setLowerX(Double lX) {
+		getAxisX().setLowerEnd(lX);
 	}
 
-	public Double getUY() {
-		return getAxisY().getUP();
+	public Double getUpperY() {
+		return getAxisY().getUpperEnd();
 	}
 
-	public void setUY(Double uY) {
-		getAxisY().setUP(uY);
+	public void setUpperY(Double uY) {
+		getAxisY().setUpperEnd(uY);
 	}
 
-	public Double getLY() {
-		return getAxisY().getLP();
+	public Double getLowerY() {
+		return getAxisY().getLowerEnd();
 	}
 
-	public void setLY(Double lY) {
-		getAxisY().setLP(lY);
+	public void setLowerY(Double lY) {
+		getAxisY().setLowerEnd(lY);
 	}
 
-	public Double getUZ() {
-		return getAxisZ().getUP();
+	public Double getUpperZ() {
+		return getAxisZ().getUpperEnd();
 	}
 
-	public void setUZ(Double uZ) {
-		getAxisZ().setUP(uZ);
+	public void setUpperZ(Double uZ) {
+		getAxisZ().setUpperEnd(uZ);
 	}
 
-	public Double getLZ() {
-		return getAxisZ().getLP();
+	public Double getLowerZ() {
+		return getAxisZ().getLowerEnd();
 	}
 
-	public void setLZ(Double lZ) {
-		getAxisZ().setLP(lZ);
+	public void setLowerZ(Double lZ) {
+		getAxisZ().setLowerEnd(lZ);
 	}
 
-	public Double getUD(int dimension) {
-		switch (dimension) {
+	public Double getAxisUpper(int axis) {
+		switch (axis) {
 		case K.X:
-			return getUX();
+			return getUpperX();
 		case K.Y:
-			return getUY();
+			return getUpperY();
 		case K.Z:
-			return getUZ();
+			return getUpperZ();
 		default:
-			throw new IllegalArgumentException("Illegal dimension: " + dimension + ".");
+			throw new IllegalArgumentException(Errors.AXIS_NOT_RECOGNIZED);
 		}
 	}
 
-	public void setUD(int dimension, Double uD) {
-		switch (dimension) {
+	public void setAxisUpper(int axis, Double uD) {
+		switch (axis) {
 		case K.X:
-			setUX(uD);
-			break;
-		case K.Y:
-			setUY(uD);
-			break;
-		case K.Z:
-			setUZ(uD);
-			break;
-		default:
-			throw new IllegalArgumentException("Illegal dimension: " + dimension + ".");
-		}
-	}
-
-	public Double getLD(int dimension) {
-		switch (dimension) {
-		case K.X:
-			return getLX();
-		case K.Y:
-			return getLY();
-		case K.Z:
-			return getLZ();
-		default:
-			throw new IllegalArgumentException("Illegal dimension: " + dimension + ".");
-		}
-	}
-
-	public void setLD(int dimension, Double lD) {
-		switch (dimension) {
-		case K.X:
-			setLX(lD);
+			setUpperX(uD);
 			break;
 		case K.Y:
-			setLY(lD);
+			setUpperY(uD);
 			break;
 		case K.Z:
-			setLZ(lD);
+			setUpperZ(uD);
 			break;
 		default:
-			throw new IllegalArgumentException("Illegal dimension: " + dimension + ".");
+			throw new IllegalArgumentException(Errors.AXIS_NOT_RECOGNIZED);
 		}
 	}
 
-	public Double getD(int dimension, int side) {
-		switch (side) {
-		case K.UPPER:
-			return getUD(dimension);
-		case K.LOWER:
-			return getLD(dimension);
+	public Double getAxisLower(int axis) {
+		switch (axis) {
+		case K.X:
+			return geLowerX();
+		case K.Y:
+			return getLowerY();
+		case K.Z:
+			return getLowerZ();
 		default:
-			throw new IllegalArgumentException("Illegal side: " + side + ".");
+			throw new IllegalArgumentException(Errors.AXIS_NOT_RECOGNIZED);
 		}
 	}
 
-	public void setL(int dimension, int side, Double l) {
-		switch (side) {
-		case K.UPPER:
-			setUD(dimension, l);
+	public void setAxisLower(int axis, Double lD) {
+		switch (axis) {
+		case K.X:
+			setLowerX(lD);
 			break;
-		case K.LOWER:
-			setLD(dimension, l);
+		case K.Y:
+			setLowerY(lD);
+			break;
+		case K.Z:
+			setLowerZ(lD);
 			break;
 		default:
-			throw new IllegalArgumentException("Illegal side: " + side + ".");
+			throw new IllegalArgumentException(Errors.AXIS_NOT_RECOGNIZED);
+		}
+	}
+
+	public Double getAxisEnd(int axis, int end) {
+		switch (end) {
+		case K.END_UPPER:
+			return getAxisUpper(axis);
+		case K.END_LOWER:
+			return getAxisLower(axis);
+		default:
+			throw new IllegalArgumentException(Errors.END_NOT_RECOGNIZED);
+		}
+	}
+
+	public void setAxisEnd(int dimension, int end, Double l) {
+		switch (end) {
+		case K.END_UPPER:
+			setAxisUpper(dimension, l);
+			break;
+		case K.END_LOWER:
+			setAxisLower(dimension, l);
+			break;
+		default:
+			throw new IllegalArgumentException(Errors.END_NOT_RECOGNIZED);
 		}
 	}
 

@@ -6,7 +6,11 @@ public class AvuilderCoreException extends Exception {
 	public AvuilderCoreException(String msg) {
 		super(msg);
 	}
-	
+
+	public AvuilderCoreException(Throwable cause) {
+		super(cause);
+	}
+
 	public AvuilderCoreException(String msg, Throwable cause) {
 		super(msg, cause);
 	}

@@ -2,7 +2,7 @@ package avuilder.core.entities.dimensional;
 
 import java.io.Serializable;
 
-import avuilder.core.error.AvuilderCoreRuntimeException;
+import avuilder.core.error.AvuilderEntityException;
 import avuilder.core.error.Errors;
 
 /**
@@ -27,17 +27,17 @@ public class Point implements Serializable {
 		this.z = z;
 	}
 
-	public static boolean isDefined(Point p) {
-		if (p.x != null && p.y != null && p.z != null) {
+	public boolean isDefined() {
+		if (x != null && y != null && z != null) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public static void validate(Point p) {
-		if (p.x != null && p.y != null && p.z != null)
-			throw new AvuilderCoreRuntimeException(Errors.NOT_SUFFICIENTLY_DEFINED);
+	public void validate() {
+		if (!isDefined())
+			throw new AvuilderEntityException(Errors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	/*
