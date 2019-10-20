@@ -190,4 +190,16 @@ public class Block extends Cuboid {
 		this.color = color;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Block [index=" + index + ", parent=" + parent + ", orientation=" + orientation + ", type=" + type
+				+ ", material=" + material + ", color=" + color + ", getVolume()=" + getVolume() + ", getCenter()="
+				+ getCenter() + ", getAxisX()=" + getAxisX() + ", getAxisY()=" + getAxisY() + ", getAxisZ()="
+				+ getAxisZ() + "]";
+	}
+
 }

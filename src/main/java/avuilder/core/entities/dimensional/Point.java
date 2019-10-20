@@ -2,8 +2,10 @@ package avuilder.core.entities.dimensional;
 
 import java.io.Serializable;
 
-import avuilder.core.error.AvuilderEntityException;
 import avuilder.core.error.ACErrors;
+import avuilder.core.error.AvuilderEntityException;
+import avuilder.core.utils.ACK;
+import avuilder.core.utils.ACValidations;
 
 /**
  * Represents a point in a Cartesian coordinate system.
@@ -27,6 +29,18 @@ public class Point implements Serializable {
 		this.z = z;
 	}
 
+	public static Point deepCopy(Point p) {
+		return new Point(p.x, p.y, p.z);
+	}
+
+	public static Vector difference(Point a, Point b) {
+		return new Vector(a.x - b.x, a.y - b.y, a.z - b.z);
+	}
+
+	public static Vector sum(Point a, Point b) {
+		return new Vector(a.x + b.x, a.y + b.y, a.z + b.z);
+	}
+
 	public boolean isDefined() {
 		if (x != null && y != null && z != null) {
 			return true;
@@ -38,6 +52,21 @@ public class Point implements Serializable {
 	public void validate() {
 		if (!isDefined())
 			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
+	}
+
+	public Double getAxisComponent(int axisId) {
+		ACValidations.validateAxesExistance(axisId);
+		switch (axisId) {
+		case ACK.AXIS_X:
+			return x;
+		case ACK.AXIS_Y:
+			return y;
+		case ACK.AXIS_Z:
+			return z;
+		default:
+			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
+		}
+
 	}
 
 	/*

@@ -32,17 +32,17 @@ public class ACValidations {
 		}
 	}
 
-	public static void validateDimensionsRepetition(int... dimensions) {
-		validateConstantsArgsRepetition(dimensions, ACK.ALL_AXES, ACErrors.AXIS_NOT_EXISTS);
+	public static void validateAxesRepetition(int... axesIds) {
+		validateConstantsArgsRepetition(axesIds, ACK.ALL_AXES, ACErrors.AXIS_NOT_EXISTS);
 	}
 
-	public static void validateDimensionsExistance(int... dimensions) {
-		validateConstantsArgsExistance(dimensions, ACK.ALL_AXES, ACErrors.AXIS_NOT_EXISTS);
+	public static void validateAxesExistance(int... axesIds) {
+		validateConstantsArgsExistance(axesIds, ACK.ALL_AXES, ACErrors.AXIS_NOT_EXISTS);
 	}
 
-	public static void validateDimensions(int... dimensions) {
-		validateDimensionsRepetition(dimensions);
-		validateDimensionsExistance(dimensions);
+	public static void validateAxes(int... axesIds) {
+		validateAxesRepetition(axesIds);
+		validateAxesExistance(axesIds);
 	}
 
 	public static void validateCornersExistance(int... corners) {

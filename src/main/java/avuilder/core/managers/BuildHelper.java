@@ -1,38 +1,43 @@
 package avuilder.core.managers;
 
+import avuilder.core.entities.dimensional.AxisEnds;
 import avuilder.core.entities.dimensional.Cuboid;
-import avuilder.core.entities.dimensional.Margins;
-import avuilder.core.error.AvuilderManagerException;
+import avuilder.core.entities.dimensional.Point;
 import avuilder.core.error.ACErrors;
+import avuilder.core.error.AvuilderCoreRuntimeException;
 import avuilder.core.utils.ACK;
 import avuilder.core.utils.ACValidations;
 
 public class BuildHelper {
 
-	public void escalate(Cuboid cuboid, double ratio, int... dimensions) {
+	public static void escalate(Cuboid cuboid, double ratio, int... axesIds) {
 		try {
 			cuboid.validate();
 			ACValidations.validateRatios(ratio);
-			ACValidations.validateDimensions(dimensions);
-			if (dimensions.length == 0) {
-				dimensions = ACK.ALL_AXES;
+			ACValidations.validateAxes(axesIds);
+
+			if (axesIds.length == 0) {
+				axesIds = ACK.ALL_AXES;
 			}
-			for (int d : dimensions) {
-				cuboid.setAxisUpper(d, cuboid.getAxisUpper(d) * ratio);
-				cuboid.setAxisLower(d, cuboid.getAxisLower(d) * ratio);
+
+			for (int axisId : axesIds) {
+				AxisEnds axis = cuboid.getAxis(axisId);
+				for (int endId : AxisEnds.ALL_ENDS) {
+					axis.setEnd(endId, axis.getEnd(endId) * ratio);
+				}
 			}
 		} catch (Exception e) {
-			throw new AvuilderManagerException(e);
+			throw new AvuilderCoreRuntimeException(e);
 		}
 	}
 
-	public void escalateByVolume(Cuboid cuboid, double finalVolume, int... dimensions) {
+	public static void escalateByVolume(Cuboid cuboid, double finalVolume, int... axes) {
 		try {
 			cuboid.validate();
 			ACValidations.validateVolumes(finalVolume);
-			ACValidations.validateDimensions(dimensions);
+			ACValidations.validateAxes(axes);
 			double ratio;
-			switch (dimensions.length) {
+			switch (axes.length) {
 			case 0:
 			case 3:
 				ratio = Math.cbrt(finalVolume / cuboid.getVolume());
@@ -44,15 +49,61 @@ public class BuildHelper {
 				ratio = finalVolume / cuboid.getVolume();
 				break;
 			default:
-				throw new AvuilderManagerException(ACErrors.AXIS_AMOUNT);
+				throw new AvuilderCoreRuntimeException(ACErrors.AXIS_AMOUNT);
 			}
-			escalate(cuboid, ratio, dimensions);
+			escalate(cuboid, ratio, axes);
 		} catch (Exception e) {
-			throw new AvuilderManagerException(e);
+			throw new AvuilderCoreRuntimeException(e);
 		}
 	}
 
-	public void matchFace(Cuboid cuboid, Cuboid matched, String matchedFace, Margins margins) {
+	public static void matchFace(Cuboid cuboid, Cuboid reference, int faceMatching, boolean move) {
+
+		try {
+			ACValidations.validateFacesExistance(faceMatching);
+
+			int[] axesIds = new int[2];
+			switch (faceMatching) {
+			case Cuboid.FACE_WALL_UY:
+			case Cuboid.FACE_WALL_LY:
+				axesIds[0] = ACK.AXIS_X;
+				axesIds[1] = ACK.AXIS_Z;
+				break;
+			case Cuboid.FACE_WALL_UZ:
+			case Cuboid.FACE_WALL_LZ:
+				axesIds[0] = ACK.AXIS_X;
+				axesIds[1] = ACK.AXIS_Y;
+				break;
+			case Cuboid.FACE_WALL_UX:
+			case Cuboid.FACE_WALL_LX:
+				axesIds[0] = ACK.AXIS_Y;
+				axesIds[1] = ACK.AXIS_Z;
+				break;
+			default:
+				throw new IllegalArgumentException(ACErrors.FACE_NOT_RECOGNIZED);
+			}
+
+			for (int axisId : axesIds) {
+				cuboid.getAxis(axisId).validate();
+				reference.getAxis(axisId).validate();
+				cuboid.getAxis(axisId).setLength(reference.getAxis(axisId).getLength());
+			}
+		} catch (Exception e) {
+			throw new AvuilderCoreRuntimeException(e);
+		}
+	}
+
+	public static void move(Cuboid cuboid, Point origen, Point destino) {
+		Point diff = Point.difference(origen, destino);
+		Point correccion = Point.sum(cuboid.getCenter(), diff);
+		cuboid.moveCenter(correccion);
+	}
+
+	public static void applyCrop() {
+
+	}
+
+	public static void applyOffset() {
 
 	}
 

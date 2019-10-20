@@ -1,9 +1,12 @@
 package avuilder.core.entities.game;
 
+import java.io.Serializable;
+
 /**
  * Block orientation
  */
-public class Orientation {
+public class Orientation implements Serializable {
+	private static final long serialVersionUID = -7559284143961816577L;
 
 	/**
 	 * Look component of the piece orientation.
@@ -71,6 +74,15 @@ public class Orientation {
 	 */
 	public void setUp(Integer up) {
 		this.up = up;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Orientation [look=" + look + ", up=" + up + "]";
 	}
 
 }

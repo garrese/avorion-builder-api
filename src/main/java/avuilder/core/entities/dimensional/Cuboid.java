@@ -3,8 +3,8 @@ package avuilder.core.entities.dimensional;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import avuilder.core.error.AvuilderEntityException;
 import avuilder.core.error.ACErrors;
+import avuilder.core.error.AvuilderEntityException;
 import avuilder.core.utils.ACK;
 
 /**
@@ -15,19 +15,20 @@ import avuilder.core.utils.ACK;
 public class Cuboid implements Serializable {
 	private static final long serialVersionUID = -5598838939653504628L;
 
-	public static final int FACE_BASE = 0;
-	public static final int FACE_TOP = 1;
-	public static final int FACE_WALL_1 = 2;
-	public static final int FACE_WALL_2 = 3;
-	public static final int FACE_WALL_3 = 4;
-	public static final int FACE_WALL_4 = 5;
+	public static final int FACE_WALL_UX = 0;
+	public static final int FACE_WALL_LX = 1;
+	public static final int FACE_WALL_UY = 2;
+	public static final int FACE_WALL_LY = 3;
+	public static final int FACE_WALL_UZ = 4;
+	public static final int FACE_WALL_LZ = 5;
+
 	public static final int[] ALL_FACES = new int[] { //@formatter:off hhh
-			FACE_BASE,
-			FACE_TOP,
-			FACE_WALL_1,
-			FACE_WALL_2,
-			FACE_WALL_3,
-			FACE_WALL_4
+			FACE_WALL_UX,
+			FACE_WALL_LX,
+			FACE_WALL_UY,
+			FACE_WALL_LY,
+			FACE_WALL_UZ,
+			FACE_WALL_LZ
 	}; //@formatter:on
 
 	public static final int CORNER_BASE_1 = 0;
@@ -78,6 +79,10 @@ public class Cuboid implements Serializable {
 		this.axisZ = axisZ;
 	}
 
+	public Cuboid(double lengthX, double lengthY, double lengthZ) {
+		setLengths(lengthX, lengthY, lengthZ);
+	}
+
 	public static Cuboid deepCopy(Cuboid cuboid) {
 		Cuboid c = null;
 		if (cuboid != null) {
@@ -113,29 +118,29 @@ public class Cuboid implements Serializable {
 		return p;
 	}
 
-	public Point getFaceCenter(int face) {
+	public Point getFaceCenter(int faceId) {
 		Point p = null;
 
 		if (isDefined()) {
-			p = new Point();
-			switch (face) {
-			case FACE_BASE:
-				p.y = getAxisY().getLowerEnd();
-				break;
-			case FACE_TOP:
-				p.y = getAxisY().getUpperEnd();
-				break;
-			case FACE_WALL_1:
-				p.z = getAxisZ().getUpperEnd();
-				break;
-			case FACE_WALL_2:
+			p = getCenter();
+			switch (faceId) {
+			case FACE_WALL_UX:
 				p.x = getAxisX().getUpperEnd();
 				break;
-			case FACE_WALL_3:
-				p.z = getAxisZ().getLowerEnd();
-				break;
-			case FACE_WALL_4:
+			case FACE_WALL_LX:
 				p.x = getAxisX().getLowerEnd();
+				break;
+			case FACE_WALL_UY:
+				p.y = getAxisY().getUpperEnd();
+				break;
+			case FACE_WALL_LY:
+				p.y = getAxisY().getLowerEnd();
+				break;
+			case FACE_WALL_UZ:
+				p.z = getAxisZ().getUpperEnd();
+				break;
+			case FACE_WALL_LZ:
+				p.z = getAxisZ().getLowerEnd();
 				break;
 			default:
 				throw new IllegalArgumentException(ACErrors.FACE_NOT_RECOGNIZED);
@@ -145,12 +150,18 @@ public class Cuboid implements Serializable {
 		return p;
 	}
 
-	public Point getCorner(int corner) {
+	public void moveCenter(Point point) {
+		for (int axisId : ACK.ALL_AXES) {
+			getAxis(axisId).moveCenter(point.getAxisComponent(axisId));
+		}
+	}
+
+	public Point getCorner(int cornerId) {
 		Point p = null;
 
 		if (isDefined()) {
 			p = new Point();
-			switch (corner) {
+			switch (cornerId) {
 			case CORNER_BASE_1:
 				p.x = getAxisX().getLowerEnd();
 				p.y = getAxisY().getLowerEnd();
@@ -274,59 +285,27 @@ public class Cuboid implements Serializable {
 		return list;
 	}
 
-	public Double getAxisUpper(int axis) {
-		switch (axis) {
+	public AxisEnds getAxis(int axisId) {
+		switch (axisId) {
 		case ACK.AXIS_X:
-			return getAxisX().getUpperEnd();
+			return getAxisX();
 		case ACK.AXIS_Y:
-			return getAxisY().getUpperEnd();
+			return getAxisY();
 		case ACK.AXIS_Z:
-			return getAxisZ().getUpperEnd();
+			return getAxisZ();
 		default:
 			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
 		}
 	}
 
-	public void setAxisUpper(int axis, Double uD) {
-		switch (axis) {
+	public void setAxis(int axisId, AxisEnds axis) {
+		switch (axisId) {
 		case ACK.AXIS_X:
-			getAxisX().setUpperEnd(uD);
-			break;
+			setAxisX(axis);
 		case ACK.AXIS_Y:
-			getAxisY().setUpperEnd(uD);
-			break;
+			setAxisY(axis);
 		case ACK.AXIS_Z:
-			getAxisZ().setUpperEnd(uD);
-			break;
-		default:
-			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
-		}
-	}
-
-	public Double getAxisLower(int axis) {
-		switch (axis) {
-		case ACK.AXIS_X:
-			return getAxisX().getLowerEnd();
-		case ACK.AXIS_Y:
-			return getAxisY().getLowerEnd();
-		case ACK.AXIS_Z:
-			return getAxisZ().getLowerEnd();
-		default:
-			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
-		}
-	}
-
-	public void setAxisLower(int axis, Double lD) {
-		switch (axis) {
-		case ACK.AXIS_X:
-			getAxisX().setLowerEnd(lD);
-			break;
-		case ACK.AXIS_Y:
-			getAxisY().setLowerEnd(lD);
-			break;
-		case ACK.AXIS_Z:
-			getAxisZ().setLowerEnd(lD);
-			break;
+			setAxisZ(axis);
 		default:
 			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
 		}
@@ -338,9 +317,14 @@ public class Cuboid implements Serializable {
 		axisZ.setLength(lengthZ);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "Cuboid [axisX=" + axisX + ", axisY=" + axisY + ", axisZ=" + axisZ + "]";
+		return "Cuboid [volume=" + getVolume() + ", center=" + getCenter() + ", axisX=" + axisX + ", axisY=" + axisY
+				+ ", axisZ=" + axisZ + "]";
 	}
 
 	@Override

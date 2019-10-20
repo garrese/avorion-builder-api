@@ -2,8 +2,8 @@ package avuilder.core.entities.dimensional;
 
 import java.io.Serializable;
 
-import avuilder.core.error.AvuilderEntityException;
 import avuilder.core.error.ACErrors;
+import avuilder.core.error.AvuilderEntityException;
 import avuilder.core.utils.ACValidations;
 
 /**
@@ -25,8 +25,8 @@ public class AxisEnds implements Serializable {
 	protected Double upperEnd;
 
 	public static final int END_UPPER = 0;
-
 	public static final int END_LOWER = 1;
+	public static final int[] ALL_ENDS = new int[] { END_UPPER, END_LOWER };
 
 	public AxisEnds() {
 	}
@@ -88,6 +88,13 @@ public class AxisEnds implements Serializable {
 			return null;
 	}
 
+	public void moveCenter(double destination) {
+		validate();
+		double dif = destination - getCenter();
+		upperEnd += dif;
+		lowerEnd += dif;
+	}
+
 	public void setLength(double length) {
 		ACValidations.validateLengths(length);
 
@@ -96,8 +103,8 @@ public class AxisEnds implements Serializable {
 			center = getCenter();
 		}
 
-		upperEnd = center + getHalf();
-		lowerEnd = center - getHalf();
+		upperEnd = center + length / 2;
+		lowerEnd = center - length / 2;
 	}
 
 	public Double getHalf() {
@@ -150,12 +157,23 @@ public class AxisEnds implements Serializable {
 		this.upperEnd = uP;
 	}
 
-	public Double getEnd(int end) {
-		switch (end) {
+	public Double getEnd(int endId) {
+		switch (endId) {
 		case AxisEnds.END_UPPER:
 			return upperEnd;
 		case AxisEnds.END_LOWER:
 			return lowerEnd;
+		default:
+			throw new IllegalArgumentException(ACErrors.END_NOT_RECOGNIZED);
+		}
+	}
+
+	public void setEnd(int endId, Double end) {
+		switch (endId) {
+		case AxisEnds.END_UPPER:
+			upperEnd = end;
+		case AxisEnds.END_LOWER:
+			lowerEnd = end;
 		default:
 			throw new IllegalArgumentException(ACErrors.END_NOT_RECOGNIZED);
 		}
@@ -198,7 +216,8 @@ public class AxisEnds implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "AxisLine [uP=" + upperEnd + ", lP=" + lowerEnd + "]";
+		return "AxisEnds [length=" + getLength() + " lowerEnd=" + lowerEnd + ", upperEnd=" + upperEnd + ", center="
+				+ getCenter() + "]";
 	}
 
 }
