@@ -3,19 +3,19 @@ package avuilder.core.managers;
 import avuilder.core.entities.dimensional.Cuboid;
 import avuilder.core.entities.dimensional.Margins;
 import avuilder.core.error.AvuilderManagerException;
-import avuilder.core.error.Errors;
-import avuilder.core.utils.K;
-import avuilder.core.utils.Validations;
+import avuilder.core.error.ACErrors;
+import avuilder.core.utils.ACK;
+import avuilder.core.utils.ACValidations;
 
 public class BuildHelper {
 
 	public void escalate(Cuboid cuboid, double ratio, int... dimensions) {
 		try {
 			cuboid.validate();
-			Validations.validateRatios(ratio);
-			Validations.validateDimensions(dimensions);
+			ACValidations.validateRatios(ratio);
+			ACValidations.validateDimensions(dimensions);
 			if (dimensions.length == 0) {
-				dimensions = K.ALL_AXES;
+				dimensions = ACK.ALL_AXES;
 			}
 			for (int d : dimensions) {
 				cuboid.setAxisUpper(d, cuboid.getAxisUpper(d) * ratio);
@@ -29,8 +29,8 @@ public class BuildHelper {
 	public void escalateByVolume(Cuboid cuboid, double finalVolume, int... dimensions) {
 		try {
 			cuboid.validate();
-			Validations.validateVolumes(finalVolume);
-			Validations.validateDimensions(dimensions);
+			ACValidations.validateVolumes(finalVolume);
+			ACValidations.validateDimensions(dimensions);
 			double ratio;
 			switch (dimensions.length) {
 			case 0:
@@ -44,7 +44,7 @@ public class BuildHelper {
 				ratio = finalVolume / cuboid.getVolume();
 				break;
 			default:
-				throw new AvuilderManagerException(Errors.AXIS_AMOUNT);
+				throw new AvuilderManagerException(ACErrors.AXIS_AMOUNT);
 			}
 			escalate(cuboid, ratio, dimensions);
 		} catch (Exception e) {

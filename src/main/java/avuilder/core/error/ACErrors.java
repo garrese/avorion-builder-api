@@ -1,6 +1,6 @@
 package avuilder.core.error;
 
-public class Errors {
+public class ACErrors {
 
 	public static final String CORNER_NOT_EXISTS = "Invalid corner. Corner does not exist.";
 	public static final String CORNER_NOT_RECOGNIZED = "Corner not recognized.";

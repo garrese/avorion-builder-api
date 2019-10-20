@@ -3,7 +3,8 @@ package avuilder.core.entities.dimensional;
 import java.io.Serializable;
 
 import avuilder.core.error.AvuilderEntityException;
-import avuilder.core.error.Errors;
+import avuilder.core.error.ACErrors;
+import avuilder.core.utils.ACValidations;
 
 /**
  * Represents a line in a single coordinate axis.
@@ -22,6 +23,10 @@ public class AxisEnds implements Serializable {
 	 * Upper point of the line in the coordinate axis.
 	 */
 	protected Double upperEnd;
+
+	public static final int END_UPPER = 0;
+
+	public static final int END_LOWER = 1;
 
 	public AxisEnds() {
 	}
@@ -54,7 +59,7 @@ public class AxisEnds implements Serializable {
 
 	public void validate() {
 		if (!isDefined())
-			throw new AvuilderEntityException(Errors.NOT_SUFFICIENTLY_DEFINED);
+			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	/**
@@ -64,8 +69,10 @@ public class AxisEnds implements Serializable {
 	 * @throws IllegalStateException if {@link #upperEnd} or {@link #lowerEnd} are null.
 	 */
 	public Double getCenter() {
-		validate();
-		return lowerEnd + (upperEnd - lowerEnd) / 2;
+		if (isDefined())
+			return lowerEnd + (upperEnd - lowerEnd) / 2;
+		else
+			return null;
 	}
 
 	/**
@@ -75,8 +82,30 @@ public class AxisEnds implements Serializable {
 	 * @throws IllegalStateException if {@link #upperEnd} or {@link #lowerEnd} are null.
 	 */
 	public Double getLength() {
-		validate();
-		return upperEnd - lowerEnd;
+		if (isDefined())
+			return upperEnd - lowerEnd;
+		else
+			return null;
+	}
+
+	public void setLength(double length) {
+		ACValidations.validateLengths(length);
+
+		double center = 0;
+		if (isDefined()) {
+			center = getCenter();
+		}
+
+		upperEnd = center + getHalf();
+		lowerEnd = center - getHalf();
+	}
+
+	public Double getHalf() {
+		if (isDefined()) {
+			return getLength() / 2;
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -119,6 +148,17 @@ public class AxisEnds implements Serializable {
 		if (uP != null && lowerEnd != null && uP <= lowerEnd)
 			throw new IllegalArgumentException("Upper point must be higher than lower point.");
 		this.upperEnd = uP;
+	}
+
+	public Double getEnd(int end) {
+		switch (end) {
+		case AxisEnds.END_UPPER:
+			return upperEnd;
+		case AxisEnds.END_LOWER:
+			return lowerEnd;
+		default:
+			throw new IllegalArgumentException(ACErrors.END_NOT_RECOGNIZED);
+		}
 	}
 
 	@Override

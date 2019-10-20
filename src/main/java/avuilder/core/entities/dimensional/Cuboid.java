@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import avuilder.core.error.AvuilderEntityException;
-import avuilder.core.error.Errors;
-import avuilder.core.utils.K;
+import avuilder.core.error.ACErrors;
+import avuilder.core.utils.ACK;
 
 /**
  * Represents a cuboid in a Cartesian coordinate system.
@@ -14,6 +14,40 @@ import avuilder.core.utils.K;
  */
 public class Cuboid implements Serializable {
 	private static final long serialVersionUID = -5598838939653504628L;
+
+	public static final int FACE_BASE = 0;
+	public static final int FACE_TOP = 1;
+	public static final int FACE_WALL_1 = 2;
+	public static final int FACE_WALL_2 = 3;
+	public static final int FACE_WALL_3 = 4;
+	public static final int FACE_WALL_4 = 5;
+	public static final int[] ALL_FACES = new int[] { //@formatter:off hhh
+			FACE_BASE,
+			FACE_TOP,
+			FACE_WALL_1,
+			FACE_WALL_2,
+			FACE_WALL_3,
+			FACE_WALL_4
+	}; //@formatter:on
+
+	public static final int CORNER_BASE_1 = 0;
+	public static final int CORNER_BASE_2 = 1;
+	public static final int CORNER_BASE_3 = 2;
+	public static final int CORNER_BASE_4 = 3;
+	public static final int CORNER_TOP_1 = 4;
+	public static final int CORNER_TOP_2 = 5;
+	public static final int CORNER_TOP_3 = 6;
+	public static final int CORNER_TOP_4 = 7;
+	public static final int[] ALL_CORNERS = new int[] { //@formatter:off
+			CORNER_BASE_1,
+			CORNER_BASE_2,
+			CORNER_BASE_3,
+			CORNER_BASE_4,
+			CORNER_TOP_1,
+			CORNER_TOP_2,
+			CORNER_TOP_3,
+			CORNER_TOP_4
+	}; //@formatter:on
 
 	/**
 	 * X axis line.
@@ -56,8 +90,11 @@ public class Cuboid implements Serializable {
 	}
 
 	public Double getVolume() {
-		validate();
-		return axisX.getLength() * axisY.getLength() * axisZ.getLength();
+		if (isDefined()) {
+			return axisX.getLength() * axisY.getLength() * axisZ.getLength();
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -66,91 +103,97 @@ public class Cuboid implements Serializable {
 	 * @return the central point of the cuboid.
 	 */
 	public Point getCenter() {
-		validate();
-		Point p = new Point();
-		p.x = axisX.getCenter();
-		p.y = axisY.getCenter();
-		p.z = axisZ.getCenter();
+		Point p = null;
+		if (isDefined()) {
+			p = new Point();
+			p.x = axisX.getCenter();
+			p.y = axisY.getCenter();
+			p.z = axisZ.getCenter();
+		}
 		return p;
 	}
 
 	public Point getFaceCenter(int face) {
-		validate();
-		Point p = getCenter();
+		Point p = null;
 
-		switch (face) {
-		case K.FACE_BASE:
-			p.y = getAxisY().getLowerEnd();
-			break;
-		case K.FACE_TOP:
-			p.y = getAxisY().getUpperEnd();
-			break;
-		case K.FACE_WALL_1:
-			p.z = getAxisZ().getUpperEnd();
-			break;
-		case K.FACE_WALL_2:
-			p.x = getAxisX().getUpperEnd();
-			break;
-		case K.FACE_WALL_3:
-			p.z = getAxisZ().getLowerEnd();
-			break;
-		case K.FACE_WALL_4:
-			p.x = getAxisX().getLowerEnd();
-			break;
-		default:
-			throw new IllegalArgumentException(Errors.FACE_NOT_RECOGNIZED);
+		if (isDefined()) {
+			p = new Point();
+			switch (face) {
+			case FACE_BASE:
+				p.y = getAxisY().getLowerEnd();
+				break;
+			case FACE_TOP:
+				p.y = getAxisY().getUpperEnd();
+				break;
+			case FACE_WALL_1:
+				p.z = getAxisZ().getUpperEnd();
+				break;
+			case FACE_WALL_2:
+				p.x = getAxisX().getUpperEnd();
+				break;
+			case FACE_WALL_3:
+				p.z = getAxisZ().getLowerEnd();
+				break;
+			case FACE_WALL_4:
+				p.x = getAxisX().getLowerEnd();
+				break;
+			default:
+				throw new IllegalArgumentException(ACErrors.FACE_NOT_RECOGNIZED);
+			}
 		}
 
 		return p;
 	}
 
 	public Point getCorner(int corner) {
-		validate();
-		Point p = new Point();
+		Point p = null;
 
-		switch (corner) {
-		case K.CORNER_BASE_1:
-			p.x = getAxisX().getLowerEnd();
-			p.y = getAxisY().getLowerEnd();
-			p.z = getAxisZ().getLowerEnd();
-			break;
-		case K.CORNER_BASE_2:
-			p.x = getAxisX().getUpperEnd();
-			p.y = getAxisY().getLowerEnd();
-			p.z = getAxisZ().getLowerEnd();
-			break;
-		case K.CORNER_BASE_3:
-			p.x = getAxisX().getUpperEnd();
-			p.y = getAxisY().getLowerEnd();
-			p.z = getAxisZ().getUpperEnd();
-			break;
-		case K.CORNER_BASE_4:
-			p.x = getAxisX().getLowerEnd();
-			p.y = getAxisY().getLowerEnd();
-			p.z = getAxisZ().getUpperEnd();
-			break;
-		case K.CORNER_TOP_1:
-			p.x = getAxisX().getLowerEnd();
-			p.y = getAxisY().getUpperEnd();
-			p.z = getAxisZ().getLowerEnd();
-			break;
-		case K.CORNER_TOP_2:
-			p.x = getAxisX().getUpperEnd();
-			p.y = getAxisY().getUpperEnd();
-			p.z = getAxisZ().getLowerEnd();
-			break;
-		case K.CORNER_TOP_3:
-			p.x = getAxisX().getUpperEnd();
-			p.y = getAxisY().getUpperEnd();
-			p.z = getAxisZ().getUpperEnd();
-			break;
-		case K.CORNER_TOP_4:
-			p.x = getAxisX().getLowerEnd();
-			p.y = getAxisY().getUpperEnd();
-			p.z = getAxisZ().getUpperEnd();
-			break;
-		default:
-			throw new IllegalArgumentException(Errors.CORNER_NOT_RECOGNIZED);
+		if (isDefined()) {
+			p = new Point();
+			switch (corner) {
+			case CORNER_BASE_1:
+				p.x = getAxisX().getLowerEnd();
+				p.y = getAxisY().getLowerEnd();
+				p.z = getAxisZ().getLowerEnd();
+				break;
+			case CORNER_BASE_2:
+				p.x = getAxisX().getUpperEnd();
+				p.y = getAxisY().getLowerEnd();
+				p.z = getAxisZ().getLowerEnd();
+				break;
+			case CORNER_BASE_3:
+				p.x = getAxisX().getUpperEnd();
+				p.y = getAxisY().getLowerEnd();
+				p.z = getAxisZ().getUpperEnd();
+				break;
+			case CORNER_BASE_4:
+				p.x = getAxisX().getLowerEnd();
+				p.y = getAxisY().getLowerEnd();
+				p.z = getAxisZ().getUpperEnd();
+				break;
+			case CORNER_TOP_1:
+				p.x = getAxisX().getLowerEnd();
+				p.y = getAxisY().getUpperEnd();
+				p.z = getAxisZ().getLowerEnd();
+				break;
+			case CORNER_TOP_2:
+				p.x = getAxisX().getUpperEnd();
+				p.y = getAxisY().getUpperEnd();
+				p.z = getAxisZ().getLowerEnd();
+				break;
+			case CORNER_TOP_3:
+				p.x = getAxisX().getUpperEnd();
+				p.y = getAxisY().getUpperEnd();
+				p.z = getAxisZ().getUpperEnd();
+				break;
+			case CORNER_TOP_4:
+				p.x = getAxisX().getLowerEnd();
+				p.y = getAxisY().getUpperEnd();
+				p.z = getAxisZ().getUpperEnd();
+				break;
+			default:
+				throw new IllegalArgumentException(ACErrors.CORNER_NOT_RECOGNIZED);
+			}
 		}
 
 		return p;
@@ -166,7 +209,7 @@ public class Cuboid implements Serializable {
 
 	public void validate() {
 		if (!isDefined())
-			throw new AvuilderEntityException(Errors.NOT_SUFFICIENTLY_DEFINED);
+			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	/**
@@ -231,139 +274,68 @@ public class Cuboid implements Serializable {
 		return list;
 	}
 
-	/**
-	 * Sets the {@link #axisX} upper end.
-	 * 
-	 * @return the {@link #axisX} upper end.
-	 */
-	public Double getUpperX() {
-		return getAxisX().getUpperEnd();
-	}
-
-	public void setUpperX(Double uX) {
-		getAxisX().setUpperEnd(uX);
-	}
-
-	public Double geLowerX() {
-		return getAxisX().getLowerEnd();
-	}
-
-	public void setLowerX(Double lX) {
-		getAxisX().setLowerEnd(lX);
-	}
-
-	public Double getUpperY() {
-		return getAxisY().getUpperEnd();
-	}
-
-	public void setUpperY(Double uY) {
-		getAxisY().setUpperEnd(uY);
-	}
-
-	public Double getLowerY() {
-		return getAxisY().getLowerEnd();
-	}
-
-	public void setLowerY(Double lY) {
-		getAxisY().setLowerEnd(lY);
-	}
-
-	public Double getUpperZ() {
-		return getAxisZ().getUpperEnd();
-	}
-
-	public void setUpperZ(Double uZ) {
-		getAxisZ().setUpperEnd(uZ);
-	}
-
-	public Double getLowerZ() {
-		return getAxisZ().getLowerEnd();
-	}
-
-	public void setLowerZ(Double lZ) {
-		getAxisZ().setLowerEnd(lZ);
-	}
-
 	public Double getAxisUpper(int axis) {
 		switch (axis) {
-		case K.X:
-			return getUpperX();
-		case K.Y:
-			return getUpperY();
-		case K.Z:
-			return getUpperZ();
+		case ACK.AXIS_X:
+			return getAxisX().getUpperEnd();
+		case ACK.AXIS_Y:
+			return getAxisY().getUpperEnd();
+		case ACK.AXIS_Z:
+			return getAxisZ().getUpperEnd();
 		default:
-			throw new IllegalArgumentException(Errors.AXIS_NOT_RECOGNIZED);
+			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
 		}
 	}
 
 	public void setAxisUpper(int axis, Double uD) {
 		switch (axis) {
-		case K.X:
-			setUpperX(uD);
+		case ACK.AXIS_X:
+			getAxisX().setUpperEnd(uD);
 			break;
-		case K.Y:
-			setUpperY(uD);
+		case ACK.AXIS_Y:
+			getAxisY().setUpperEnd(uD);
 			break;
-		case K.Z:
-			setUpperZ(uD);
+		case ACK.AXIS_Z:
+			getAxisZ().setUpperEnd(uD);
 			break;
 		default:
-			throw new IllegalArgumentException(Errors.AXIS_NOT_RECOGNIZED);
+			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
 		}
 	}
 
 	public Double getAxisLower(int axis) {
 		switch (axis) {
-		case K.X:
-			return geLowerX();
-		case K.Y:
-			return getLowerY();
-		case K.Z:
-			return getLowerZ();
+		case ACK.AXIS_X:
+			return getAxisX().getLowerEnd();
+		case ACK.AXIS_Y:
+			return getAxisY().getLowerEnd();
+		case ACK.AXIS_Z:
+			return getAxisZ().getLowerEnd();
 		default:
-			throw new IllegalArgumentException(Errors.AXIS_NOT_RECOGNIZED);
+			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
 		}
 	}
 
 	public void setAxisLower(int axis, Double lD) {
 		switch (axis) {
-		case K.X:
-			setLowerX(lD);
+		case ACK.AXIS_X:
+			getAxisX().setLowerEnd(lD);
 			break;
-		case K.Y:
-			setLowerY(lD);
+		case ACK.AXIS_Y:
+			getAxisY().setLowerEnd(lD);
 			break;
-		case K.Z:
-			setLowerZ(lD);
+		case ACK.AXIS_Z:
+			getAxisZ().setLowerEnd(lD);
 			break;
 		default:
-			throw new IllegalArgumentException(Errors.AXIS_NOT_RECOGNIZED);
+			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
 		}
 	}
 
-	public Double getAxisEnd(int axis, int end) {
-		switch (end) {
-		case K.END_UPPER:
-			return getAxisUpper(axis);
-		case K.END_LOWER:
-			return getAxisLower(axis);
-		default:
-			throw new IllegalArgumentException(Errors.END_NOT_RECOGNIZED);
-		}
-	}
-
-	public void setAxisEnd(int dimension, int end, Double l) {
-		switch (end) {
-		case K.END_UPPER:
-			setAxisUpper(dimension, l);
-			break;
-		case K.END_LOWER:
-			setAxisLower(dimension, l);
-			break;
-		default:
-			throw new IllegalArgumentException(Errors.END_NOT_RECOGNIZED);
-		}
+	public void setLengths(double lengthX, double lengthY, double lengthZ) {
+		axisX.setLength(lengthX);
+		axisY.setLength(lengthY);
+		axisZ.setLength(lengthZ);
 	}
 
 	@Override

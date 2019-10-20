@@ -3,14 +3,15 @@ package avuilder.core.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import avuilder.core.error.Errors;
+import avuilder.core.entities.dimensional.Cuboid;
+import avuilder.core.error.ACErrors;
 
-public class Validations {
+public class ACValidations {
 
 	public static void validateVolumes(double... volume) {
 		for (Double vol : volume) {
 			if (vol <= 0) {
-				throw new IllegalArgumentException(Errors.VOLUME_NOT_POSITIVE);
+				throw new IllegalArgumentException(ACErrors.VOLUME_NOT_POSITIVE);
 			}
 		}
 	}
@@ -18,7 +19,7 @@ public class Validations {
 	public static void validateLengths(double... length) {
 		for (Double len : length) {
 			if (len <= 0) {
-				throw new IllegalArgumentException(Errors.LENGTH_NOT_POSITIVE);
+				throw new IllegalArgumentException(ACErrors.LENGTH_NOT_POSITIVE);
 			}
 		}
 	}
@@ -26,17 +27,17 @@ public class Validations {
 	public static void validateRatios(double... ratio) {
 		for (Double rat : ratio) {
 			if (rat <= 0) {
-				throw new IllegalArgumentException(Errors.RATIO_NOT_POSITIVE);
+				throw new IllegalArgumentException(ACErrors.RATIO_NOT_POSITIVE);
 			}
 		}
 	}
 
 	public static void validateDimensionsRepetition(int... dimensions) {
-		validateConstantsArgsRepetition(dimensions, K.ALL_AXES, Errors.AXIS_NOT_EXISTS);
+		validateConstantsArgsRepetition(dimensions, ACK.ALL_AXES, ACErrors.AXIS_NOT_EXISTS);
 	}
 
 	public static void validateDimensionsExistance(int... dimensions) {
-		validateConstantsArgsExistance(dimensions, K.ALL_AXES, Errors.AXIS_NOT_EXISTS);
+		validateConstantsArgsExistance(dimensions, ACK.ALL_AXES, ACErrors.AXIS_NOT_EXISTS);
 	}
 
 	public static void validateDimensions(int... dimensions) {
@@ -45,11 +46,11 @@ public class Validations {
 	}
 
 	public static void validateCornersExistance(int... corners) {
-		validateConstantsArgsExistance(corners, K.ALL_CORNERS, Errors.CORNER_NOT_EXISTS);
+		validateConstantsArgsExistance(corners, Cuboid.ALL_CORNERS, ACErrors.CORNER_NOT_EXISTS);
 	}
 
 	public static void validateFacesExistance(int... faces) {
-		validateConstantsArgsExistance(faces, K.ALL_FACES, Errors.FACE_NOT_EXISTS);
+		validateConstantsArgsExistance(faces, Cuboid.ALL_FACES, ACErrors.FACE_NOT_EXISTS);
 	}
 
 	public static void validateConstantsArgsExistance(int[] validatingArgs, int[] allConstants, String errorMsg) {

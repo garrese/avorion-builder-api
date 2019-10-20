@@ -3,7 +3,7 @@ package avuilder.core.entities.dimensional;
 import java.io.Serializable;
 
 import avuilder.core.error.AvuilderEntityException;
-import avuilder.core.error.Errors;
+import avuilder.core.error.ACErrors;
 
 public class Line implements Serializable {
 	private static final long serialVersionUID = -1723294270396933910L;
@@ -32,21 +32,26 @@ public class Line implements Serializable {
 
 	public void validate() {
 		if (!isDefined())
-			throw new AvuilderEntityException(Errors.NOT_SUFFICIENTLY_DEFINED);
+			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
-	public double getLength() {
-		validate();
-		return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(p1.z - p2.z, 2));
+	public Double getLength() {
+		if (!isDefined())
+			return null;
+		else
+			return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(p1.z - p2.z, 2));
 	}
 
 	public Point getCenter() {
-		validate();
-		Point p = new Point();
-		p.x = (p1.x + p2.x) / 2;
-		p.y = (p1.y + p2.y) / 2;
-		p.z = (p1.z + p2.z) / 2;
-		return p;
+		if (!isDefined()) {
+			return null;
+		} else {
+			Point p = new Point();
+			p.x = (p1.x + p2.x) / 2;
+			p.y = (p1.y + p2.y) / 2;
+			p.z = (p1.z + p2.z) / 2;
+			return p;
+		}
 	}
 
 	/**

@@ -3,7 +3,7 @@ package avuilder.core.entities.dimensional;
 import java.io.Serializable;
 
 import avuilder.core.error.AvuilderEntityException;
-import avuilder.core.error.Errors;
+import avuilder.core.error.ACErrors;
 
 /**
  * Represents a point in a Cartesian coordinate system.
@@ -37,7 +37,7 @@ public class Point implements Serializable {
 
 	public void validate() {
 		if (!isDefined())
-			throw new AvuilderEntityException(Errors.NOT_SUFFICIENTLY_DEFINED);
+			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	/*
