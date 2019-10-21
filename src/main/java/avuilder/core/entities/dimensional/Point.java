@@ -33,12 +33,16 @@ public class Point implements Serializable {
 		return new Point(p.x, p.y, p.z);
 	}
 
-	public static Vector difference(Point a, Point b) {
-		return new Vector(a.x - b.x, a.y - b.y, a.z - b.z);
+	public static Point vectorSum(Point a, Vector b) {
+		a.validate();
+		b.validate();
+		return new Point(a.x + b.x, a.y + b.y, a.z + b.z);
 	}
 
-	public static Vector sum(Point a, Point b) {
-		return new Vector(a.x + b.x, a.y + b.y, a.z + b.z);
+	public static Point vectorSub(Point a, Vector b) {
+		a.validate();
+		b.validate();
+		return new Point(a.x - b.x, a.y - b.y, a.z - b.z);
 	}
 
 	public boolean isDefined() {

@@ -13,23 +13,7 @@ import avuilder.core.utils.ACK;
  * The cuboid is defined by one {@link AxisEnds} in each of the three coordinate axis.
  */
 public class Cuboid implements Serializable {
-	private static final long serialVersionUID = -5598838939653504628L;
 
-	public static final int FACE_WALL_UX = 0;
-	public static final int FACE_WALL_LX = 1;
-	public static final int FACE_WALL_UY = 2;
-	public static final int FACE_WALL_LY = 3;
-	public static final int FACE_WALL_UZ = 4;
-	public static final int FACE_WALL_LZ = 5;
-
-	public static final int[] ALL_FACES = new int[] { //@formatter:off hhh
-			FACE_WALL_UX,
-			FACE_WALL_LX,
-			FACE_WALL_UY,
-			FACE_WALL_LY,
-			FACE_WALL_UZ,
-			FACE_WALL_LZ
-	}; //@formatter:on
 
 	public static final int CORNER_BASE_1 = 0;
 	public static final int CORNER_BASE_2 = 1;
@@ -39,7 +23,7 @@ public class Cuboid implements Serializable {
 	public static final int CORNER_TOP_2 = 5;
 	public static final int CORNER_TOP_3 = 6;
 	public static final int CORNER_TOP_4 = 7;
-	public static final int[] ALL_CORNERS = new int[] { //@formatter:off
+	public static final int[] CORNERS = new int[] { // @formatter:off
 			CORNER_BASE_1,
 			CORNER_BASE_2,
 			CORNER_BASE_3,
@@ -49,6 +33,36 @@ public class Cuboid implements Serializable {
 			CORNER_TOP_3,
 			CORNER_TOP_4
 	}; //@formatter:on
+
+	public static final int FACE_WALL_XL = 1;
+	public static final int FACE_WALL_XU = 0;
+	public static final int FACE_WALL_YL = 3;
+	public static final int FACE_WALL_YU = 2;
+	public static final int FACE_WALL_ZL = 5;
+	public static final int FACE_WALL_ZU = 4;
+	public static final int[] FACES = new int[] { // @formatter:off
+			FACE_WALL_XU,
+			FACE_WALL_XL,
+			FACE_WALL_YU, 
+			FACE_WALL_YL, 
+			FACE_WALL_ZU, 
+			FACE_WALL_ZL
+	}; // @formatter:on
+
+	private static final long serialVersionUID = -5598838939653504628L;
+
+	public static Cuboid deepCopy(Cuboid cuboid) {
+		Cuboid c = null;
+		if (cuboid != null) {
+			c = new Cuboid();
+			c.setIndex(cuboid.getIndex());
+			c.setParent(Cuboid.deepCopy(cuboid.getParent()));
+			c.setAxisX(AxisEnds.deepCopy(cuboid.getAxisX()));
+			c.setAxisY(AxisEnds.deepCopy(cuboid.getAxisY()));
+			c.setAxisZ(AxisEnds.deepCopy(cuboid.getAxisZ()));
+		}
+		return c;
+	}
 
 	/**
 	 * X axis line.
@@ -64,6 +78,16 @@ public class Cuboid implements Serializable {
 	 * Z axis line.
 	 */
 	private AxisEnds axisZ = new AxisEnds();
+
+	/**
+	 * Cuboid's index in structure.
+	 */
+	private Integer index;
+
+	/**
+	 * Cuboid's parent index in a structure.
+	 */
+	private Cuboid parent;
 
 	public Cuboid() {
 	}
@@ -83,23 +107,107 @@ public class Cuboid implements Serializable {
 		setLengths(lengthX, lengthY, lengthZ);
 	}
 
-	public static Cuboid deepCopy(Cuboid cuboid) {
-		Cuboid c = null;
-		if (cuboid != null) {
-			c = new Cuboid();
-			c.setAxisX(AxisEnds.deepCopy(cuboid.getAxisX()));
-			c.setAxisY(AxisEnds.deepCopy(cuboid.getAxisY()));
-			c.setAxisZ(AxisEnds.deepCopy(cuboid.getAxisZ()));
-		}
-		return c;
+	public Cuboid(Integer index) {
+		super();
+		this.index = index;
 	}
 
-	public Double getVolume() {
-		if (isDefined()) {
-			return axisX.getLength() * axisY.getLength() * axisZ.getLength();
-		} else {
-			return null;
+	public Cuboid(Integer index, Cuboid parent) {
+		super();
+		this.index = index;
+		this.parent = parent;
+	}
+
+	public void attachTo(Cuboid destinationCuboid, int destinationFaceId) {
+		Point faceOrigin = null;
+		Point faceDestination = null;
+
+		validate();
+		destinationCuboid.validate();
+
+		faceDestination = destinationCuboid.getFaceCenter(destinationFaceId);
+		faceOrigin = getFaceCenter(getOppositeFaceId(destinationFaceId));
+		Vector centerToOwnFace = Point.pointDiff(getCenter(), faceOrigin);
+
+		moveCenterToPoint(faceDestination);
+		moveCenterByVector(centerToOwnFace);
+
+		parent = destinationCuboid;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cuboid other = (Cuboid) obj;
+		if (axisX == null) {
+			if (other.axisX != null)
+				return false;
+		} else if (!axisX.equals(other.axisX))
+			return false;
+		if (axisY == null) {
+			if (other.axisY != null)
+				return false;
+		} else if (!axisY.equals(other.axisY))
+			return false;
+		if (axisZ == null) {
+			if (other.axisZ != null)
+				return false;
+		} else if (!axisZ.equals(other.axisZ))
+			return false;
+		return true;
+	}
+
+	public ArrayList<AxisEnds> getAllAxes() {
+		ArrayList<AxisEnds> list = new ArrayList<AxisEnds>();
+		list.add(axisX);
+		list.add(axisY);
+		list.add(axisZ);
+		return list;
+	}
+
+	public AxisEnds getAxis(int axisId) {
+		switch (axisId) {
+		case ACK.AXIS_X:
+			return getAxisX();
+		case ACK.AXIS_Y:
+			return getAxisY();
+		case ACK.AXIS_Z:
+			return getAxisZ();
+		default:
+			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
 		}
+	}
+
+	/**
+	 * Gets the {@link #axisX}.
+	 * 
+	 * @return the {@link #axisX}.
+	 */
+	public AxisEnds getAxisX() {
+		return axisX;
+	}
+
+	/**
+	 * Gets the {@link #axisY}.
+	 * 
+	 * @return the {@link #axisY}.
+	 */
+	public AxisEnds getAxisY() {
+		return axisY;
+	}
+
+	/**
+	 * Gets the {@link #axisZ}.
+	 * 
+	 * @return the {@link #axisZ}.
+	 */
+	public AxisEnds getAxisZ() {
+		return axisZ;
 	}
 
 	/**
@@ -116,44 +224,6 @@ public class Cuboid implements Serializable {
 			p.z = axisZ.getCenter();
 		}
 		return p;
-	}
-
-	public Point getFaceCenter(int faceId) {
-		Point p = null;
-
-		if (isDefined()) {
-			p = getCenter();
-			switch (faceId) {
-			case FACE_WALL_UX:
-				p.x = getAxisX().getUpperEnd();
-				break;
-			case FACE_WALL_LX:
-				p.x = getAxisX().getLowerEnd();
-				break;
-			case FACE_WALL_UY:
-				p.y = getAxisY().getUpperEnd();
-				break;
-			case FACE_WALL_LY:
-				p.y = getAxisY().getLowerEnd();
-				break;
-			case FACE_WALL_UZ:
-				p.z = getAxisZ().getUpperEnd();
-				break;
-			case FACE_WALL_LZ:
-				p.z = getAxisZ().getLowerEnd();
-				break;
-			default:
-				throw new IllegalArgumentException(ACErrors.FACE_NOT_RECOGNIZED);
-			}
-		}
-
-		return p;
-	}
-
-	public void moveCenter(Point point) {
-		for (int axisId : ACK.ALL_AXES) {
-			getAxis(axisId).moveCenter(point.getAxisComponent(axisId));
-		}
 	}
 
 	public Point getCorner(int cornerId) {
@@ -210,7 +280,97 @@ public class Cuboid implements Serializable {
 		return p;
 	}
 
+	public Point getFaceCenter(int faceId) {
+		Point p = null;
+
+		if (isDefined()) {
+			p = getCenter();
+			switch (faceId) {
+			case FACE_WALL_XU:
+				p.x = getAxisX().getUpperEnd();
+				break;
+			case FACE_WALL_XL:
+				p.x = getAxisX().getLowerEnd();
+				break;
+			case FACE_WALL_YU:
+				p.y = getAxisY().getUpperEnd();
+				break;
+			case FACE_WALL_YL:
+				p.y = getAxisY().getLowerEnd();
+				break;
+			case FACE_WALL_ZU:
+				p.z = getAxisZ().getUpperEnd();
+				break;
+			case FACE_WALL_ZL:
+				p.z = getAxisZ().getLowerEnd();
+				break;
+			default:
+				throw new IllegalArgumentException(ACErrors.FACE_NOT_RECOGNIZED);
+			}
+		}
+
+		return p;
+	}
+
+	/**
+	 * Gets the {@link #index}.
+	 * 
+	 * @return the {@link #index}.
+	 */
+	public Integer getIndex() {
+		return index;
+	}
+
+	public int getOppositeFaceId(int faceId) {
+		switch (faceId) {
+		case FACE_WALL_XU:
+			return FACE_WALL_XL;
+		case FACE_WALL_XL:
+			return FACE_WALL_XU;
+		case FACE_WALL_YU:
+			return FACE_WALL_YL;
+		case FACE_WALL_YL:
+			return FACE_WALL_YU;
+		case FACE_WALL_ZU:
+			return FACE_WALL_ZL;
+		case FACE_WALL_ZL:
+			return FACE_WALL_ZU;
+		default:
+			throw new IllegalArgumentException(ACErrors.FACE_NOT_RECOGNIZED);
+		}
+	}
+
+	/**
+	 * Gets the {@link #parent}.
+	 * 
+	 * @return the {@link #parent}.
+	 */
+	public Cuboid getParent() {
+		return parent;
+	}
+
+	public Double getVolume() {
+		if (isDefined()) {
+			return axisX.getLength() * axisY.getLength() * axisZ.getLength();
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((axisX == null) ? 0 : axisX.hashCode());
+		result = prime * result + ((axisY == null) ? 0 : axisY.hashCode());
+		result = prime * result + ((axisZ == null) ? 0 : axisZ.hashCode());
+		return result;
+	}
+
 	public boolean isDefined() {
+		if (axisX == null || axisY == null || axisZ == null) {
+			return false;
+		}
 		for (AxisEnds axis : getAllAxes()) {
 			if (!axis.isDefined())
 				return false;
@@ -218,83 +378,15 @@ public class Cuboid implements Serializable {
 		return true;
 	}
 
-	public void validate() {
-		if (!isDefined())
-			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
+	public void moveCenterByVector(Vector vector) {
+		for (int axisId : ACK.ALL_AXES) {
+			getAxis(axisId).moveCenterByVector(vector.getAxisComponent(axisId));
+		}
 	}
 
-	/**
-	 * Gets the {@link #axisX}.
-	 * 
-	 * @return the {@link #axisX}.
-	 */
-	public AxisEnds getAxisX() {
-		return axisX;
-	}
-
-	/**
-	 * Sets the {@link #axisX}.
-	 * 
-	 * @param lineX the {@link #axisX} to set.
-	 */
-	public void setAxisX(AxisEnds lineX) {
-		this.axisX = lineX;
-	}
-
-	/**
-	 * Gets the {@link #axisY}.
-	 * 
-	 * @return the {@link #axisY}.
-	 */
-	public AxisEnds getAxisY() {
-		return axisY;
-	}
-
-	/**
-	 * Sets the {@link #axisY}.
-	 * 
-	 * @param lineY the {@link #axisY} to set.
-	 */
-	public void setAxisY(AxisEnds lineY) {
-		this.axisY = lineY;
-	}
-
-	/**
-	 * Gets the {@link #axisZ}.
-	 * 
-	 * @return the {@link #axisZ}.
-	 */
-	public AxisEnds getAxisZ() {
-		return axisZ;
-	}
-
-	/**
-	 * Sets the {@link #axisZ}.
-	 * 
-	 * @param lineZ the {@link #axisZ} to set.
-	 */
-	public void setAxisZ(AxisEnds lineZ) {
-		this.axisZ = lineZ;
-	}
-
-	public ArrayList<AxisEnds> getAllAxes() {
-		ArrayList<AxisEnds> list = new ArrayList<AxisEnds>();
-		list.add(axisX);
-		list.add(axisY);
-		list.add(axisZ);
-		return list;
-	}
-
-	public AxisEnds getAxis(int axisId) {
-		switch (axisId) {
-		case ACK.AXIS_X:
-			return getAxisX();
-		case ACK.AXIS_Y:
-			return getAxisY();
-		case ACK.AXIS_Z:
-			return getAxisZ();
-		default:
-			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
+	public void moveCenterToPoint(Point point) {
+		for (int axisId : ACK.ALL_AXES) {
+			getAxis(axisId).moveCenterToPoint(point.getAxisComponent(axisId));
 		}
 	}
 
@@ -311,10 +403,55 @@ public class Cuboid implements Serializable {
 		}
 	}
 
+	/**
+	 * Sets the {@link #axisX}.
+	 * 
+	 * @param lineX the {@link #axisX} to set.
+	 */
+	public void setAxisX(AxisEnds lineX) {
+		this.axisX = lineX;
+	}
+
+	/**
+	 * Sets the {@link #axisY}.
+	 * 
+	 * @param lineY the {@link #axisY} to set.
+	 */
+	public void setAxisY(AxisEnds lineY) {
+		this.axisY = lineY;
+	}
+
+	/**
+	 * Sets the {@link #axisZ}.
+	 * 
+	 * @param lineZ the {@link #axisZ} to set.
+	 */
+	public void setAxisZ(AxisEnds lineZ) {
+		this.axisZ = lineZ;
+	}
+
+	/**
+	 * Sets the {@link #index}.
+	 * 
+	 * @param index the {@link #index} to set.
+	 */
+	public void setIndex(Integer index) {
+		this.index = index;
+	}
+
 	public void setLengths(double lengthX, double lengthY, double lengthZ) {
 		axisX.setLength(lengthX);
 		axisY.setLength(lengthY);
 		axisZ.setLength(lengthZ);
+	}
+
+	/**
+	 * Sets the {@link #parent}.
+	 * 
+	 * @param parent the {@link #parent} to set.
+	 */
+	public void setParent(Cuboid parent) {
+		this.parent = parent;
 	}
 
 	/*
@@ -327,41 +464,9 @@ public class Cuboid implements Serializable {
 				+ ", axisZ=" + axisZ + "]";
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((axisX == null) ? 0 : axisX.hashCode());
-		result = prime * result + ((axisY == null) ? 0 : axisY.hashCode());
-		result = prime * result + ((axisZ == null) ? 0 : axisZ.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Cuboid other = (Cuboid) obj;
-		if (axisX == null) {
-			if (other.axisX != null)
-				return false;
-		} else if (!axisX.equals(other.axisX))
-			return false;
-		if (axisY == null) {
-			if (other.axisY != null)
-				return false;
-		} else if (!axisY.equals(other.axisY))
-			return false;
-		if (axisZ == null) {
-			if (other.axisZ != null)
-				return false;
-		} else if (!axisZ.equals(other.axisZ))
-			return false;
-		return true;
+	public void validate() {
+		if (!isDefined())
+			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 }

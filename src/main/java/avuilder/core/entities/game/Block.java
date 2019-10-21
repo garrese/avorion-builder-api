@@ -9,15 +9,7 @@ import avuilder.core.entities.dimensional.Cuboid;
 public class Block extends Cuboid {
 	private static final long serialVersionUID = -1896528590585386376L;
 
-	/**
-	 * Block's index in structure
-	 */
-	private Integer index;
 
-	/**
-	 * Block's parent index in a structure.
-	 */
-	private Block parent;
 
 	/**
 	 * Block's orientation
@@ -42,38 +34,33 @@ public class Block extends Cuboid {
 	public Block() {
 	}
 
-	/**
-	 * @param parent the {@link #parent}
-	 */
-	public Block(Block parent) {
-		this.parent = parent;
+	public Block(Integer index) {
+		super(index);
 	}
 
-	/**
-	 * @param lineX
-	 * @param lineY
-	 * @param lineZ
-	 */
+	public Block(Integer index, Cuboid parent) {
+		super(index, parent);
+	}
+
 	public Block(AxisEnds lineX, AxisEnds lineY, AxisEnds lineZ) {
 		super(lineX, lineY, lineZ);
 	}
 
-	/**
-	 * @param lineX
-	 * @param lineY
-	 * @param lineZ
-	 * @param parent
-	 */
-	public Block(AxisEnds lineX, AxisEnds lineY, AxisEnds lineZ, Block parent) {
-		super(lineX, lineY, lineZ);
-		this.parent = parent;
+	public Block(double lengthX, double lengthY, double lengthZ) {
+		super(lengthX, lengthY, lengthZ);
+	}
+
+	public Block(Material material, TypeBlock type, Orientation orientation) {
+		super();
+		this.material = material;
+		this.type = type;
+		this.orientation = orientation;
 	}
 
 	public static Block deepCopy(Block bb) {
 		Block b = (Block) Cuboid.deepCopy(bb);
 		if (bb != null) {
-			b.setIndex(bb.getIndex());
-			b.setParent(Block.deepCopy(bb.getParent()));
+
 			b.setOrientation(Orientation.deepCopy(bb.getOrientation()));
 			b.setType(bb.getType());
 			b.setMaterial(bb.getMaterial());
@@ -82,41 +69,6 @@ public class Block extends Cuboid {
 		return b;
 	}
 
-	/**
-	 * Gets the {@link #index}.
-	 * 
-	 * @return the {@link #index}.
-	 */
-	public Integer getIndex() {
-		return index;
-	}
-
-	/**
-	 * Sets the {@link #index}.
-	 * 
-	 * @param index the {@link #index} to set.
-	 */
-	public void setIndex(Integer index) {
-		this.index = index;
-	}
-
-	/**
-	 * Gets the {@link #parent}.
-	 * 
-	 * @return the {@link #parent}.
-	 */
-	public Block getParent() {
-		return parent;
-	}
-
-	/**
-	 * Sets the {@link #parent}.
-	 * 
-	 * @param parent the {@link #parent} to set.
-	 */
-	public void setParent(Block parent) {
-		this.parent = parent;
-	}
 
 	/**
 	 * Gets the {@link #orientation}.

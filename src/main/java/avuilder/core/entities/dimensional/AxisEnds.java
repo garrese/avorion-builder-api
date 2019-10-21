@@ -88,11 +88,16 @@ public class AxisEnds implements Serializable {
 			return null;
 	}
 
-	public void moveCenter(double destination) {
+	public void moveCenterToPoint(double destination) {
 		validate();
-		double dif = destination - getCenter();
-		upperEnd += dif;
-		lowerEnd += dif;
+		double vector = destination - getCenter();
+		moveCenterByVector(vector);
+	}
+
+	public void moveCenterByVector(double vector) {
+		validate();
+		upperEnd += vector;
+		lowerEnd += vector;
 	}
 
 	public void setLength(double length) {
@@ -216,8 +221,7 @@ public class AxisEnds implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "AxisEnds [length=" + getLength() + " lowerEnd=" + lowerEnd + ", upperEnd=" + upperEnd + ", center="
-				+ getCenter() + "]";
+		return "AxisEnds [length=" + getLength() + " lowerEnd=" + lowerEnd + ", center=" + getCenter() + ", upperEnd=" + upperEnd + "]";
 	}
 
 }

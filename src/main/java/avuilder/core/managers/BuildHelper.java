@@ -1,8 +1,10 @@
 package avuilder.core.managers;
 
+
 import avuilder.core.entities.dimensional.AxisEnds;
 import avuilder.core.entities.dimensional.Cuboid;
 import avuilder.core.entities.dimensional.Point;
+import avuilder.core.entities.dimensional.Vector;
 import avuilder.core.error.ACErrors;
 import avuilder.core.error.AvuilderCoreRuntimeException;
 import avuilder.core.utils.ACK;
@@ -64,18 +66,18 @@ public class BuildHelper {
 
 			int[] axesIds = new int[2];
 			switch (faceMatching) {
-			case Cuboid.FACE_WALL_UY:
-			case Cuboid.FACE_WALL_LY:
+			case Cuboid.FACE_WALL_YU:
+			case Cuboid.FACE_WALL_YL:
 				axesIds[0] = ACK.AXIS_X;
 				axesIds[1] = ACK.AXIS_Z;
 				break;
-			case Cuboid.FACE_WALL_UZ:
-			case Cuboid.FACE_WALL_LZ:
+			case Cuboid.FACE_WALL_ZU:
+			case Cuboid.FACE_WALL_ZL:
 				axesIds[0] = ACK.AXIS_X;
 				axesIds[1] = ACK.AXIS_Y;
 				break;
-			case Cuboid.FACE_WALL_UX:
-			case Cuboid.FACE_WALL_LX:
+			case Cuboid.FACE_WALL_XU:
+			case Cuboid.FACE_WALL_XL:
 				axesIds[0] = ACK.AXIS_Y;
 				axesIds[1] = ACK.AXIS_Z;
 				break;
@@ -94,16 +96,15 @@ public class BuildHelper {
 	}
 
 	public static void move(Cuboid cuboid, Point origen, Point destino) {
-		Point diff = Point.difference(origen, destino);
-		Point correccion = Point.sum(cuboid.getCenter(), diff);
-		cuboid.moveCenter(correccion);
+		// Vector refsDistance = Point.difference(origen, destino);
+		Vector centerToRefDistance = Point.pointDiff(cuboid.getCenter(), origen);
+		System.out.println("centerToRefDistance: " + centerToRefDistance);
+
+		cuboid.moveCenterToPoint(destino);
+		cuboid.moveCenterByVector(centerToRefDistance);
 	}
 
 	public static void applyCrop() {
-
-	}
-
-	public static void applyOffset() {
 
 	}
 

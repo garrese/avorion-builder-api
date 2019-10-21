@@ -46,11 +46,11 @@ public class ACValidations {
 	}
 
 	public static void validateCornersExistance(int... corners) {
-		validateConstantsArgsExistance(corners, Cuboid.ALL_CORNERS, ACErrors.CORNER_NOT_EXISTS);
+		validateConstantsArgsExistance(corners, Cuboid.CORNERS, ACErrors.CORNER_NOT_EXISTS);
 	}
 
 	public static void validateFacesExistance(int... faces) {
-		validateConstantsArgsExistance(faces, Cuboid.ALL_FACES, ACErrors.FACE_NOT_EXISTS);
+		validateConstantsArgsExistance(faces, Cuboid.FACES, ACErrors.FACE_NOT_EXISTS);
 	}
 
 	public static void validateConstantsArgsExistance(int[] validatingArgs, int[] allConstants, String errorMsg) {
