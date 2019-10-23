@@ -122,8 +122,8 @@ public class Cuboid implements Serializable {
 		Point faceOrigin = null;
 		Point faceDestination = null;
 
-		validate();
-		destinationCuboid.validate();
+		validateCuboid();
+		destinationCuboid.validateCuboid();
 
 		faceDestination = destinationCuboid.getFaceCenter(destinationFaceId);
 		faceOrigin = getFaceCenter(getOppositeFaceId(destinationFaceId));
@@ -217,7 +217,7 @@ public class Cuboid implements Serializable {
 	 */
 	public Point getCenter() {
 		Point p = null;
-		if (isDefined()) {
+		if (isCuboidDefined()) {
 			p = new Point();
 			p.x = axisX.getCenter();
 			p.y = axisY.getCenter();
@@ -229,7 +229,7 @@ public class Cuboid implements Serializable {
 	public Point getCorner(int cornerId) {
 		Point p = null;
 
-		if (isDefined()) {
+		if (isCuboidDefined()) {
 			p = new Point();
 			switch (cornerId) {
 			case CORNER_BASE_1:
@@ -283,7 +283,7 @@ public class Cuboid implements Serializable {
 	public Point getFaceCenter(int faceId) {
 		Point p = null;
 
-		if (isDefined()) {
+		if (isCuboidDefined()) {
 			p = getCenter();
 			switch (faceId) {
 			case FACE_WALL_XU:
@@ -350,7 +350,7 @@ public class Cuboid implements Serializable {
 	}
 
 	public Double getVolume() {
-		if (isDefined()) {
+		if (isCuboidDefined()) {
 			return axisX.getLength() * axisY.getLength() * axisZ.getLength();
 		} else {
 			return null;
@@ -367,12 +367,12 @@ public class Cuboid implements Serializable {
 		return result;
 	}
 
-	public boolean isDefined() {
+	public boolean isCuboidDefined() {
 		if (axisX == null || axisY == null || axisZ == null) {
 			return false;
 		}
 		for (AxisEnds axis : getAllAxes()) {
-			if (!axis.isDefined())
+			if (!axis.isAxisEndsDefined())
 				return false;
 		}
 		return true;
@@ -464,8 +464,8 @@ public class Cuboid implements Serializable {
 				+ ", axisZ=" + axisZ + "]";
 	}
 
-	public void validate() {
-		if (!isDefined())
+	public void validateCuboid() {
+		if (!isCuboidDefined())
 			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 

@@ -34,18 +34,18 @@ public class Point implements Serializable {
 	}
 
 	public static Point vectorSum(Point a, Vector b) {
-		a.validate();
-		b.validate();
+		a.validatePoint();
+		b.validatePoint();
 		return new Point(a.x + b.x, a.y + b.y, a.z + b.z);
 	}
 
 	public static Point vectorSub(Point a, Vector b) {
-		a.validate();
-		b.validate();
+		a.validatePoint();
+		b.validatePoint();
 		return new Point(a.x - b.x, a.y - b.y, a.z - b.z);
 	}
 
-	public boolean isDefined() {
+	public boolean isPointDefined() {
 		if (x != null && y != null && z != null) {
 			return true;
 		} else {
@@ -53,8 +53,8 @@ public class Point implements Serializable {
 		}
 	}
 
-	public void validate() {
-		if (!isDefined())
+	public void validatePoint() {
+		if (!isPointDefined())
 			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 

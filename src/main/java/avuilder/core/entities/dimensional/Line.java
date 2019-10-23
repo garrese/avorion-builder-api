@@ -23,27 +23,27 @@ public class Line implements Serializable {
 		this.p2 = p2;
 	}
 
-	public boolean isDefined() {
-		if (p1 != null && p2 != null && p1.isDefined() && p2.isDefined())
+	public boolean isLineDefined() {
+		if (p1 != null && p2 != null && p1.isPointDefined() && p2.isPointDefined())
 			return true;
 		else
 			return false;
 	}
 
-	public void validate() {
-		if (!isDefined())
+	public void validateLine() {
+		if (!isLineDefined())
 			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	public Double getLength() {
-		if (!isDefined())
+		if (!isLineDefined())
 			return null;
 		else
 			return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(p1.z - p2.z, 2));
 	}
 
 	public Point getCenter() {
-		if (!isDefined()) {
+		if (!isLineDefined()) {
 			return null;
 		} else {
 			Point p = new Point();

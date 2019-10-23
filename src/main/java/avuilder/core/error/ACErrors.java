@@ -26,4 +26,6 @@ public class ACErrors {
 
 	public static final String VOLUME_NOT_POSITIVE = "Invalid volume. Volume must be greather than 0.";
 
+	public static final String COLOR_INVALID_FORMAT = "Invalid color format. Color format must be in 8 digit color hex format [0-9|a-fA-F]{8}.";
+
 }

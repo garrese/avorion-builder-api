@@ -26,7 +26,7 @@ public class Block extends Cuboid {
 	/**
 	 * Block's color in 8 digit color hex format.
 	 */
-	private String color;
+	private String color = "00000000";
 
 	/**
 	 * Block's material.
@@ -147,6 +147,18 @@ public class Block extends Cuboid {
 		result = prime * result + ((orientation == null) ? 0 : orientation.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
+	}
+
+
+	public boolean isBlockDefined() {
+		if (!isCuboidDefined()) {
+			return false;
+		} else if (color == null || !orientation.isOrientationDefined()) { // TODO resto de atributos
+			return false;
+		} else {
+			return true;
+		}
+
 	}
 
 	/**

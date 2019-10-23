@@ -50,15 +50,15 @@ public class AxisEnds implements Serializable {
 		return line;
 	}
 
-	public boolean isDefined() {
+	public boolean isAxisEndsDefined() {
 		if (lowerEnd != null && upperEnd != null)
 			return true;
 		else
 			return false;
 	}
 
-	public void validate() {
-		if (!isDefined())
+	public void validateAxisEnds() {
+		if (!isAxisEndsDefined())
 			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
@@ -69,7 +69,7 @@ public class AxisEnds implements Serializable {
 	 * @throws IllegalStateException if {@link #upperEnd} or {@link #lowerEnd} are null.
 	 */
 	public Double getCenter() {
-		if (isDefined())
+		if (isAxisEndsDefined())
 			return lowerEnd + (upperEnd - lowerEnd) / 2;
 		else
 			return null;
@@ -82,20 +82,20 @@ public class AxisEnds implements Serializable {
 	 * @throws IllegalStateException if {@link #upperEnd} or {@link #lowerEnd} are null.
 	 */
 	public Double getLength() {
-		if (isDefined())
+		if (isAxisEndsDefined())
 			return upperEnd - lowerEnd;
 		else
 			return null;
 	}
 
 	public void moveCenterToPoint(double destination) {
-		validate();
+		validateAxisEnds();
 		double vector = destination - getCenter();
 		moveCenterByVector(vector);
 	}
 
 	public void moveCenterByVector(double vector) {
-		validate();
+		validateAxisEnds();
 		upperEnd += vector;
 		lowerEnd += vector;
 	}
@@ -104,7 +104,7 @@ public class AxisEnds implements Serializable {
 		ACValidations.validateLengths(length);
 
 		double center = 0;
-		if (isDefined()) {
+		if (isAxisEndsDefined()) {
 			center = getCenter();
 		}
 
@@ -113,7 +113,7 @@ public class AxisEnds implements Serializable {
 	}
 
 	public Double getHalf() {
-		if (isDefined()) {
+		if (isAxisEndsDefined()) {
 			return getLength() / 2;
 		} else {
 			return null;

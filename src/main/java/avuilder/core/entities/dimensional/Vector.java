@@ -10,26 +10,26 @@ public class Vector extends Point implements Serializable {
 	}
 
 	public static Vector pointDiff(Point a, Point b) {
-		a.validate();
-		b.validate();
+		a.validatePoint();
+		b.validatePoint();
 		return new Vector(a.x - b.x, a.y - b.y, a.z - b.z);
 	}
 
 	public static Vector pointSum(Point a, Point b) {
-		a.validate();
-		b.validate();
+		a.validatePoint();
+		b.validatePoint();
 		return new Vector(a.x + b.x, a.y + b.y, a.z + b.z);
 	}
 
 	public static Vector vectorDiff(Vector a, Vector b) {
-		a.validate();
-		b.validate();
+		a.validatePoint();
+		b.validatePoint();
 		return new Vector(a.x - b.x, a.y - b.y, a.z - b.z);
 	}
 
 	public static Vector vectorSum(Vector a, Vector b) {
-		a.validate();
-		b.validate();
+		a.validatePoint();
+		b.validatePoint();
 		return new Vector(a.x + b.x, a.y + b.y, a.z + b.z);
 	}
 

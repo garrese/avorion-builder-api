@@ -8,27 +8,33 @@ import avuilder.core.error.ACErrors;
 
 public class ACValidations {
 
+	public static final String colorRegex = "";
+
 	public static void validateVolumes(double... volume) {
 		for (Double vol : volume) {
-			if (vol <= 0) {
+			if (vol <= 0)
 				throw new IllegalArgumentException(ACErrors.VOLUME_NOT_POSITIVE);
-			}
 		}
 	}
 
 	public static void validateLengths(double... length) {
 		for (Double len : length) {
-			if (len <= 0) {
+			if (len <= 0)
 				throw new IllegalArgumentException(ACErrors.LENGTH_NOT_POSITIVE);
-			}
 		}
 	}
 
 	public static void validateRatios(double... ratio) {
 		for (Double rat : ratio) {
-			if (rat <= 0) {
+			if (rat <= 0)
 				throw new IllegalArgumentException(ACErrors.RATIO_NOT_POSITIVE);
-			}
+		}
+	}
+
+	public static void validateColors(String... colors) {
+		for (String color : colors) {
+			if (!color.matches("[0-9|a-fA-F]{8}"))
+				throw new IllegalArgumentException(ACErrors.COLOR_INVALID_FORMAT);
 		}
 	}
 
@@ -80,5 +86,7 @@ public class ACValidations {
 			listedArgs.add(validating);
 		}
 	}
+
+
 
 }

@@ -14,7 +14,7 @@ public class BuildHelper {
 
 	public static void escalate(Cuboid cuboid, double ratio, int... axesIds) {
 		try {
-			cuboid.validate();
+			cuboid.validateCuboid();
 			ACValidations.validateRatios(ratio);
 			ACValidations.validateAxes(axesIds);
 
@@ -35,7 +35,7 @@ public class BuildHelper {
 
 	public static void escalateByVolume(Cuboid cuboid, double finalVolume, int... axes) {
 		try {
-			cuboid.validate();
+			cuboid.validateCuboid();
 			ACValidations.validateVolumes(finalVolume);
 			ACValidations.validateAxes(axes);
 			double ratio;
@@ -86,8 +86,8 @@ public class BuildHelper {
 			}
 
 			for (int axisId : axesIds) {
-				cuboid.getAxis(axisId).validate();
-				reference.getAxis(axisId).validate();
+				cuboid.getAxis(axisId).validateAxisEnds();
+				reference.getAxis(axisId).validateAxisEnds();
 				cuboid.getAxis(axisId).setLength(reference.getAxis(axisId).getLength());
 			}
 		} catch (Exception e) {
