@@ -97,7 +97,7 @@ public class BuildHelper {
 
 	public static void move(Cuboid cuboid, Point origen, Point destino) {
 		// Vector refsDistance = Point.difference(origen, destino);
-		Vector centerToRefDistance = Point.pointDiff(cuboid.getCenter(), origen);
+		Vector centerToRefDistance = Vector.pointDiff(cuboid.getCenter(), origen);
 		System.out.println("centerToRefDistance: " + centerToRefDistance);
 
 		cuboid.moveCenterToPoint(destino);

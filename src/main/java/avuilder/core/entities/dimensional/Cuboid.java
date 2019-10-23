@@ -67,27 +67,27 @@ public class Cuboid implements Serializable {
 	/**
 	 * X axis line.
 	 */
-	private AxisEnds axisX = new AxisEnds();
+	protected AxisEnds axisX = new AxisEnds();
 
 	/**
 	 * Y axis line.
 	 */
-	private AxisEnds axisY = new AxisEnds();
+	protected AxisEnds axisY = new AxisEnds();
 
 	/**
 	 * Z axis line.
 	 */
-	private AxisEnds axisZ = new AxisEnds();
+	protected AxisEnds axisZ = new AxisEnds();
 
 	/**
 	 * Cuboid's index in structure.
 	 */
-	private Integer index;
+	protected Integer index;
 
 	/**
 	 * Cuboid's parent index in a structure.
 	 */
-	private Cuboid parent;
+	protected Cuboid parent;
 
 	public Cuboid() {
 	}
@@ -127,7 +127,7 @@ public class Cuboid implements Serializable {
 
 		faceDestination = destinationCuboid.getFaceCenter(destinationFaceId);
 		faceOrigin = getFaceCenter(getOppositeFaceId(destinationFaceId));
-		Vector centerToOwnFace = Point.pointDiff(getCenter(), faceOrigin);
+		Vector centerToOwnFace = Vector.pointDiff(getCenter(), faceOrigin);
 
 		moveCenterToPoint(faceDestination);
 		moveCenterByVector(centerToOwnFace);
