@@ -16,11 +16,21 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import avuilder4j.entities.game.Block;
+import avuilder4j.error.AvuilderCoreException;
 
 public class Exporter {
 
-	public void export(List<Block> blocks, String shipName) {
+	protected String exportRoute = "";
+
+	public void export(List<Block> blocks, String shipName) throws AvuilderCoreException {
 		try {
+
+			if (shipName == null || shipName.equals("")) {
+				throw new IllegalArgumentException("Ship's name can't be empty or null");
+			}
+			for (Block block : blocks) {
+				block.validateBlock();
+			}
 
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -64,10 +74,10 @@ public class Exporter {
 				addAttribute(doc, blockE, "uy", uy);
 				addAttribute(doc, blockE, "uz", uz);
 
-				String typeIndex = String.valueOf(block.getType().getIndex());
+				String typeIndex = String.valueOf(block.getType());
 				addAttribute(doc, blockE, "index", typeIndex);
 
-				String materialIndex = String.valueOf(block.getMaterial().getIndex());
+				String materialIndex = String.valueOf(block.getMaterial());
 				addAttribute(doc, blockE, "material", materialIndex);
 
 				String look = String.valueOf(block.getOrientation().getLook());
@@ -87,18 +97,26 @@ public class Exporter {
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(shipName + ".xml"));
+			StreamResult result = new StreamResult(new File(exportRoute + shipName + ".xml"));
 			transformer.transform(source, result);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new AvuilderCoreException("Error exporting ship");
 		}
 	}
 
-	private void addAttribute(Document doc, Element element, String attributeName, String attributeValue) {
+	private static void addAttribute(Document doc, Element element, String attributeName, String attributeValue) {
 		Attr materialIndexAtt = doc.createAttribute(attributeName);
 		materialIndexAtt.setValue(attributeValue);
 		element.setAttributeNode(materialIndexAtt);
+	}
+
+	public String getExportRoute() {
+		return exportRoute;
+	}
+
+	public void setExportRoute(String exportRoute) {
+		this.exportRoute = exportRoute;
 	}
 
 }

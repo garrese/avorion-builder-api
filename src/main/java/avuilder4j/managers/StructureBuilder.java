@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import avuilder4j.entities.game.Block;
+import avuilder4j.entities.game.Orientation;
+import avuilder4j.utils.ACK;
 
 /**
  * Para tener todos bloques ya almacenados. <br>
@@ -22,6 +24,14 @@ public class StructureBuilder {
 	private List<Block> blocks = new ArrayList<Block>();
 
 	private int indexCount;
+	public String defaultColor = ACK.DEFAULT_COLOR;
+	public Integer defaultMaterial = ACK.DEFAULT_MATERIAL;
+	public Integer defaultType = ACK.DEFAULT_TYPE;
+	public Double defaultLengthX = ACK.DEFAULT_LENGTH;
+	public Double defaultLengthY = ACK.DEFAULT_LENGTH;
+	public Double defaultLengthZ = ACK.DEFAULT_LENGTH;
+	public Orientation defaultOrientation = ACK.ORIENTATION_ZERO;
+
 
 	public StructureBuilder() {
 	}
@@ -32,14 +42,24 @@ public class StructureBuilder {
 		blocks.add(block);
 	}
 
-	public Block createBlock() {
+	public Block createBlankBlock() {
 		Block b = new Block();
 		indexBlock(b);
 		return b;
 	}
 
+	public Block createBlock() {
+		Block b = createBlankBlock();
+		b.setColor(defaultColor);
+		b.setMaterial(defaultMaterial);
+		b.setType(defaultType);
+		b.setLengths(defaultLengthX, defaultLengthY, defaultLengthZ);
+		b.setOrientation(defaultOrientation);
+		return b;
+	}
+
 	public Block createBlock(Block parent) {
-		Block b = createBlock();
+		Block b = createBlankBlock();
 		b.setParent(parent);
 		return b;
 	}
@@ -110,5 +130,6 @@ public class StructureBuilder {
 				indexes.put(index, index);
 		}
 	}
+
 
 }

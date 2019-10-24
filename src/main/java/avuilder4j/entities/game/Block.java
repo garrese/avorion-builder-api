@@ -2,19 +2,19 @@ package avuilder4j.entities.game;
 
 import avuilder4j.entities.dimensional.AxisEnds;
 import avuilder4j.entities.dimensional.Cuboid;
+import avuilder4j.error.ACErrors;
+import avuilder4j.error.AvuilderEntityException;
 
 /**
  * Represents an Avorion full functional block in a structure.
  */
-public abstract class Block extends Cuboid {
+public class Block extends Cuboid {
 	private static final long serialVersionUID = -1896528590585386376L;
-
-
 
 	public static Block deepCopy(Block bb) {
 		Block b = (Block) Cuboid.deepCopy(bb);
 		if (bb != null) {
-
+			b.setParent(bb.getParent());
 			b.setOrientation(Orientation.deepCopy(bb.getOrientation()));
 			b.setType(bb.getType());
 			b.setMaterial(bb.getMaterial());
@@ -26,12 +26,12 @@ public abstract class Block extends Cuboid {
 	/**
 	 * Block's color in 8 digit color hex format.
 	 */
-	private String color = "00000000";
+	private String color;
 
 	/**
 	 * Block's material.
 	 */
-	private Material material;
+	private Integer material;
 
 	/**
 	 * Block's orientation
@@ -41,7 +41,7 @@ public abstract class Block extends Cuboid {
 	/**
 	 * Block's type.
 	 */
-	private TypeBlock type;
+	private Integer type;
 
 	public Block() {
 	}
@@ -62,13 +62,12 @@ public abstract class Block extends Cuboid {
 		super(index, parent);
 	}
 
-	public Block(Material material, TypeBlock type, Orientation orientation) {
+	public Block(Integer material, Integer type, Orientation orientation) {
 		super();
 		this.material = material;
 		this.type = type;
 		this.orientation = orientation;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -111,12 +110,7 @@ public abstract class Block extends Cuboid {
 		return color;
 	}
 
-	/**
-	 * Gets the {@link #material}.
-	 * 
-	 * @return the {@link #material}.
-	 */
-	public Material getMaterial() {
+	public Integer getMaterial() {
 		return material;
 	}
 
@@ -129,12 +123,7 @@ public abstract class Block extends Cuboid {
 		return orientation;
 	}
 
-	/**
-	 * Gets the {@link #type}.
-	 * 
-	 * @return the {@link #type}.
-	 */
-	public TypeBlock getType() {
+	public Integer getType() {
 		return type;
 	}
 
@@ -149,17 +138,16 @@ public abstract class Block extends Cuboid {
 		return result;
 	}
 
-
 	public boolean isBlockDefined() {
 		if (!isCuboidDefined()) {
 			return false;
-		} else if (color == null || !orientation.isOrientationDefined()) { // TODO resto de atributos
+		} else if (color == null || !orientation.isOrientationDefined() || material == null || type == null) {
 			return false;
 		} else {
 			return true;
 		}
-
 	}
+
 
 	/**
 	 * Sets the {@link #color}.
@@ -170,14 +158,10 @@ public abstract class Block extends Cuboid {
 		this.color = color;
 	}
 
-	/**
-	 * Sets the {@link #material}.
-	 * 
-	 * @param material the {@link #material} to set.
-	 */
-	public void setMaterial(Material material) {
+	public void setMaterial(Integer material) {
 		this.material = material;
 	}
+
 
 	/**
 	 * Sets the {@link #orientation}.
@@ -188,14 +172,16 @@ public abstract class Block extends Cuboid {
 		this.orientation = orientation;
 	}
 
-	/**
-	 * Sets the {@link #type}.
-	 * 
-	 * @param type the {@link #type} to set.
-	 */
-	public void setType(TypeBlock type) {
+
+
+	public void setType(Integer type) {
 		this.type = type;
 	}
+
+
+
+
+
 
 	/*
 	 * (non-Javadoc)
@@ -207,6 +193,11 @@ public abstract class Block extends Cuboid {
 				+ ", material=" + material + ", color=" + color + ", getVolume()=" + getVolume() + ", getCenter()="
 				+ getCenter() + ", getAxisX()=" + getAxisX() + ", getAxisY()=" + getAxisY() + ", getAxisZ()="
 				+ getAxisZ() + "]";
+	}
+
+	public void validateBlock() {
+		if (!isBlockDefined())
+			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 }
