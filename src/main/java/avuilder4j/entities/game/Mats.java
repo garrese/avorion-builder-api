@@ -1,4 +1,4 @@
-package avuilder.core.entities.game;
+package avuilder4j.entities.game;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;

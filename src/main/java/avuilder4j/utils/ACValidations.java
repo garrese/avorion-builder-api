@@ -1,10 +1,10 @@
-package avuilder.core.utils;
+package avuilder4j.utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import avuilder.core.entities.dimensional.Cuboid;
-import avuilder.core.error.ACErrors;
+import avuilder4j.entities.dimensional.Cuboid;
+import avuilder4j.error.ACErrors;
 
 public class ACValidations {
 

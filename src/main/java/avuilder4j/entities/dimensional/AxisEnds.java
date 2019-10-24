@@ -1,10 +1,10 @@
-package avuilder.core.entities.dimensional;
+package avuilder4j.entities.dimensional;
 
 import java.io.Serializable;
 
-import avuilder.core.error.ACErrors;
-import avuilder.core.error.AvuilderEntityException;
-import avuilder.core.utils.ACValidations;
+import avuilder4j.error.ACErrors;
+import avuilder4j.error.AvuilderEntityException;
+import avuilder4j.utils.ACValidations;
 
 /**
  * Represents a line in a single coordinate axis.

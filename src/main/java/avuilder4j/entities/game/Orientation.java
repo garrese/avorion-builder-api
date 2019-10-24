@@ -1,9 +1,9 @@
-package avuilder.core.entities.game;
+package avuilder4j.entities.game;
 
 import java.io.Serializable;
 
-import avuilder.core.error.ACErrors;
-import avuilder.core.error.AvuilderCoreRuntimeException;
+import avuilder4j.error.ACErrors;
+import avuilder4j.error.AvuilderCoreRuntimeException;
 
 /**
  * Block orientation

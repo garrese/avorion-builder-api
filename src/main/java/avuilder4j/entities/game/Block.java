@@ -1,12 +1,12 @@
-package avuilder.core.entities.game;
+package avuilder4j.entities.game;
 
-import avuilder.core.entities.dimensional.AxisEnds;
-import avuilder.core.entities.dimensional.Cuboid;
+import avuilder4j.entities.dimensional.AxisEnds;
+import avuilder4j.entities.dimensional.Cuboid;
 
 /**
  * Represents an Avorion full functional block in a structure.
  */
-public class Block extends Cuboid {
+public abstract class Block extends Cuboid {
 	private static final long serialVersionUID = -1896528590585386376L;
 
 

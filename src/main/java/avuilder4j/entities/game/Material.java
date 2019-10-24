@@ -1,4 +1,4 @@
-package avuilder.core.entities.game;
+package avuilder4j.entities.game;
 
 /**
  * Immutable Avorion material reference.

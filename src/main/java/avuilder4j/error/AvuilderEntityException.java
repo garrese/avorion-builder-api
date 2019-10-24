@@ -1,4 +1,4 @@
-package avuilder.core.error;
+package avuilder4j.error;
 
 public class AvuilderEntityException extends AvuilderCoreRuntimeException {
 	private static final long serialVersionUID = -800973262197531617L;

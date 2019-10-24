@@ -1,4 +1,4 @@
-package avuilder.core.error;
+package avuilder4j.error;
 
 public class ACErrors {
 

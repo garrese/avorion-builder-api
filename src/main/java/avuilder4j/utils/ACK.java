@@ -1,6 +1,6 @@
-package avuilder.core.utils;
+package avuilder4j.utils;
 
-import avuilder.core.entities.dimensional.Point;
+import avuilder4j.entities.dimensional.Point;
 
 /**
  * General purpose constants.

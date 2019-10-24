@@ -1,4 +1,4 @@
-package avuilder.core.managers;
+package avuilder4j.managers;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import avuilder.core.entities.game.Block;
+import avuilder4j.entities.game.Block;
 
 /**
  * Para tener todos bloques ya almacenados. <br>
@@ -110,11 +110,5 @@ public class StructureBuilder {
 				indexes.put(index, index);
 		}
 	}
-
-	public void reviseIndexes() {
-
-	}
-
-
 
 }

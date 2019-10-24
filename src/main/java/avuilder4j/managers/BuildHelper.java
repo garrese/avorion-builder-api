@@ -1,14 +1,14 @@
-package avuilder.core.managers;
+package avuilder4j.managers;
 
 
-import avuilder.core.entities.dimensional.AxisEnds;
-import avuilder.core.entities.dimensional.Cuboid;
-import avuilder.core.entities.dimensional.Point;
-import avuilder.core.entities.dimensional.Vector;
-import avuilder.core.error.ACErrors;
-import avuilder.core.error.AvuilderCoreRuntimeException;
-import avuilder.core.utils.ACK;
-import avuilder.core.utils.ACValidations;
+import avuilder4j.entities.dimensional.AxisEnds;
+import avuilder4j.entities.dimensional.Cuboid;
+import avuilder4j.entities.dimensional.Point;
+import avuilder4j.entities.dimensional.Vector;
+import avuilder4j.error.ACErrors;
+import avuilder4j.error.AvuilderCoreRuntimeException;
+import avuilder4j.utils.ACK;
+import avuilder4j.utils.ACValidations;
 
 public class BuildHelper {
 

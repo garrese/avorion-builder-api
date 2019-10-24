@@ -1,4 +1,4 @@
-package avuilder.core.managers;
+package avuilder4j.managers;
 
 import java.io.File;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import avuilder.core.entities.game.Block;
+import avuilder4j.entities.game.Block;
 
 public class Exporter {
 

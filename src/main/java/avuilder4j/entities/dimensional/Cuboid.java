@@ -1,11 +1,11 @@
-package avuilder.core.entities.dimensional;
+package avuilder4j.entities.dimensional;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import avuilder.core.error.ACErrors;
-import avuilder.core.error.AvuilderEntityException;
-import avuilder.core.utils.ACK;
+import avuilder4j.error.ACErrors;
+import avuilder4j.error.AvuilderEntityException;
+import avuilder4j.utils.ACK;
 
 /**
  * Represents a cuboid in a Cartesian coordinate system.
