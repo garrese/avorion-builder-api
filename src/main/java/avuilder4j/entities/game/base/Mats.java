@@ -1,8 +1,10 @@
-package avuilder4j.entities.game;
+package avuilder4j.entities.game.base;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import avuilder4j.entities.game.Material;
 
 public class Mats {
 

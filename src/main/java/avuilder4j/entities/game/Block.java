@@ -6,7 +6,7 @@ import avuilder4j.entities.dimensional.Cuboid;
 /**
  * Represents an Avorion full functional block in a structure.
  */
-public abstract class Block extends Cuboid {
+public class Block extends Cuboid {
 	private static final long serialVersionUID = -1896528590585386376L;
 
 
@@ -14,7 +14,6 @@ public abstract class Block extends Cuboid {
 	public static Block deepCopy(Block bb) {
 		Block b = (Block) Cuboid.deepCopy(bb);
 		if (bb != null) {
-
 			b.setOrientation(Orientation.deepCopy(bb.getOrientation()));
 			b.setType(bb.getType());
 			b.setMaterial(bb.getMaterial());
@@ -26,22 +25,22 @@ public abstract class Block extends Cuboid {
 	/**
 	 * Block's color in 8 digit color hex format.
 	 */
-	private String color = "00000000";
+	protected String color = "00000000";
 
 	/**
 	 * Block's material.
 	 */
-	private Material material;
+	protected Material material;
 
 	/**
 	 * Block's orientation
 	 */
-	private Orientation orientation = new Orientation();
+	protected Orientation orientation = new Orientation();
 
 	/**
 	 * Block's type.
 	 */
-	private TypeBlock type;
+	protected TypeBlock type;
 
 	public Block() {
 	}
