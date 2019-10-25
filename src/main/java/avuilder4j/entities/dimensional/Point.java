@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 import avuilder4j.error.ACErrors;
 import avuilder4j.error.AvuilderEntityException;
-import avuilder4j.utils.ACK;
-import avuilder4j.utils.ACValidations;
+import avuilder4j.utils.AvK;
+import avuilder4j.utils.AvValidations;
 
 /**
  * Represents a point in a Cartesian coordinate system.
@@ -59,13 +59,13 @@ public class Point implements Serializable {
 	}
 
 	public Double getAxisComponent(int axisId) {
-		ACValidations.validateAxesExistance(axisId);
+		AvValidations.validateAxesExistance(axisId);
 		switch (axisId) {
-		case ACK.AXIS_X:
+		case AvK.AXIS_X:
 			return x;
-		case ACK.AXIS_Y:
+		case AvK.AXIS_Y:
 			return y;
-		case ACK.AXIS_Z:
+		case AvK.AXIS_Z:
 			return z;
 		default:
 			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);

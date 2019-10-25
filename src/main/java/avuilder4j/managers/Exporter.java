@@ -87,7 +87,7 @@ public class Exporter {
 				addAttribute(doc, blockE, "up", up);
 
 				String color = block.getColor();
-				addAttribute(doc, blockE, "color", color);
+				addAttribute(doc, blockE, "color", color.toLowerCase());
 
 			}
 

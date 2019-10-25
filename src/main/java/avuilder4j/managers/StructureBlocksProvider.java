@@ -8,7 +8,7 @@ import java.util.Map;
 
 import avuilder4j.entities.game.Block;
 import avuilder4j.entities.game.Orientation;
-import avuilder4j.utils.ACK;
+import avuilder4j.utils.AvK;
 
 /**
  * Para tener todos bloques ya almacenados. <br>
@@ -19,21 +19,21 @@ import avuilder4j.utils.ACK;
  * Permite adquirir bloques y reindexarlos coherentemente. <br>
  * Al importar un bloque comprueba si éste va
  */
-public class StructureBuilder {
+public class StructureBlocksProvider {
 
 	private List<Block> blocks = new ArrayList<Block>();
 
 	private int indexCount;
-	public String defaultColor = ACK.DEFAULT_COLOR;
-	public Integer defaultMaterial = ACK.DEFAULT_MATERIAL;
-	public Integer defaultType = ACK.DEFAULT_TYPE;
-	public Double defaultLengthX = ACK.DEFAULT_LENGTH;
-	public Double defaultLengthY = ACK.DEFAULT_LENGTH;
-	public Double defaultLengthZ = ACK.DEFAULT_LENGTH;
-	public Orientation defaultOrientation = ACK.ORIENTATION_ZERO;
+	public String defaultColor = AvK.DEFAULT_COLOR;
+	public Integer defaultMaterial = AvK.DEFAULT_MATERIAL;
+	public Integer defaultType = AvK.DEFAULT_TYPE;
+	public Double defaultLengthX = AvK.DEFAULT_LENGTH;
+	public Double defaultLengthY = AvK.DEFAULT_LENGTH;
+	public Double defaultLengthZ = AvK.DEFAULT_LENGTH;
+	public Orientation defaultOrientation = AvK.ORIENTATION_ZERO;
 
 
-	public StructureBuilder() {
+	public StructureBlocksProvider() {
 	}
 
 	public void indexBlock(Block block) {

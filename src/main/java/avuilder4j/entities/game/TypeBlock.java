@@ -14,27 +14,27 @@ public class TypeBlock {
 	 * Material density modificator of the block type.
 	 */
 	protected Double density;
-	
+
 	/**
 	 * Material durability modificator of the block type.
 	 */
 	protected Double durability;
-	
+
 	/**
 	 * Material credit cost modificator of the block type.
 	 */
 	protected Double creditCost;
-	
+
 	/**
 	 * Material cost modificator of the block type.
 	 */
 	protected Double materialCost;
-	
+
 	/**
 	 * Mechanics cost in crew/m^3.
 	 */
 	protected Double mechanics;
-	
+
 	/**
 	 * Engineers cost in crew/m^3.
 	 */
@@ -51,7 +51,7 @@ public class TypeBlock {
 	 * @param mechanics    the {@link #mechanics}
 	 * @param engineers    the {@link #engineers}
 	 */
-	protected TypeBlock(int index, Double density, Double durability, Double creditCost, Double materialCost,
+	public TypeBlock(int index, Double density, Double durability, Double creditCost, Double materialCost,
 			Double mechanics, Double engineers) {
 		super();
 		this.index = index;

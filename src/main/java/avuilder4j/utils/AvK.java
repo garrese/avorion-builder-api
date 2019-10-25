@@ -6,7 +6,7 @@ import avuilder4j.entities.game.Orientation;
 /**
  * General purpose constants.
  */
-public class ACK {
+public class AvK {
 
 	/**
 	 * Block's base material cost

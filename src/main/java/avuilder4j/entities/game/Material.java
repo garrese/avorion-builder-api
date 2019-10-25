@@ -30,7 +30,6 @@ public class Material {
 	 */
 	protected double materialCost;
 
-
 	/**
 	 * Material reference constructor.
 	 * 
@@ -40,7 +39,7 @@ public class Material {
 	 * @param creditCost   the {@link #creditCost}
 	 * @param materialCost the {@link #materialCost}
 	 */
-	protected Material(int index, String name, double density, double durability, double creditCost, double materialCost) {
+	public Material(int index, String name, double density, double durability, double creditCost, double materialCost) {
 		super();
 		this.index = index;
 		this.name = name;
@@ -49,7 +48,6 @@ public class Material {
 		this.creditCost = creditCost;
 		this.materialCost = materialCost;
 	}
-
 
 	/**
 	 * Gets the {@link #index}.
@@ -96,8 +94,8 @@ public class Material {
 		return materialCost;
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -105,7 +103,5 @@ public class Material {
 		return "Material [index=" + index + ", name=" + name + ", density=" + density + ", durability=" + durability
 				+ ", creditCost=" + creditCost + ", materialCost=" + materialCost + "]";
 	}
-	
-	
 
 }

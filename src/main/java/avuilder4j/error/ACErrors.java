@@ -7,7 +7,7 @@ public class ACErrors {
 
 	public static final String AXIS_NOT_EXISTS = "Invalid axis ID. Axis ID does not exist.";
 	public static final String AXIS_NOT_RECOGNIZED = "Axis ID not recognized.";
-	public static final String AXIS_REPEATED = "Invalid axis. Axis is repeated.";
+	public static final String AXIS_REPEATED = "Invalid axes. Some axis is repeated.";
 	public static final String AXIS_AMOUNT = "Error solving axes amount.";
 
 	public static final String END_NOT_EXISTS = "Invalid end ID. End ID does not exist.";

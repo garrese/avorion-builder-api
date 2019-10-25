@@ -6,7 +6,7 @@ import java.util.List;
 import avuilder4j.entities.dimensional.Cuboid;
 import avuilder4j.error.ACErrors;
 
-public class ACValidations {
+public class AvValidations {
 
 	public static final String colorRegex = "";
 
@@ -38,28 +38,23 @@ public class ACValidations {
 		}
 	}
 
-	public static void validateAxesRepetition(int... axesIds) {
-		validateConstantsArgsRepetition(axesIds, ACK.ALL_AXES, ACErrors.AXIS_NOT_EXISTS);
-	}
-
 	public static void validateAxesExistance(int... axesIds) {
-		validateConstantsArgsExistance(axesIds, ACK.ALL_AXES, ACErrors.AXIS_NOT_EXISTS);
+		validateIdArgsExistance(axesIds, AvK.ALL_AXES, ACErrors.AXIS_NOT_EXISTS);
 	}
 
-	public static void validateAxes(int... axesIds) {
-		validateAxesRepetition(axesIds);
-		validateAxesExistance(axesIds);
+	public static void validateAxesRepetition(int... axesIds) {
+		validateIdArgsRepetition(axesIds, ACErrors.AXIS_REPEATED);
 	}
 
 	public static void validateCornersExistance(int... corners) {
-		validateConstantsArgsExistance(corners, Cuboid.CORNERS, ACErrors.CORNER_NOT_EXISTS);
+		validateIdArgsExistance(corners, Cuboid.CORNERS, ACErrors.CORNER_NOT_EXISTS);
 	}
 
 	public static void validateFacesExistance(int... faces) {
-		validateConstantsArgsExistance(faces, Cuboid.FACES, ACErrors.FACE_NOT_EXISTS);
+		validateIdArgsExistance(faces, Cuboid.FACES, ACErrors.FACE_NOT_EXISTS);
 	}
 
-	public static void validateConstantsArgsExistance(int[] validatingArgs, int[] allConstants, String errorMsg) {
+	public static void validateIdArgsExistance(int[] validatingArgs, int[] allConstants, String errorMsg) {
 		boolean found = false;
 		for (int arg : validatingArgs) {
 			for (int constant : allConstants) {
@@ -75,7 +70,7 @@ public class ACValidations {
 		}
 	}
 
-	public static void validateConstantsArgsRepetition(int[] validatingArgs, int[] allConstants, String errorMsg) {
+	public static void validateIdArgsRepetition(int[] validatingArgs, String errorMsg) {
 		List<Integer> listedArgs = new ArrayList<Integer>();
 		for (int validating : validatingArgs) {
 			for (int listed : listedArgs) {
@@ -86,7 +81,5 @@ public class ACValidations {
 			listedArgs.add(validating);
 		}
 	}
-
-
 
 }

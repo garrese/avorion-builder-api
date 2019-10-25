@@ -5,7 +5,9 @@ import java.util.ArrayList;
 
 import avuilder4j.error.ACErrors;
 import avuilder4j.error.AvuilderEntityException;
-import avuilder4j.utils.ACK;
+import avuilder4j.utils.AvK;
+import avuilder4j.utils.AvU;
+import avuilder4j.utils.AvValidations;
 
 /**
  * Represents a cuboid in a Cartesian coordinate system.
@@ -13,7 +15,6 @@ import avuilder4j.utils.ACK;
  * The cuboid is defined by one {@link AxisEnds} in each of the three coordinate axis.
  */
 public class Cuboid implements Serializable {
-
 
 	public static final int CORNER_BASE_1 = 0;
 	public static final int CORNER_BASE_2 = 1;
@@ -172,11 +173,11 @@ public class Cuboid implements Serializable {
 
 	public AxisEnds getAxis(int axisId) {
 		switch (axisId) {
-		case ACK.AXIS_X:
+		case AvK.AXIS_X:
 			return getAxisX();
-		case ACK.AXIS_Y:
+		case AvK.AXIS_Y:
 			return getAxisY();
-		case ACK.AXIS_Z:
+		case AvK.AXIS_Z:
 			return getAxisZ();
 		default:
 			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
@@ -379,24 +380,24 @@ public class Cuboid implements Serializable {
 	}
 
 	public void moveCenterByVector(Vector vector) {
-		for (int axisId : ACK.ALL_AXES) {
+		for (int axisId : AvK.ALL_AXES) {
 			getAxis(axisId).moveCenterByVector(vector.getAxisComponent(axisId));
 		}
 	}
 
 	public void moveCenterToPoint(Point point) {
-		for (int axisId : ACK.ALL_AXES) {
+		for (int axisId : AvK.ALL_AXES) {
 			getAxis(axisId).moveCenterToPoint(point.getAxisComponent(axisId));
 		}
 	}
 
 	public void setAxis(int axisId, AxisEnds axis) {
 		switch (axisId) {
-		case ACK.AXIS_X:
+		case AvK.AXIS_X:
 			setAxisX(axis);
-		case ACK.AXIS_Y:
+		case AvK.AXIS_Y:
 			setAxisY(axis);
-		case ACK.AXIS_Z:
+		case AvK.AXIS_Z:
 			setAxisZ(axis);
 		default:
 			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
@@ -439,10 +440,55 @@ public class Cuboid implements Serializable {
 		this.index = index;
 	}
 
-	public void setLengths(double lengthX, double lengthY, double lengthZ) {
-		axisX.setLength(lengthX);
-		axisY.setLength(lengthY);
-		axisZ.setLength(lengthZ);
+	public void setLengths(double lengthX, double lengthY, double lengthZ, int... fixedFacesIds) {
+
+		int fixed = fixedFacesIds.length;
+		if (fixed == 0) {
+			// any fixed face
+			axisX.setLength(lengthX);
+			axisY.setLength(lengthY);
+			axisZ.setLength(lengthZ);
+
+		} else if (fixed > 3) {
+			throw new IllegalArgumentException("The maximum number of fixed faces is 3.");
+
+		} else {
+			// find axes and its validation
+			int[] fixedFacesAxes = new int[fixed];
+			for (int i = 0; i < fixed; i++) {
+				fixedFacesAxes[i] = AvU.getAxisIdByFaceId(fixedFacesIds[i]);
+			}
+			AvValidations.validateIdArgsRepetition(fixedFacesAxes,
+					"Can not be more than one fixed face in the same axis");
+
+			// fixed axes
+			boolean freeX = true;
+			boolean freeY = true;
+			boolean freeZ = true;
+			for (int i = 0; i < fixed; i++) {
+				int axisId = fixedFacesAxes[i];
+				int endId = AvU.getEndIdByFaceId(fixedFacesIds[i]);
+				if (axisId == AvK.AXIS_X) {
+					axisX.setLength(lengthX, endId);
+					freeX = false;
+				} else if (axisId == AvK.AXIS_Y) {
+					axisY.setLength(lengthY, endId);
+					freeX = false;
+				} else if (axisId == AvK.AXIS_Y) {
+					axisZ.setLength(lengthY, endId);
+					freeX = false;
+				}
+			}
+
+			// not fixed axes
+			if (freeX)
+				axisX.setLength(lengthX);
+			if (freeY)
+				axisY.setLength(lengthY);
+			if (freeZ)
+				axisZ.setLength(lengthZ);
+		}
+
 	}
 
 	/**

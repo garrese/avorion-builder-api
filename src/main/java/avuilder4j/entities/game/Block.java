@@ -148,7 +148,6 @@ public class Block extends Cuboid {
 		}
 	}
 
-
 	/**
 	 * Sets the {@link #color}.
 	 * 
@@ -162,7 +161,6 @@ public class Block extends Cuboid {
 		this.material = material;
 	}
 
-
 	/**
 	 * Sets the {@link #orientation}.
 	 * 
@@ -172,16 +170,9 @@ public class Block extends Cuboid {
 		this.orientation = orientation;
 	}
 
-
-
 	public void setType(Integer type) {
 		this.type = type;
 	}
-
-
-
-
-
 
 	/*
 	 * (non-Javadoc)

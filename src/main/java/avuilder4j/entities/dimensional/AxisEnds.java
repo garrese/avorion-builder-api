@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import avuilder4j.error.ACErrors;
 import avuilder4j.error.AvuilderEntityException;
-import avuilder4j.utils.ACValidations;
+import avuilder4j.utils.AvValidations;
 
 /**
  * Represents a line in a single coordinate axis.
@@ -100,17 +100,42 @@ public class AxisEnds implements Serializable {
 		lowerEnd += vector;
 	}
 
-	public void setLength(double length) {
-		ACValidations.validateLengths(length);
+	public void setLength(double length, Integer fixedEndId) {
+		AvValidations.validateLengths(length);
 
-		double center = 0;
-		if (isAxisEndsDefined()) {
-			center = getCenter();
+		if (fixedEndId == null) {
+			double center = 0;
+			if (isAxisEndsDefined()) {
+				center = getCenter();
+			}
+			upperEnd = center + length / 2;
+			lowerEnd = center - length / 2;
+
+		} else {
+			switch (fixedEndId) {
+			case END_UPPER:
+				if (upperEnd == null)
+					upperEnd = 0.0;
+				lowerEnd = upperEnd - length;
+				break;
+			case END_LOWER:
+				if (lowerEnd == null)
+					lowerEnd = 0.0;
+				upperEnd = lowerEnd + length;
+				break;
+			default:
+				throw new IllegalArgumentException(ACErrors.END_NOT_RECOGNIZED);
+			}
 		}
-
-		upperEnd = center + length / 2;
-		lowerEnd = center - length / 2;
 	}
+
+	public void setLength(double length) {
+		setLength(length, null);
+	}
+
+//	public void setLength(double length) {
+//		setLength(length, null);
+//	}
 
 	public Double getHalf() {
 		if (isAxisEndsDefined()) {
@@ -221,7 +246,8 @@ public class AxisEnds implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "AxisEnds [length=" + getLength() + " lowerEnd=" + lowerEnd + ", center=" + getCenter() + ", upperEnd=" + upperEnd + "]";
+		return "AxisEnds [length=" + getLength() + " lowerEnd=" + lowerEnd + ", center=" + getCenter() + ", upperEnd="
+				+ upperEnd + "]";
 	}
 
 }

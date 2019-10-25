@@ -1,8 +1,10 @@
-package avuilder4j.entities.game;
+package avuilder4j.utils;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import avuilder4j.entities.game.TypeBlock;
 
 public class Types {
 	public static final int INTEGRITY_FIELD_GENERATOR = 0;
