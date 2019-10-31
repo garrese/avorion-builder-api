@@ -1,6 +1,7 @@
 package avuilder4j.managers;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -16,20 +17,32 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import avuilder4j.entities.game.Block;
-import avuilder4j.error.AvuilderCoreException;
+import avuilder4j.error.Avuilder4jException;
 
 public class Exporter {
 
 	protected String exportRoute = "";
 
-	public void export(List<Block> blocks, String shipName) throws AvuilderCoreException {
+	public void export(List<Block> blocks, String shipName) throws Avuilder4jException {
 		try {
 
 			if (shipName == null || shipName.equals("")) {
 				throw new IllegalArgumentException("Ship's name can't be empty or null");
 			}
+
+			boolean rootFound = true;
+			ArrayList<Block> roots = new ArrayList<Block>();
 			for (Block block : blocks) {
 				block.validateBlock();
+				if (block.getParent() == null) {
+					if (roots.size() > 0) {
+						throw new Avuilder4jException("Can not be more than one root block. roots= " + roots);
+					}
+					roots.add(block);
+				}
+			}
+			if (roots.size() == 0) {
+				throw new Avuilder4jException("Must be one root block.");
 			}
 
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -37,21 +50,27 @@ public class Exporter {
 
 			// root
 			Document doc = docBuilder.newDocument();
-			Element shipE = doc.createElement("ship");
-			doc.appendChild(shipE);
+			Element shipDesignE = doc.createElement("ship_design");
+			doc.appendChild(shipDesignE);
+
+			Element planE = doc.createElement("plan");
+			shipDesignE.appendChild(planE);
 
 			// ship atts
-			addAttribute(doc, shipE, "accumulateHealth", "true");
-			addAttribute(doc, shipE, "convex", "false");
+			addAttribute(doc, planE, "accumulateHealth", "true");
+			addAttribute(doc, planE, "convex", "false");
 
 			// ( item > block )*
 			for (Block block : blocks) {
 
 				// item
 				Element itemE = doc.createElement("item");
-				shipE.appendChild(itemE);
+				planE.appendChild(itemE);
 
-				String parentIndex = String.valueOf(block.getParent().getIndex());
+				String parentIndex = "-1";
+				if (block.getParent() != null) {
+					parentIndex = String.valueOf(block.getParent().getIndex());
+				}
 				addAttribute(doc, itemE, "parent", parentIndex);
 
 				String blockIndex = String.valueOf(block.getIndex());
@@ -101,7 +120,7 @@ public class Exporter {
 			transformer.transform(source, result);
 
 		} catch (Exception e) {
-			throw new AvuilderCoreException("Error exporting ship");
+			throw new Avuilder4jException("Error exporting ship.", e);
 		}
 	}
 

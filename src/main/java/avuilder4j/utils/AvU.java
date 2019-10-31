@@ -1,8 +1,10 @@
 package avuilder4j.utils;
 
+import java.util.ArrayList;
+
 import avuilder4j.entities.dimensional.AxisEnds;
 import avuilder4j.entities.dimensional.Cuboid;
-import avuilder4j.error.ACErrors;
+import avuilder4j.error.AvErrors;
 
 public class AvU {
 
@@ -15,7 +17,7 @@ public class AvU {
 		case AvK.AXIS_Z:
 			return new int[] { Cuboid.FACE_WALL_ZL, Cuboid.FACE_WALL_ZU };
 		default:
-			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
+			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
 		}
 	}
 
@@ -31,8 +33,33 @@ public class AvU {
 		case Cuboid.FACE_WALL_ZL:
 			return AvK.AXIS_Z;
 		default:
-			throw new IllegalArgumentException(ACErrors.FACE_NOT_RECOGNIZED);
+			throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
 		}
+	}
+
+	public static int[] getAxesIdsOfLengthsInvolvedInRotation(int rotationId) {
+
+		int[] axes = new int[2];
+		switch (rotationId) {
+		case AvK.ROTATION_X:
+		case AvK.ROTATION_X_INVERSE:
+			axes[0] = AvK.AXIS_Y;
+			axes[1] = AvK.AXIS_Z;
+			break;
+		case AvK.ROTATION_Y:
+		case AvK.ROTATION_Y_INVERSE:
+			axes[0] = AvK.AXIS_X;
+			axes[1] = AvK.AXIS_Z;
+			break;
+		case AvK.ROTATION_Z:
+		case AvK.ROTATION_Z_INVERSE:
+			axes[0] = AvK.AXIS_Z;
+			axes[1] = AvK.AXIS_Y;
+			break;
+		default:
+			throw new IllegalArgumentException(AvErrors.ROTATION_NOT_RECOGNIZED);
+		}
+		return null;
 	}
 
 	public static int getEndIdByFaceId(int faceId) {
@@ -46,8 +73,27 @@ public class AvU {
 		case Cuboid.FACE_WALL_ZL:
 			return AxisEnds.END_LOWER;
 		default:
-			throw new IllegalArgumentException(ACErrors.FACE_NOT_RECOGNIZED);
+			throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
 		}
+	}
+
+	public static int[] findMissingIds(int[] ids, int[] allIds) {
+		ArrayList<Integer> missed = new ArrayList<Integer>();
+		for (int id : ids) {
+			boolean found = false;
+			for (int idRef : allIds) {
+				if (id == idRef)
+					found = true;
+			}
+			if (!found)
+				missed.add(id);
+		}
+
+		int[] array = new int[missed.size()];
+		for (int i = 0; i < array.length; i++) {
+			array[i] = missed.get(i);
+		}
+		return array;
 	}
 
 }

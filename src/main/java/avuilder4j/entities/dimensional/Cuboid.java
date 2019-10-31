@@ -3,8 +3,8 @@ package avuilder4j.entities.dimensional;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import avuilder4j.error.ACErrors;
-import avuilder4j.error.AvuilderEntityException;
+import avuilder4j.error.AvErrors;
+import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.utils.AvK;
 import avuilder4j.utils.AvU;
 import avuilder4j.utils.AvValidations;
@@ -24,7 +24,7 @@ public class Cuboid implements Serializable {
 	public static final int CORNER_TOP_2 = 5;
 	public static final int CORNER_TOP_3 = 6;
 	public static final int CORNER_TOP_4 = 7;
-	public static final int[] CORNERS = new int[] { // @formatter:off
+	public static final int[] CORNERS_LIST = new int[] { // @formatter:off
 			CORNER_BASE_1,
 			CORNER_BASE_2,
 			CORNER_BASE_3,
@@ -35,13 +35,13 @@ public class Cuboid implements Serializable {
 			CORNER_TOP_4
 	}; //@formatter:on
 
-	public static final int FACE_WALL_XL = 1;
-	public static final int FACE_WALL_XU = 0;
-	public static final int FACE_WALL_YL = 3;
-	public static final int FACE_WALL_YU = 2;
-	public static final int FACE_WALL_ZL = 5;
-	public static final int FACE_WALL_ZU = 4;
-	public static final int[] FACES = new int[] { // @formatter:off
+	public static final int FACE_WALL_XL = 0;
+	public static final int FACE_WALL_XU = 1;
+	public static final int FACE_WALL_YL = 2;
+	public static final int FACE_WALL_YU = 3;
+	public static final int FACE_WALL_ZL = 4;
+	public static final int FACE_WALL_ZU = 5;
+	public static final int[] FACES_LIST = new int[] { // @formatter:off
 			FACE_WALL_XU,
 			FACE_WALL_XL,
 			FACE_WALL_YU, 
@@ -93,19 +93,8 @@ public class Cuboid implements Serializable {
 	public Cuboid() {
 	}
 
-	/**
-	 * @param axisX the {@link #axisX}
-	 * @param axisY the {@link #axisY}
-	 * @param axisZ the {@link #axisZ}
-	 */
-	public Cuboid(AxisEnds axisX, AxisEnds axisY, AxisEnds axisZ) {
-		this.axisX = axisX;
-		this.axisY = axisY;
-		this.axisZ = axisZ;
-	}
-
-	public Cuboid(double lengthX, double lengthY, double lengthZ) {
-		setLengths(lengthX, lengthY, lengthZ);
+	public Cuboid(Lengths lengths) {
+		setLengths(lengths);
 	}
 
 	public Cuboid(Integer index) {
@@ -134,6 +123,72 @@ public class Cuboid implements Serializable {
 		moveCenterByVector(centerToOwnFace);
 
 		parent = destinationCuboid;
+	}
+
+	public void escalate(double ratio, int[] fixedFacesIds) {
+		escalate(ratio, null, fixedFacesIds);
+	}
+
+	public void escalate(double ratio, int[] fixedFacesIds, int[] axesIds) {
+		if (axesIds == null) {
+			axesIds = new int[0];
+		}
+		if (fixedFacesIds == null) {
+			fixedFacesIds = new int[0];
+		}
+		validateCuboid();
+		AvValidations.validateRatios(ratio);
+		AvValidations.validateFacesExistance(fixedFacesIds);
+		AvValidations.validateFixedFacesMaxNumber(fixedFacesIds);
+		AvValidations.validateFixedFacesAxes(fixedFacesIds);
+		AvValidations.validateAxesExistance(axesIds);
+		AvValidations.validateAxesRepetition(axesIds);
+
+		if (axesIds.length == 0) {
+			axesIds = AvK.ALL_AXES;
+		}
+
+		for (int axisId : axesIds) {
+			AxisEnds axis = getAxis(axisId);
+			boolean axisCompleted = false;
+			for (int faceId : fixedFacesIds) {
+				int faceIdAxisId = AvU.getAxisIdByFaceId(faceId);
+				if (axisId == faceIdAxisId) {
+					Integer endId = AvU.getEndIdByFaceId(axisId);
+					axis.escalateStatic(ratio, endId);
+					axisCompleted = true;
+				}
+			}
+			if (!axisCompleted) {
+				axis.escalateStatic(ratio, null);
+			}
+		}
+	}
+
+	public void escalateByVolume(double finalVolume, int[] fixedFacesIds, int[] axesIds) {
+		if (axesIds == null) {
+			axesIds = new int[0];
+		}
+		validateCuboid();
+		AvValidations.validateAxesExistance(axesIds);
+		AvValidations.validateAxesRepetition(axesIds);
+
+		double ratio;
+		switch (axesIds.length) {
+		case 0:
+		case 3:
+			ratio = Math.cbrt(finalVolume / getVolume());
+			break;
+		case 2:
+			ratio = Math.sqrt(finalVolume / getVolume());
+			break;
+		case 1:
+			ratio = finalVolume / getVolume();
+			break;
+		default:
+			throw new Avuilder4jRuntimeException(AvErrors.AXIS_AMOUNT);
+		}
+		escalate(ratio, fixedFacesIds, axesIds);
 	}
 
 	@Override
@@ -180,7 +235,7 @@ public class Cuboid implements Serializable {
 		case AvK.AXIS_Z:
 			return getAxisZ();
 		default:
-			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
+			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
 		}
 	}
 
@@ -274,7 +329,7 @@ public class Cuboid implements Serializable {
 				p.z = getAxisZ().getUpperEnd();
 				break;
 			default:
-				throw new IllegalArgumentException(ACErrors.CORNER_NOT_RECOGNIZED);
+				throw new IllegalArgumentException(AvErrors.CORNER_NOT_RECOGNIZED);
 			}
 		}
 
@@ -306,7 +361,7 @@ public class Cuboid implements Serializable {
 				p.z = getAxisZ().getLowerEnd();
 				break;
 			default:
-				throw new IllegalArgumentException(ACErrors.FACE_NOT_RECOGNIZED);
+				throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
 			}
 		}
 
@@ -320,6 +375,10 @@ public class Cuboid implements Serializable {
 	 */
 	public Integer getIndex() {
 		return index;
+	}
+
+	public Lengths getLengths() {
+		return new Lengths(axisX.getLength(), axisY.getLength(), axisZ.getLength());
 	}
 
 	public int getOppositeFaceId(int faceId) {
@@ -337,7 +396,7 @@ public class Cuboid implements Serializable {
 		case FACE_WALL_ZL:
 			return FACE_WALL_ZU;
 		default:
-			throw new IllegalArgumentException(ACErrors.FACE_NOT_RECOGNIZED);
+			throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
 		}
 	}
 
@@ -379,6 +438,47 @@ public class Cuboid implements Serializable {
 		return true;
 	}
 
+	public void matchToFace(Cuboid reference, int faceMatching) {
+		matchToFace(reference, faceMatching, true);
+	}
+
+	public void matchToFace(Cuboid reference, int faceMatching, boolean attach) {
+		AvValidations.validateFacesExistance(faceMatching);
+
+		int[] matchingAxesIds = new int[2];
+		switch (faceMatching) {
+		case Cuboid.FACE_WALL_YU:
+		case Cuboid.FACE_WALL_YL:
+			matchingAxesIds[0] = AvK.AXIS_X;
+			matchingAxesIds[1] = AvK.AXIS_Z;
+			break;
+		case Cuboid.FACE_WALL_ZU:
+		case Cuboid.FACE_WALL_ZL:
+			matchingAxesIds[0] = AvK.AXIS_X;
+			matchingAxesIds[1] = AvK.AXIS_Y;
+			break;
+		case Cuboid.FACE_WALL_XU:
+		case Cuboid.FACE_WALL_XL:
+			matchingAxesIds[0] = AvK.AXIS_Y;
+			matchingAxesIds[1] = AvK.AXIS_Z;
+			break;
+		default:
+			throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
+		}
+
+		for (int axisId : matchingAxesIds) {
+			getAxis(axisId).validateAxisEnds();
+			reference.getAxis(axisId).validateAxisEnds();
+
+			getAxis(axisId).setLength(reference.getAxis(axisId).getLength());
+		}
+
+		if (attach) {
+			attachTo(reference, faceMatching);
+		}
+
+	}
+
 	public void moveCenterByVector(Vector vector) {
 		for (int axisId : AvK.ALL_AXES) {
 			getAxis(axisId).moveCenterByVector(vector.getAxisComponent(axisId));
@@ -391,6 +491,43 @@ public class Cuboid implements Serializable {
 		}
 	}
 
+	public void rotate(int rotationId, int times, int... fixedFacesIds) {
+		AvValidations.validateRotationsExistance(rotationId);
+		AvValidations.validateFixedFacesMaxNumber(fixedFacesIds);
+		AvValidations.validateFixedFacesAxes(fixedFacesIds);
+
+		if (times <= 0) {
+			throw new IllegalArgumentException("times argument must be greater than 0.");
+		}
+
+		int[] axesIds = AvU.getAxesIdsOfLengthsInvolvedInRotation(rotationId);
+		try {
+			AxisEnds axis0 = getAxis(axesIds[0]);
+			AxisEnds axis1 = getAxis(axesIds[1]);
+			axis0.validateAxisEnds();
+			axis1.validateAxisEnds();
+
+			Integer axis0FixedEnd = null;
+			Integer axis1FixedEnd = null;
+			for (int faceId : fixedFacesIds) {
+				if (axesIds[0] == AvU.getAxisIdByFaceId(faceId)) {
+					axis0FixedEnd = AvU.getEndIdByFaceId(faceId);
+				}
+				if (axesIds[1] == AvU.getAxisIdByFaceId(faceId)) {
+					axis1FixedEnd = AvU.getEndIdByFaceId(faceId);
+				}
+			}
+
+			double len0 = axis0.getLength();
+			double len1 = axis1.getLength();
+			axis0.setLength(len1, axis0FixedEnd);
+			axis1.setLength(len0, axis1FixedEnd);
+
+		} catch (Exception e) {
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED, e);
+		}
+	}
+
 	public void setAxis(int axisId, AxisEnds axis) {
 		switch (axisId) {
 		case AvK.AXIS_X:
@@ -400,7 +537,7 @@ public class Cuboid implements Serializable {
 		case AvK.AXIS_Z:
 			setAxisZ(axis);
 		default:
-			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
+			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
 		}
 	}
 
@@ -440,55 +577,47 @@ public class Cuboid implements Serializable {
 		this.index = index;
 	}
 
-	public void setLengths(double lengthX, double lengthY, double lengthZ, int... fixedFacesIds) {
+	public void setLengths(Lengths lengths, int... fixedFacesIds) {
+		if (lengths == null) {
+			lengths = new Lengths();
+		}
+		AvValidations.validateFacesExistance(fixedFacesIds);
+		AvValidations.validateFacesRepetition(fixedFacesIds);
+		AvValidations.validateFixedFacesMaxNumber(fixedFacesIds);
+		AvValidations.validateFixedFacesAxes(fixedFacesIds);
 
-		int fixed = fixedFacesIds.length;
-		if (fixed == 0) {
-			// any fixed face
-			axisX.setLength(lengthX);
-			axisY.setLength(lengthY);
-			axisZ.setLength(lengthZ);
-
-		} else if (fixed > 3) {
-			throw new IllegalArgumentException("The maximum number of fixed faces is 3.");
+		if (fixedFacesIds.length == 0) {
+			for (int axisId : AvK.ALL_AXES) {
+				getAxis(axisId).setLength(lengths.getLength(axisId));
+			}
 
 		} else {
-			// find axes and its validation
-			int[] fixedFacesAxes = new int[fixed];
-			for (int i = 0; i < fixed; i++) {
-				fixedFacesAxes[i] = AvU.getAxisIdByFaceId(fixedFacesIds[i]);
-			}
-			AvValidations.validateIdArgsRepetition(fixedFacesAxes,
-					"Can not be more than one fixed face in the same axis");
-
 			// fixed axes
-			boolean freeX = true;
-			boolean freeY = true;
-			boolean freeZ = true;
-			for (int i = 0; i < fixed; i++) {
-				int axisId = fixedFacesAxes[i];
+			boolean notFixedX = true;
+			boolean notFixedY = true;
+			boolean notFixedZ = true;
+			for (int i = 0; i < fixedFacesIds.length; i++) {
+				int axisId = AvU.getAxisIdByFaceId(fixedFacesIds[i]);
 				int endId = AvU.getEndIdByFaceId(fixedFacesIds[i]);
+				getAxis(axisId).setLength(lengths.getLength(axisId), endId);
+
 				if (axisId == AvK.AXIS_X) {
-					axisX.setLength(lengthX, endId);
-					freeX = false;
+					notFixedX = false;
 				} else if (axisId == AvK.AXIS_Y) {
-					axisY.setLength(lengthY, endId);
-					freeX = false;
+					notFixedX = false;
 				} else if (axisId == AvK.AXIS_Y) {
-					axisZ.setLength(lengthY, endId);
-					freeX = false;
+					notFixedX = false;
 				}
 			}
 
 			// not fixed axes
-			if (freeX)
-				axisX.setLength(lengthX);
-			if (freeY)
-				axisY.setLength(lengthY);
-			if (freeZ)
-				axisZ.setLength(lengthZ);
+			if (notFixedX)
+				axisX.setLength(lengths.lengthX);
+			if (notFixedY)
+				axisY.setLength(lengths.lengthY);
+			if (notFixedZ)
+				axisZ.setLength(lengths.lengthZ);
 		}
-
 	}
 
 	/**
@@ -512,7 +641,7 @@ public class Cuboid implements Serializable {
 
 	public void validateCuboid() {
 		if (!isCuboidDefined())
-			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 }

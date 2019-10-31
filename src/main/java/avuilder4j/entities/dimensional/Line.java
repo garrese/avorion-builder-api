@@ -2,8 +2,8 @@ package avuilder4j.entities.dimensional;
 
 import java.io.Serializable;
 
-import avuilder4j.error.ACErrors;
-import avuilder4j.error.AvuilderEntityException;
+import avuilder4j.error.AvErrors;
+import avuilder4j.error.Avuilder4jRuntimeException;
 
 public class Line implements Serializable {
 	private static final long serialVersionUID = -1723294270396933910L;
@@ -32,7 +32,7 @@ public class Line implements Serializable {
 
 	public void validateLine() {
 		if (!isLineDefined())
-			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	public Double getLength() {

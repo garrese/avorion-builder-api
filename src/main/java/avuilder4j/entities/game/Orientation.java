@@ -2,8 +2,8 @@ package avuilder4j.entities.game;
 
 import java.io.Serializable;
 
-import avuilder4j.error.ACErrors;
-import avuilder4j.error.AvuilderCoreRuntimeException;
+import avuilder4j.error.AvErrors;
+import avuilder4j.error.Avuilder4jRuntimeException;
 
 /**
  * Block orientation
@@ -14,7 +14,6 @@ public class Orientation implements Serializable {
 	public static final int MAX_ORIENTATION = 5;
 	public static final int MIN_ORIENTATION = 0;
 
-	
 	/**
 	 * Look component of the piece orientation.
 	 */
@@ -47,7 +46,7 @@ public class Orientation implements Serializable {
 
 	public void validateOrientation() {
 		if (!isOrientationDefined())
-			throw new AvuilderCoreRuntimeException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	public static Orientation deepCopy(Orientation orientation) {
@@ -75,8 +74,9 @@ public class Orientation implements Serializable {
 	 * @param look the {@link #look} to set.
 	 */
 	public void setLook(Integer look) {
-		if (look >= MIN_ORIENTATION || look <= MAX_ORIENTATION) {
-			throw new IllegalArgumentException("Look orientation must be between " + MIN_ORIENTATION + " and " + MAX_ORIENTATION + ".");
+		if (look < MIN_ORIENTATION || look > MAX_ORIENTATION) {
+			throw new IllegalArgumentException(
+					"Look orientation must be between " + MIN_ORIENTATION + " and " + MAX_ORIENTATION + ".");
 		}
 		this.look = look;
 	}
@@ -96,8 +96,9 @@ public class Orientation implements Serializable {
 	 * @param up the {@link #up} to set.
 	 */
 	public void setUp(Integer up) {
-		if (up >= MIN_ORIENTATION || look <= MAX_ORIENTATION) {
-			throw new IllegalArgumentException("Up orientation must be between " + MIN_ORIENTATION + " and " + MAX_ORIENTATION + ".");
+		if (up < MIN_ORIENTATION || look > MAX_ORIENTATION) {
+			throw new IllegalArgumentException(
+					"Up orientation must be between " + MIN_ORIENTATION + " and " + MAX_ORIENTATION + ".");
 		}
 		this.up = up;
 	}

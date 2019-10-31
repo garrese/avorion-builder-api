@@ -2,8 +2,8 @@ package avuilder4j.entities.dimensional;
 
 import java.io.Serializable;
 
-import avuilder4j.error.ACErrors;
-import avuilder4j.error.AvuilderEntityException;
+import avuilder4j.error.AvErrors;
+import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.utils.AvK;
 import avuilder4j.utils.AvValidations;
 
@@ -55,7 +55,7 @@ public class Point implements Serializable {
 
 	public void validatePoint() {
 		if (!isPointDefined())
-			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 	public Double getAxisComponent(int axisId) {
@@ -68,7 +68,7 @@ public class Point implements Serializable {
 		case AvK.AXIS_Z:
 			return z;
 		default:
-			throw new IllegalArgumentException(ACErrors.AXIS_NOT_RECOGNIZED);
+			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
 		}
 
 	}

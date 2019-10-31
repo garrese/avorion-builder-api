@@ -1,9 +1,10 @@
 package avuilder4j.entities.game;
 
-import avuilder4j.entities.dimensional.AxisEnds;
 import avuilder4j.entities.dimensional.Cuboid;
-import avuilder4j.error.ACErrors;
-import avuilder4j.error.AvuilderEntityException;
+import avuilder4j.entities.dimensional.Lengths;
+import avuilder4j.error.AvErrors;
+import avuilder4j.error.Avuilder4jRuntimeException;
+import avuilder4j.utils.AvValidations;
 
 /**
  * Represents an Avorion full functional block in a structure.
@@ -46,12 +47,8 @@ public class Block extends Cuboid {
 	public Block() {
 	}
 
-	public Block(AxisEnds lineX, AxisEnds lineY, AxisEnds lineZ) {
-		super(lineX, lineY, lineZ);
-	}
-
-	public Block(double lengthX, double lengthY, double lengthZ) {
-		super(lengthX, lengthY, lengthZ);
+	public Block(Lengths lengths) {
+		super(lengths);
 	}
 
 	public Block(Integer index) {
@@ -141,7 +138,8 @@ public class Block extends Cuboid {
 	public boolean isBlockDefined() {
 		if (!isCuboidDefined()) {
 			return false;
-		} else if (color == null || !orientation.isOrientationDefined() || material == null || type == null) {
+		} else if (color == null || orientation == null || !orientation.isOrientationDefined() || material == null
+				|| type == null) {
 			return false;
 		} else {
 			return true;
@@ -154,6 +152,7 @@ public class Block extends Cuboid {
 	 * @param color the {@link #color} to set.
 	 */
 	public void setColor(String color) {
+		AvValidations.validateColors(color);
 		this.color = color;
 	}
 
@@ -188,7 +187,7 @@ public class Block extends Cuboid {
 
 	public void validateBlock() {
 		if (!isBlockDefined())
-			throw new AvuilderEntityException(ACErrors.NOT_SUFFICIENTLY_DEFINED);
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import avuilder4j.entities.dimensional.Lengths;
 import avuilder4j.entities.game.Block;
 import avuilder4j.entities.game.Orientation;
 import avuilder4j.utils.AvK;
@@ -13,25 +14,20 @@ import avuilder4j.utils.AvK;
 /**
  * Para tener todos bloques ya almacenados. <br>
  * Y llevar un index de manera natural y en tiempo real. <br>
- * De todos modos al intentar construir se volverá a checkear todo.
- *
- * Crea bloques y los va indexando.<br>
+ * De todos modos al intentar construir se volverá a checkear todo. Crea bloques y los va indexando.<br>
  * Permite adquirir bloques y reindexarlos coherentemente. <br>
  * Al importar un bloque comprueba si éste va
  */
 public class StructureBlocksProvider {
 
 	private List<Block> blocks = new ArrayList<Block>();
-
 	private int indexCount;
+
 	public String defaultColor = AvK.DEFAULT_COLOR;
 	public Integer defaultMaterial = AvK.DEFAULT_MATERIAL;
 	public Integer defaultType = AvK.DEFAULT_TYPE;
-	public Double defaultLengthX = AvK.DEFAULT_LENGTH;
-	public Double defaultLengthY = AvK.DEFAULT_LENGTH;
-	public Double defaultLengthZ = AvK.DEFAULT_LENGTH;
+	public Lengths defaultLengths = new Lengths(AvK.DEFAULT_LENGTH, AvK.DEFAULT_LENGTH, AvK.DEFAULT_LENGTH);
 	public Orientation defaultOrientation = AvK.ORIENTATION_ZERO;
-
 
 	public StructureBlocksProvider() {
 	}
@@ -42,24 +38,24 @@ public class StructureBlocksProvider {
 		blocks.add(block);
 	}
 
-	public Block createBlankBlock() {
+	public Block createBlockBlank() {
 		Block b = new Block();
 		indexBlock(b);
 		return b;
 	}
 
 	public Block createBlock() {
-		Block b = createBlankBlock();
+		Block b = createBlockBlank();
 		b.setColor(defaultColor);
 		b.setMaterial(defaultMaterial);
 		b.setType(defaultType);
-		b.setLengths(defaultLengthX, defaultLengthY, defaultLengthZ);
+		b.setLengths(defaultLengths);
 		b.setOrientation(defaultOrientation);
 		return b;
 	}
 
 	public Block createBlock(Block parent) {
-		Block b = createBlankBlock();
+		Block b = createBlockBlank();
 		b.setParent(parent);
 		return b;
 	}
@@ -131,5 +127,15 @@ public class StructureBlocksProvider {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "StructureBlocksProvider [blocks=" + blocks + ", indexCount=" + indexCount + ", defaultColor="
+				+ defaultColor + ", defaultMaterial=" + defaultMaterial + ", defaultType=" + defaultType
+				+ ", defaultLengths=" + defaultLengths + ", defaultOrientation=" + defaultOrientation + "]";
+	}
 
 }
