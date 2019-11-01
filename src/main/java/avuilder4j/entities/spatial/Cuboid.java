@@ -17,19 +17,6 @@ import avuilder4j.values.Spatial;
 public class Cuboid implements Serializable {
 	private static final long serialVersionUID = -5598838939653504628L;
 
-	public static Cuboid deepCopy(Cuboid cuboid) {
-		Cuboid c = null;
-		if (cuboid != null) {
-			c = new Cuboid();
-			c.setIndex(cuboid.getIndex());
-			c.setParent(Cuboid.deepCopy(cuboid.getParent()));
-			c.setAxisX(AxisEnds.deepCopy(cuboid.getAxisX()));
-			c.setAxisY(AxisEnds.deepCopy(cuboid.getAxisY()));
-			c.setAxisZ(AxisEnds.deepCopy(cuboid.getAxisZ()));
-		}
-		return c;
-	}
-
 	/**
 	 * X axis line.
 	 */
@@ -55,11 +42,133 @@ public class Cuboid implements Serializable {
 	 */
 	protected Cuboid parent;
 
-	public Cuboid() {
+	protected String tags;
+
+	public static Cuboid deepCopy(Cuboid cuboid) {
+		Cuboid c = null;
+		if (cuboid != null) {
+			c = new Cuboid();
+			c.setIndex(cuboid.getIndex());
+			c.setParent(Cuboid.deepCopy(cuboid.getParent()));
+			c.setAxisX(AxisEnds.deepCopy(cuboid.getAxisX()));
+			c.setAxisY(AxisEnds.deepCopy(cuboid.getAxisY()));
+			c.setAxisZ(AxisEnds.deepCopy(cuboid.getAxisZ()));
+		}
+		return c;
 	}
 
-	public Cuboid(Lengths lengths) {
-		setLengths(lengths);
+	public static void escalateStructure(List<? extends Cuboid> cuboids, double ratio) {
+		escalateStructure(cuboids, ratio);
+	}
+
+	public static void escalateStructure(List<? extends Cuboid> cuboids, double ratioX, double ratioY, double ratioZ) {
+		AvValidations.validateRatios(ratioX, ratioY, ratioZ);
+
+		for (Cuboid cuboid : cuboids) {
+			cuboid.validateCuboid();
+		}
+
+		for (Cuboid cuboid : cuboids) {
+			cuboid.getAxisX().escalateRelative(ratioX);
+			cuboid.getAxisY().escalateRelative(ratioY);
+			cuboid.getAxisZ().escalateRelative(ratioZ);
+		}
+	}
+
+	public static void escalateStructure(List<? extends Cuboid> cuboids, double ratio, int... axesIds) {
+		AvValidations.validateRatios(ratio);
+		AvValidations.validateAxesExistance(axesIds);
+		AvValidations.validateAxesRepetition(axesIds);
+		if (axesIds.length == 0) {
+			axesIds = Spatial.AXES_LIST;
+		}
+
+		for (Cuboid cuboid : cuboids) {
+			cuboid.validateCuboid();
+		}
+
+		for (Cuboid cuboid : cuboids) {
+			for (int axisId : axesIds) {
+				cuboid.getAxis(axisId).escalateRelative(ratio);
+			}
+		}
+	}
+
+	public static void escalateStructureByVolume(List<? extends Cuboid> cuboids, double finalVolume) {
+		escalateStructureByVolume(cuboids, finalVolume, new int[0]);
+	}
+
+	public static void escalateStructureByVolume(List<? extends Cuboid> cuboids, double finalVolume, int... axesIds) {
+		AvValidations.validateVolumes(finalVolume);
+		AvValidations.validateAxesExistance(axesIds);
+		AvValidations.validateAxesRepetition(axesIds);
+		if (axesIds.length == 0) {
+			axesIds = Spatial.AXES_LIST;
+		}
+
+		for (Cuboid cuboid : cuboids) {
+			cuboid.validateCuboid();
+		}
+		double currentVol = 0;
+		for (Cuboid cuboid : cuboids) {
+			currentVol += cuboid.getVolume();
+		}
+
+		double ratio;
+		switch (axesIds.length) {
+		case 0:
+		case 3:
+			ratio = Math.cbrt(finalVolume / currentVol);
+			break;
+		case 2:
+			ratio = Math.sqrt(finalVolume / currentVol);
+			break;
+		case 1:
+			ratio = finalVolume / currentVol;
+			break;
+		default:
+			throw new Avuilder4jRuntimeException(AvErrors.AXIS_AMOUNT);
+		}
+		escalateStructure(cuboids, ratio, axesIds);
+	}
+
+	public static List<? extends Cuboid> getByTag(List<? extends Cuboid> cuboids, String tags) {
+		List<Cuboid> r = new ArrayList<Cuboid>();
+		for (Cuboid cuboid : cuboids) {
+			if (cuboid.hasTags(tags))
+				r.add(cuboid);
+		}
+		return r;
+	}
+
+	public static void rotateStructure(List<? extends Cuboid> cuboids, int rotationId) {
+		rotateStructure(cuboids, rotationId, 1);
+	}
+
+	public static void rotateStructure(List<? extends Cuboid> cuboids, int rotationId, int times) {
+		AvValidations.validateRotationsExistance(rotationId);
+		if (times <= 0)
+			throw new IllegalArgumentException("'times' argument can not be lower than 1.");
+
+		int[] axesIds = Spatial.getAxesIdsInvolvedInRotation(rotationId);
+		try {
+			for (Cuboid cuboid : cuboids) {
+				AxisEnds axis0 = cuboid.getAxis(axesIds[0]);
+				AxisEnds axis1 = cuboid.getAxis(axesIds[1]);
+				axis0.validateAxisEnds();
+				axis1.validateAxisEnds();
+
+				AxisEnds axis0Aux = axis0;
+				AxisEnds axis1Aux = axis1;
+				cuboid.setAxis(axesIds[0], axis1Aux);
+				cuboid.setAxis(axesIds[1], axis0Aux);
+			}
+		} catch (Exception e) {
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED, e);
+		}
+	}
+
+	public Cuboid() {
 	}
 
 	public Cuboid(Integer index) {
@@ -71,6 +180,10 @@ public class Cuboid implements Serializable {
 		super();
 		this.index = index;
 		this.parent = parent;
+	}
+
+	public Cuboid(Lengths lengths) {
+		setLengths(lengths);
 	}
 
 	public void attachTo(Cuboid destinationCuboid, int destinationFaceId) {
@@ -90,6 +203,48 @@ public class Cuboid implements Serializable {
 		moveCenterByVector(centerToOwnFace);
 
 		parent = destinationCuboid;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cuboid other = (Cuboid) obj;
+		if (axisX == null) {
+			if (other.axisX != null)
+				return false;
+		} else if (!axisX.equals(other.axisX))
+			return false;
+		if (axisY == null) {
+			if (other.axisY != null)
+				return false;
+		} else if (!axisY.equals(other.axisY))
+			return false;
+		if (axisZ == null) {
+			if (other.axisZ != null)
+				return false;
+		} else if (!axisZ.equals(other.axisZ))
+			return false;
+		if (index == null) {
+			if (other.index != null)
+				return false;
+		} else if (!index.equals(other.index))
+			return false;
+		if (parent == null) {
+			if (other.parent != null)
+				return false;
+		} else if (!parent.equals(other.parent))
+			return false;
+		if (tags == null) {
+			if (other.tags != null)
+				return false;
+		} else if (!tags.equals(other.tags))
+			return false;
+		return true;
 	}
 
 	public void escalate(double ratio) {
@@ -164,108 +319,6 @@ public class Cuboid implements Serializable {
 			throw new Avuilder4jRuntimeException(AvErrors.AXIS_AMOUNT);
 		}
 		escalate(ratio, fixedFacesIds, axesIds);
-	}
-
-	public static void escalateStructure(List<? extends Cuboid> cuboids, double ratio) {
-		escalateStructure(cuboids, ratio);
-	}
-
-	public static void escalateStructure(List<? extends Cuboid> cuboids, double ratio, int... axesIds) {
-		AvValidations.validateRatios(ratio);
-		AvValidations.validateAxesExistance(axesIds);
-		AvValidations.validateAxesRepetition(axesIds);
-		if (axesIds.length == 0) {
-			axesIds = Spatial.AXES_LIST;
-		}
-
-		for (Cuboid cuboid : cuboids) {
-			cuboid.validateCuboid();
-		}
-
-		for (Cuboid cuboid : cuboids) {
-			for (int axisId : axesIds) {
-				cuboid.getAxis(axisId).escalateRelative(ratio);
-			}
-		}
-	}
-
-	public static void escalateStructure(List<? extends Cuboid> cuboids, double ratioX, double ratioY, double ratioZ) {
-		AvValidations.validateRatios(ratioX, ratioY, ratioZ);
-
-		for (Cuboid cuboid : cuboids) {
-			cuboid.validateCuboid();
-		}
-
-		for (Cuboid cuboid : cuboids) {
-			cuboid.getAxisX().escalateRelative(ratioX);
-			cuboid.getAxisY().escalateRelative(ratioY);
-			cuboid.getAxisZ().escalateRelative(ratioZ);
-		}
-	}
-
-	public static void escalateStructureByVolume(List<? extends Cuboid> cuboids, double finalVolume) {
-		escalateStructureByVolume(cuboids, finalVolume, new int[0]);
-	}
-
-	public static void escalateStructureByVolume(List<? extends Cuboid> cuboids, double finalVolume, int... axesIds) {
-		AvValidations.validateVolumes(finalVolume);
-		AvValidations.validateAxesExistance(axesIds);
-		AvValidations.validateAxesRepetition(axesIds);
-		if (axesIds.length == 0) {
-			axesIds = Spatial.AXES_LIST;
-		}
-
-		for (Cuboid cuboid : cuboids) {
-			cuboid.validateCuboid();
-		}
-		double currentVol = 0;
-		for (Cuboid cuboid : cuboids) {
-			currentVol += cuboid.getVolume();
-		}
-
-		double ratio;
-		switch (axesIds.length) {
-		case 0:
-		case 3:
-			ratio = Math.cbrt(finalVolume / currentVol);
-			break;
-		case 2:
-			ratio = Math.sqrt(finalVolume / currentVol);
-			break;
-		case 1:
-			ratio = finalVolume / currentVol;
-			break;
-		default:
-			throw new Avuilder4jRuntimeException(AvErrors.AXIS_AMOUNT);
-		}
-		escalateStructure(cuboids, ratio, axesIds);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Cuboid other = (Cuboid) obj;
-		if (axisX == null) {
-			if (other.axisX != null)
-				return false;
-		} else if (!axisX.equals(other.axisX))
-			return false;
-		if (axisY == null) {
-			if (other.axisY != null)
-				return false;
-		} else if (!axisY.equals(other.axisY))
-			return false;
-		if (axisZ == null) {
-			if (other.axisZ != null)
-				return false;
-		} else if (!axisZ.equals(other.axisZ))
-			return false;
-		return true;
 	}
 
 	public ArrayList<AxisEnds> getAllAxes() {
@@ -468,6 +521,15 @@ public class Cuboid implements Serializable {
 		return parent;
 	}
 
+	/**
+	 * Gets the {@link #tags}.
+	 * 
+	 * @return the {@link #tags}.
+	 */
+	public String getTags() {
+		return tags;
+	}
+
 	public Double getVolume() {
 		if (isCuboidDefined()) {
 			return axisX.getLength() * axisY.getLength() * axisZ.getLength();
@@ -483,7 +545,34 @@ public class Cuboid implements Serializable {
 		result = prime * result + ((axisX == null) ? 0 : axisX.hashCode());
 		result = prime * result + ((axisY == null) ? 0 : axisY.hashCode());
 		result = prime * result + ((axisZ == null) ? 0 : axisZ.hashCode());
+		result = prime * result + ((index == null) ? 0 : index.hashCode());
+		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
 		return result;
+	}
+
+	public boolean hasTags(String tags) {
+		boolean noThisTags = this.tags == null || this.tags.trim().isEmpty();
+		boolean noArgTags = tags == null || tags.trim().isEmpty();
+		if (noThisTags || noArgTags) {
+			return false;
+		}
+
+		String[] argTagsArray = tags.trim().split(" ");
+		String[] thisTagsArray = this.tags.trim().split(" ");
+		for (String argTag : argTagsArray) {
+			boolean hasTag = false;
+			for (String thisTag : thisTagsArray) {
+				if (argTag.equals(thisTag)) {
+					hasTag = true;
+					break;
+				}
+			}
+			if (!hasTag) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public boolean isCuboidDefined() {
@@ -603,33 +692,6 @@ public class Cuboid implements Serializable {
 		}
 	}
 
-	public static void rotateStructure(List<? extends Cuboid> cuboids, int rotationId) {
-		rotateStructure(cuboids, rotationId, 1);
-	}
-
-	public static void rotateStructure(List<? extends Cuboid> cuboids, int rotationId, int times) {
-		AvValidations.validateRotationsExistance(rotationId);
-		if (times <= 0)
-			throw new IllegalArgumentException("'times' argument can not be lower than 1.");
-
-		int[] axesIds = Spatial.getAxesIdsInvolvedInRotation(rotationId);
-		try {
-			for (Cuboid cuboid : cuboids) {
-				AxisEnds axis0 = cuboid.getAxis(axesIds[0]);
-				AxisEnds axis1 = cuboid.getAxis(axesIds[1]);
-				axis0.validateAxisEnds();
-				axis1.validateAxisEnds();
-
-				AxisEnds axis0Aux = axis0;
-				AxisEnds axis1Aux = axis1;
-				cuboid.setAxis(axesIds[0], axis1Aux);
-				cuboid.setAxis(axesIds[1], axis0Aux);
-			}
-		} catch (Exception e) {
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED, e);
-		}
-	}
-
 	public void setAxis(int axisId, AxisEnds axis) {
 		switch (axisId) {
 		case Spatial.AXIS_X:
@@ -734,6 +796,15 @@ public class Cuboid implements Serializable {
 		this.parent = parent;
 	}
 
+	/**
+	 * Sets the {@link #tags}.
+	 * 
+	 * @param tags the {@link #tags} to set.
+	 */
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -748,7 +819,9 @@ public class Cuboid implements Serializable {
 		parentSring += "]";
 
 		//@formatter:off
-		return "Block [index=" + index 
+		return "Block ["
+				+ "tags=\"" + tags + "\""
+				+ ", index=" + index 
 				+ ", parent=" + parentSring
 				+ ", lengths=" + getLengths()
 				+ ", volume=" + getVolume()

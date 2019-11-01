@@ -9,6 +9,7 @@ import avuilder4j.values.Spatial;
 public class AvValidations {
 
 	public static final String COLOR_REGEX = "[0-9|a-fA-F]{8}";
+
 	public static void validateVolumes(double... volume) {
 		for (Double vol : volume) {
 			if (vol <= 0)

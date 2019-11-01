@@ -185,7 +185,9 @@ public class Block extends Cuboid {
 			parentSring = "[id=" + parent.getIndex() + "]";
 
 		//@formatter:off
-		return "Block [index=" + index 
+		return "Block ["
+				+ "tags=\"" + tags + "\""
+				+ ", index=" + index 
 				+ ", parent=" + parentSring
 				+ ", material=" + material
 				+ ", type=" + type 

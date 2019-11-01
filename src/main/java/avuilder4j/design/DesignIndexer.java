@@ -27,7 +27,7 @@ public class DesignIndexer {
 	public Integer defaultMaterial = Game.DEFAULT_MATERIAL;
 	public Integer defaultType = Game.DEFAULT_TYPE;
 	public Lengths defaultLengths = new Lengths(Game.DEFAULT_LENGTH, Game.DEFAULT_LENGTH, Game.DEFAULT_LENGTH);
-	public TypeLook defaultOrientation = Game.ORIENTATION_ZERO;
+	public TypeLook defaultOrientation = Game.TYPE_LOOK_ZERO;
 
 	public DesignIndexer() {
 	}
