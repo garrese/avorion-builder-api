@@ -1,4 +1,4 @@
-package avuilder4j.entities.dimensional;
+package avuilder4j.entities.spatial;
 
 import java.io.Serializable;
 

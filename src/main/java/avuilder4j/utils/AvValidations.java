@@ -3,14 +3,12 @@ package avuilder4j.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import avuilder4j.entities.dimensional.Cuboid;
 import avuilder4j.error.AvErrors;
+import avuilder4j.values.Spatial;
 
 public class AvValidations {
 
 	public static final String COLOR_REGEX = "[0-9|a-fA-F]{8}";
-	public static final int MAX_FIXED_FACES = 3;
-
 	public static void validateVolumes(double... volume) {
 		for (Double vol : volume) {
 			if (vol <= 0)
@@ -40,11 +38,11 @@ public class AvValidations {
 	}
 
 	public static void validateRotationsExistance(int... rotationIds) {
-		validateIdArgsExistance(rotationIds, AvK.ROTATIONS_LIST, AvErrors.ROTATION_NOT_EXISTS);
+		validateIdArgsExistance(rotationIds, Spatial.ROTATIONS_LIST, AvErrors.ROTATION_NOT_EXISTS);
 	}
 
 	public static void validateAxesExistance(int... axesIds) {
-		validateIdArgsExistance(axesIds, AvK.ALL_AXES, AvErrors.AXIS_NOT_EXISTS);
+		validateIdArgsExistance(axesIds, Spatial.AXES_LIST, AvErrors.AXIS_NOT_EXISTS);
 	}
 
 	public static void validateAxesRepetition(int... axesIds) {
@@ -52,11 +50,11 @@ public class AvValidations {
 	}
 
 	public static void validateCornersExistance(int... cornersIds) {
-		validateIdArgsExistance(cornersIds, Cuboid.CORNERS_LIST, AvErrors.CORNER_NOT_EXISTS);
+		validateIdArgsExistance(cornersIds, Spatial.CORNERS_LIST, AvErrors.CORNER_NOT_EXISTS);
 	}
 
 	public static void validateFacesExistance(int... facesIds) {
-		validateIdArgsExistance(facesIds, Cuboid.FACES_LIST, AvErrors.FACE_NOT_EXISTS);
+		validateIdArgsExistance(facesIds, Spatial.FACES_LIST, AvErrors.FACE_NOT_EXISTS);
 	}
 
 	public static void validateFacesRepetition(int... facesIds) {
@@ -64,13 +62,13 @@ public class AvValidations {
 	}
 
 	public static void validateFixedFacesMaxNumber(int... fixedFacesIds) {
-		validateIdArgsMaxNumber(fixedFacesIds, MAX_FIXED_FACES, AvErrors.FACE_FIXED_MAX_NUMBER);
+		validateIdArgsMaxNumber(fixedFacesIds, Spatial.MAX_FIXED_FACES, AvErrors.FACE_FIXED_MAX_NUMBER);
 	}
 
 	public static void validateFixedFacesAxes(int... fixedFacesIds) {
 		int[] fixedFacesAxes = new int[fixedFacesIds.length];
 		for (int i = 0; i < fixedFacesIds.length; i++) {
-			fixedFacesAxes[i] = AvU.getAxisIdByFaceId(fixedFacesIds[i]);
+			fixedFacesAxes[i] = Spatial.getAxisIdByFaceId(fixedFacesIds[i]);
 		}
 		AvValidations.validateIdArgsRepetition(fixedFacesAxes, AvErrors.FACE_FIXED_AXES);
 	}

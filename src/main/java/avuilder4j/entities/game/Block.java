@@ -1,7 +1,7 @@
 package avuilder4j.entities.game;
 
-import avuilder4j.entities.dimensional.Cuboid;
-import avuilder4j.entities.dimensional.Lengths;
+import avuilder4j.entities.spatial.Cuboid;
+import avuilder4j.entities.spatial.Lengths;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.utils.AvValidations;
@@ -16,7 +16,7 @@ public class Block extends Cuboid {
 		Block b = (Block) Cuboid.deepCopy(bb);
 		if (bb != null) {
 			b.setParent(bb.getParent());
-			b.setOrientation(Orientation.deepCopy(bb.getOrientation()));
+			b.setTypeLook(TypeLook.deepCopy(bb.getTypeLook()));
 			b.setType(bb.getType());
 			b.setMaterial(bb.getMaterial());
 			b.setColor(bb.getColor());
@@ -37,7 +37,7 @@ public class Block extends Cuboid {
 	/**
 	 * Block's orientation
 	 */
-	private Orientation orientation = new Orientation();
+	private TypeLook typeLook = new TypeLook();
 
 	/**
 	 * Block's type.
@@ -59,11 +59,11 @@ public class Block extends Cuboid {
 		super(index, parent);
 	}
 
-	public Block(Integer material, Integer type, Orientation orientation) {
+	public Block(Integer material, Integer type, TypeLook typeLook) {
 		super();
 		this.material = material;
 		this.type = type;
-		this.orientation = orientation;
+		this.typeLook = typeLook;
 	}
 
 	@Override
@@ -85,10 +85,10 @@ public class Block extends Cuboid {
 				return false;
 		} else if (!material.equals(other.material))
 			return false;
-		if (orientation == null) {
-			if (other.orientation != null)
+		if (typeLook == null) {
+			if (other.typeLook != null)
 				return false;
-		} else if (!orientation.equals(other.orientation))
+		} else if (!typeLook.equals(other.typeLook))
 			return false;
 		if (type == null) {
 			if (other.type != null)
@@ -112,12 +112,12 @@ public class Block extends Cuboid {
 	}
 
 	/**
-	 * Gets the {@link #orientation}.
+	 * Gets the {@link #typeLook}.
 	 * 
-	 * @return the {@link #orientation}.
+	 * @return the {@link #typeLook}.
 	 */
-	public Orientation getOrientation() {
-		return orientation;
+	public TypeLook getTypeLook() {
+		return typeLook;
 	}
 
 	public Integer getType() {
@@ -130,7 +130,7 @@ public class Block extends Cuboid {
 		int result = super.hashCode();
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result + ((material == null) ? 0 : material.hashCode());
-		result = prime * result + ((orientation == null) ? 0 : orientation.hashCode());
+		result = prime * result + ((typeLook == null) ? 0 : typeLook.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -138,7 +138,7 @@ public class Block extends Cuboid {
 	public boolean isBlockDefined() {
 		if (!isCuboidDefined()) {
 			return false;
-		} else if (color == null || orientation == null || !orientation.isOrientationDefined() || material == null
+		} else if (color == null || typeLook == null || !typeLook.isOrientationDefined() || material == null
 				|| type == null) {
 			return false;
 		} else {
@@ -161,12 +161,12 @@ public class Block extends Cuboid {
 	}
 
 	/**
-	 * Sets the {@link #orientation}.
+	 * Sets the {@link #typeLook}.
 	 * 
-	 * @param orientation the {@link #orientation} to set.
+	 * @param typeLook the {@link #typeLook} to set.
 	 */
-	public void setOrientation(Orientation orientation) {
-		this.orientation = orientation;
+	public void setTypeLook(TypeLook typeLook) {
+		this.typeLook = typeLook;
 	}
 
 	public void setType(Integer type) {
@@ -179,10 +179,27 @@ public class Block extends Cuboid {
 	 */
 	@Override
 	public String toString() {
-		return "Block [index=" + index + ", parent=" + parent + ", orientation=" + orientation + ", type=" + type
-				+ ", material=" + material + ", color=" + color + ", getVolume()=" + getVolume() + ", getCenter()="
-				+ getCenter() + ", getAxisX()=" + getAxisX() + ", getAxisY()=" + getAxisY() + ", getAxisZ()="
-				+ getAxisZ() + "]";
+
+		String parentSring = null;
+		if (parent != null)
+			parentSring = "[id=" + parent.getIndex() + "]";
+
+		//@formatter:off
+		return "Block [index=" + index 
+				+ ", parent=" + parentSring
+				+ ", material=" + material
+				+ ", type=" + type 
+				+ ", color=" + color
+				+ ", lengths=" + getLengths()
+				+ ", volume=" + getVolume()
+				+ ", center=" + getCenter()
+				+ ", axisX=" + getAxisX()
+				+ ", axisY=" + getAxisY() 
+				+ ", axisZ=" + getAxisZ()
+				+ ", typeLook=" + typeLook
+				+ "]";
+		//@formatter:on
+
 	}
 
 	public void validateBlock() {

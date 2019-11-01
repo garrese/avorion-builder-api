@@ -1,6 +1,7 @@
 package avuilder4j.error;
 
 import avuilder4j.utils.AvValidations;
+import avuilder4j.values.Spatial;
 
 public class AvErrors {
 
@@ -22,7 +23,7 @@ public class AvErrors {
 	public static final String FACE_NOT_RECOGNIZED = "Face ID not recognized.";
 	public static final String FACE_REPEATED = "Invalid faces. Some face is repeated.";
 	public static final String FACE_FIXED_MAX_NUMBER = "Invalid fixed faces ammount. Maximum is "
-			+ AvValidations.MAX_FIXED_FACES + ".";
+			+ Spatial.MAX_FIXED_FACES + ".";
 	public static final String FACE_FIXED_AXES = "Can not be more than one fixed face in the same axis";
 
 	public static final String POINT_NOT_RECOGNIZED = "Point ID not recognized.";

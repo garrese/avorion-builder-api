@@ -1,11 +1,11 @@
-package avuilder4j.entities.dimensional;
+package avuilder4j.entities.spatial;
 
 import java.io.Serializable;
 
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
-import avuilder4j.utils.AvK;
 import avuilder4j.utils.AvValidations;
+import avuilder4j.values.Spatial;
 
 /**
  * Represents a point in a Cartesian coordinate system.
@@ -18,11 +18,12 @@ public class Point implements Serializable {
 	public Point() {
 	}
 
-	/**
-	 * @param x
-	 * @param y
-	 * @param z
-	 */
+	public Point(double x, double y, double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
 	public Point(Double x, Double y, Double z) {
 		this.x = x;
 		this.y = y;
@@ -61,11 +62,11 @@ public class Point implements Serializable {
 	public Double getAxisComponent(int axisId) {
 		AvValidations.validateAxesExistance(axisId);
 		switch (axisId) {
-		case AvK.AXIS_X:
+		case Spatial.AXIS_X:
 			return x;
-		case AvK.AXIS_Y:
+		case Spatial.AXIS_Y:
 			return y;
-		case AvK.AXIS_Z:
+		case Spatial.AXIS_Z:
 			return z;
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
@@ -73,13 +74,9 @@ public class Point implements Serializable {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "Point [x=" + x + ", y=" + y + ", z=" + z + "]";
+		return "[x=" + x + ", y=" + y + ", z=" + z + "]";
 	}
 
 	@Override

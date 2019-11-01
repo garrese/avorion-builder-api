@@ -4,15 +4,13 @@ import java.io.Serializable;
 
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
+import avuilder4j.values.Game;
 
 /**
  * Block orientation
  */
-public class Orientation implements Serializable {
+public class TypeLook implements Serializable {
 	private static final long serialVersionUID = -7559284143961816577L;
-
-	public static final int MAX_ORIENTATION = 5;
-	public static final int MIN_ORIENTATION = 0;
 
 	/**
 	 * Look component of the piece orientation.
@@ -24,14 +22,14 @@ public class Orientation implements Serializable {
 	 */
 	private Integer up = 0;
 
-	public Orientation() {
+	public TypeLook() {
 	}
 
 	/**
 	 * @param look the {@link #look}
 	 * @param up   the {@link #up}
 	 */
-	public Orientation(Integer look, Integer up) {
+	public TypeLook(Integer look, Integer up) {
 		setLook(look);
 		setUp(up);
 	}
@@ -49,10 +47,10 @@ public class Orientation implements Serializable {
 			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
-	public static Orientation deepCopy(Orientation orientation) {
-		Orientation o = null;
+	public static TypeLook deepCopy(TypeLook orientation) {
+		TypeLook o = null;
 		if (orientation != null) {
-			o = new Orientation();
+			o = new TypeLook();
 			o.setLook(orientation.getLook());
 			o.setUp(orientation.getUp());
 		}
@@ -74,9 +72,9 @@ public class Orientation implements Serializable {
 	 * @param look the {@link #look} to set.
 	 */
 	public void setLook(Integer look) {
-		if (look < MIN_ORIENTATION || look > MAX_ORIENTATION) {
+		if (look < Game.MIN_LOOK || look > Game.MAX_LOOK) {
 			throw new IllegalArgumentException(
-					"Look orientation must be between " + MIN_ORIENTATION + " and " + MAX_ORIENTATION + ".");
+					"Look orientation must be between " + Game.MIN_LOOK + " and " + Game.MAX_LOOK + ".");
 		}
 		this.look = look;
 	}
@@ -96,9 +94,9 @@ public class Orientation implements Serializable {
 	 * @param up the {@link #up} to set.
 	 */
 	public void setUp(Integer up) {
-		if (up < MIN_ORIENTATION || look > MAX_ORIENTATION) {
+		if (up < Game.MIN_LOOK || look > Game.MAX_LOOK) {
 			throw new IllegalArgumentException(
-					"Up orientation must be between " + MIN_ORIENTATION + " and " + MAX_ORIENTATION + ".");
+					"Up orientation must be between " + Game.MIN_LOOK + " and " + Game.MAX_LOOK + ".");
 		}
 		this.up = up;
 	}
@@ -109,7 +107,7 @@ public class Orientation implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Orientation [look=" + look + ", up=" + up + "]";
+		return "[look=" + look + ", up=" + up + "]";
 	}
 
 }

@@ -1,9 +1,9 @@
-package avuilder4j.entities.game;
+package avuilder4j.formulae;
 
 /**
  * Immutable Avorion block type reference.
  */
-public class TypeBlock {
+public class TypeStats {
 
 	/**
 	 * Block type index in game.
@@ -51,7 +51,7 @@ public class TypeBlock {
 	 * @param mechanics    the {@link #mechanics}
 	 * @param engineers    the {@link #engineers}
 	 */
-	public TypeBlock(int index, Double density, Double durability, Double creditCost, Double materialCost,
+	public TypeStats(int index, Double density, Double durability, Double creditCost, Double materialCost,
 			Double mechanics, Double engineers) {
 		super();
 		this.index = index;

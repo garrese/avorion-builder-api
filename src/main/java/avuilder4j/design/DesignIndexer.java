@@ -1,4 +1,4 @@
-package avuilder4j.managers;
+package avuilder4j.design;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import avuilder4j.entities.dimensional.Lengths;
 import avuilder4j.entities.game.Block;
-import avuilder4j.entities.game.Orientation;
-import avuilder4j.utils.AvK;
+import avuilder4j.entities.game.TypeLook;
+import avuilder4j.entities.spatial.Lengths;
+import avuilder4j.values.Game;
 
 /**
  * Para tener todos bloques ya almacenados. <br>
@@ -18,18 +18,18 @@ import avuilder4j.utils.AvK;
  * Permite adquirir bloques y reindexarlos coherentemente. <br>
  * Al importar un bloque comprueba si éste va
  */
-public class StructureBlocksProvider {
+public class DesignIndexer {
 
 	private List<Block> blocks = new ArrayList<Block>();
 	private int indexCount;
 
-	public String defaultColor = AvK.DEFAULT_COLOR;
-	public Integer defaultMaterial = AvK.DEFAULT_MATERIAL;
-	public Integer defaultType = AvK.DEFAULT_TYPE;
-	public Lengths defaultLengths = new Lengths(AvK.DEFAULT_LENGTH, AvK.DEFAULT_LENGTH, AvK.DEFAULT_LENGTH);
-	public Orientation defaultOrientation = AvK.ORIENTATION_ZERO;
+	public String defaultColor = Game.DEFAULT_COLOR;
+	public Integer defaultMaterial = Game.DEFAULT_MATERIAL;
+	public Integer defaultType = Game.DEFAULT_TYPE;
+	public Lengths defaultLengths = new Lengths(Game.DEFAULT_LENGTH, Game.DEFAULT_LENGTH, Game.DEFAULT_LENGTH);
+	public TypeLook defaultOrientation = Game.ORIENTATION_ZERO;
 
-	public StructureBlocksProvider() {
+	public DesignIndexer() {
 	}
 
 	public void indexBlock(Block block) {
@@ -50,7 +50,7 @@ public class StructureBlocksProvider {
 		b.setMaterial(defaultMaterial);
 		b.setType(defaultType);
 		b.setLengths(defaultLengths);
-		b.setOrientation(defaultOrientation);
+		b.setTypeLook(defaultOrientation);
 		return b;
 	}
 
@@ -101,7 +101,7 @@ public class StructureBlocksProvider {
 		}
 	}
 
-	public List<Block> getBlocks() {
+	public List<Block> getDesignStructure() {
 		return blocks;
 	}
 
@@ -109,7 +109,7 @@ public class StructureBlocksProvider {
 		return indexCount;
 	}
 
-	public String getBlocksReport() {
+	public String getDesignReport() {
 		String report = "";
 		for (int i = 0; i < blocks.size(); i++) {
 			report += blocks.get(i) + "\n";
@@ -133,9 +133,9 @@ public class StructureBlocksProvider {
 	 */
 	@Override
 	public String toString() {
-		return "StructureBlocksProvider [blocks=" + blocks + ", indexCount=" + indexCount + ", defaultColor="
-				+ defaultColor + ", defaultMaterial=" + defaultMaterial + ", defaultType=" + defaultType
-				+ ", defaultLengths=" + defaultLengths + ", defaultOrientation=" + defaultOrientation + "]";
+		return "StructureBlocksProvider [indexCount=" + indexCount + ", defaultColor=" + defaultColor
+				+ ", defaultMaterial=" + defaultMaterial + ", defaultType=" + defaultType + ", defaultLengths="
+				+ defaultLengths + ", defaultOrientation=" + defaultOrientation + "]";
 	}
 
 }

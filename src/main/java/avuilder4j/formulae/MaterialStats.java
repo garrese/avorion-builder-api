@@ -1,9 +1,9 @@
-package avuilder4j.entities.game;
+package avuilder4j.formulae;
 
 /**
  * Immutable Avorion material reference.
  */
-public class Material {
+public class MaterialStats {
 
 	/**
 	 * Material's index in game.
@@ -39,7 +39,7 @@ public class Material {
 	 * @param creditCost   the {@link #creditCost}
 	 * @param materialCost the {@link #materialCost}
 	 */
-	public Material(int index, String name, double density, double durability, double creditCost, double materialCost) {
+	public MaterialStats(int index, String name, double density, double durability, double creditCost, double materialCost) {
 		super();
 		this.index = index;
 		this.name = name;

@@ -1,4 +1,4 @@
-package avuilder4j.managers;
+package avuilder4j.design;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
 import avuilder4j.entities.game.Block;
 import avuilder4j.error.Avuilder4jException;
 
-public class Exporter {
+public class DesignExporter {
 
 	protected String exportRoute = "";
 
@@ -30,7 +30,6 @@ public class Exporter {
 				throw new IllegalArgumentException("Ship's name can't be empty or null");
 			}
 
-			boolean rootFound = true;
 			ArrayList<Block> roots = new ArrayList<Block>();
 			for (Block block : blocks) {
 				block.validateBlock();
@@ -99,10 +98,10 @@ public class Exporter {
 				String materialIndex = String.valueOf(block.getMaterial());
 				addAttribute(doc, blockE, "material", materialIndex);
 
-				String look = String.valueOf(block.getOrientation().getLook());
+				String look = String.valueOf(block.getTypeLook().getLook());
 				addAttribute(doc, blockE, "look", look);
 
-				String up = String.valueOf(block.getOrientation().getUp());
+				String up = String.valueOf(block.getTypeLook().getUp());
 				addAttribute(doc, blockE, "up", up);
 
 				String color = block.getColor();

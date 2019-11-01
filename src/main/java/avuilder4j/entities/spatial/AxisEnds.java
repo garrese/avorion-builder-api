@@ -1,10 +1,11 @@
-package avuilder4j.entities.dimensional;
+package avuilder4j.entities.spatial;
 
 import java.io.Serializable;
 
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.utils.AvValidations;
+import avuilder4j.values.Spatial;
 
 /**
  * Represents a line in a single coordinate axis.
@@ -12,14 +13,8 @@ import avuilder4j.utils.AvValidations;
  * The line is defined by an upper and a lower point in the coordinate axis.
  */
 public class AxisEnds implements Serializable {
-
-	public static final int END_LOWER = 0;
-
-	public static final int END_UPPER = 1;
-
-	public static final int[] ENDS_LIST = new int[] { END_LOWER, END_UPPER };
-
 	private static final long serialVersionUID = 1186136799589694838L;
+
 	/**
 	 * Lower point of the line in the coordinate axis.
 	 */
@@ -49,6 +44,11 @@ public class AxisEnds implements Serializable {
 	public AxisEnds(Double lP, Double uP) {
 		setUpperEnd(uP);
 		setLowerEnd(lP);
+	}
+
+	public void cleanEnds() {
+		lowerEnd = null;
+		upperEnd = null;
 	}
 
 	public void sumToLowerEnd(double x) {
@@ -120,9 +120,9 @@ public class AxisEnds implements Serializable {
 
 	public Double getEnd(int endId) {
 		switch (endId) {
-		case AxisEnds.END_UPPER:
+		case Spatial.END_UPPER:
 			return upperEnd;
-		case AxisEnds.END_LOWER:
+		case Spatial.END_LOWER:
 			return lowerEnd;
 		default:
 			throw new IllegalArgumentException(AvErrors.END_NOT_RECOGNIZED);
@@ -196,11 +196,42 @@ public class AxisEnds implements Serializable {
 		moveCenterByVector(vector);
 	}
 
+	public void setByLowerEndAndLength(double lowerEnd, double length) {
+		AvValidations.validateLengths(length);
+
+		upperEnd = null;
+		setLowerEnd(lowerEnd);
+		setUpperEnd(lowerEnd + length);
+	}
+
+	public void setByUpperEndAndLength(double upperEnd, double length) {
+		AvValidations.validateLengths(length);
+
+		lowerEnd = null;
+		setUpperEnd(upperEnd);
+		setLowerEnd(upperEnd - length);
+	}
+
+	public void setByEndAndLength(int endId, double end, double length) {
+		AvValidations.validateLengths(length);
+
+		switch (endId) {
+		case Spatial.END_UPPER:
+			setByUpperEndAndLength(end, length);
+			break;
+		case Spatial.END_LOWER:
+			setByLowerEndAndLength(end, length);
+			break;
+		default:
+			throw new IllegalArgumentException(AvErrors.END_NOT_RECOGNIZED);
+		}
+	}
+
 	public void setEnd(int endId, Double end) {
 		switch (endId) {
-		case AxisEnds.END_UPPER:
+		case Spatial.END_UPPER:
 			setUpperEnd(end);
-		case AxisEnds.END_LOWER:
+		case Spatial.END_LOWER:
 			setLowerEnd(end);
 		default:
 			throw new IllegalArgumentException(AvErrors.END_NOT_RECOGNIZED);
@@ -228,12 +259,12 @@ public class AxisEnds implements Serializable {
 
 			} else {
 				switch (fixedEndId) {
-				case END_UPPER:
+				case Spatial.END_UPPER:
 					if (upperEnd == null)
 						upperEnd = 0.0;
 					lowerEnd = upperEnd - length;
 					break;
-				case END_LOWER:
+				case Spatial.END_LOWER:
 					if (lowerEnd == null)
 						lowerEnd = 0.0;
 					upperEnd = lowerEnd + length;
@@ -269,14 +300,9 @@ public class AxisEnds implements Serializable {
 		this.upperEnd = uP;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "AxisEnds [length=" + getLength() + " lowerEnd=" + lowerEnd + ", center=" + getCenter() + ", upperEnd="
-				+ upperEnd + "]";
+		return "[lowerEnd=" + lowerEnd + ", upperEnd=" + upperEnd + "]";
 	}
 
 	public void validateAxisEnds() {

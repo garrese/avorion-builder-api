@@ -1,11 +1,11 @@
-package avuilder4j.utils;
+package avuilder4j.values;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import avuilder4j.entities.game.Orientation;
-import avuilder4j.entities.game.TypeBlock;
+import avuilder4j.entities.game.TypeLook;
+import avuilder4j.formulae.TypeStats;
 
 public class Types {
 
@@ -47,12 +47,12 @@ public class Types {
 	public static final int RICH_STONE = 510;
 	public static final int SUPER_RICH_STONE = 520;
 
-	public static final Orientation DIRECTIONAL_THRUSTER_X = new Orientation(0, 3);
-	public static final Orientation DIRECTIONAL_THRUSTER_Y = new Orientation(2, 0);
-	public static final Orientation DIRECTIONAL_THRUSTER_Z = new Orientation(5, 3);
-	public static final Orientation GYRO_ARRAY_AROUND_X = new Orientation(1, 2);
-	public static final Orientation GYRO_ARRAY_AROUND_Y = new Orientation(2, 0);
-	public static final Orientation GYRO_ARRAY_AROUND_Z = new Orientation(5, 2);
+	public static final TypeLook DIRECTIONAL_THRUSTER_X = new TypeLook(0, 3);
+	public static final TypeLook DIRECTIONAL_THRUSTER_Y = new TypeLook(2, 0);
+	public static final TypeLook DIRECTIONAL_THRUSTER_Z = new TypeLook(5, 3);
+	public static final TypeLook GYRO_ARRAY_AROUND_X = new TypeLook(1, 2);
+	public static final TypeLook GYRO_ARRAY_AROUND_Y = new TypeLook(2, 0);
+	public static final TypeLook GYRO_ARRAY_AROUND_Z = new TypeLook(5, 2);
 
 //	public static final int BLANK_HULL = 2;
 //	public static final int HULL = 1;
@@ -92,19 +92,19 @@ public class Types {
 //	public static final int TRANSPORTER = 56;
 //	public static final int CLONING_PODS = 58;
 
-	protected Map<Integer, TypeBlock> typeBlocks;
+	protected Map<Integer, TypeStats> typeBlocks;
 
 	public Types() {
-		Map<Integer, TypeBlock> m = new HashMap<Integer, TypeBlock>();
-		m.put(INTEGRITY_FIELD_GENERATOR, new TypeBlock(INTEGRITY_FIELD_GENERATOR, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
+		Map<Integer, TypeStats> m = new HashMap<Integer, TypeStats>();
+		m.put(INTEGRITY_FIELD_GENERATOR, new TypeStats(INTEGRITY_FIELD_GENERATOR, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
 		this.typeBlocks = Collections.unmodifiableMap(m);
 	}
 
-	public Map<Integer, TypeBlock> getAllMaterials() {
+	public Map<Integer, TypeStats> getAllMaterials() {
 		return typeBlocks;
 	}
 
-	public TypeBlock getMaterial(Integer typeIndex) {
+	public TypeStats getMaterial(Integer typeIndex) {
 		return typeBlocks.get(typeIndex);
 	}
 

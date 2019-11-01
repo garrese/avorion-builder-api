@@ -1,4 +1,4 @@
-package avuilder4j.entities.dimensional;
+package avuilder4j.entities.spatial;
 
 import java.io.Serializable;
 
@@ -37,13 +37,17 @@ public class Vector extends Point implements Serializable {
 		super();
 	}
 
-	/**
-	 * @param x
-	 * @param y
-	 * @param z
-	 */
 	public Vector(Double x, Double y, Double z) {
 		super(x, y, z);
+	}
+
+	public Vector(double x, double y, double z) {
+		super(x, y, z);
+	}
+
+	@Override
+	public String toString() {
+		return "[x=" + x + ", y=" + y + ", z=" + z + "]";
 	}
 
 }

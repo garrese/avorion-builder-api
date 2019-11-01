@@ -1,9 +1,9 @@
-package avuilder4j.entities.dimensional;
+package avuilder4j.entities.spatial;
 
 import java.io.Serializable;
 
 import avuilder4j.error.AvErrors;
-import avuilder4j.utils.AvK;
+import avuilder4j.values.Spatial;
 
 public class Lengths implements Serializable {
 	private static final long serialVersionUID = -3737835992118370776L;
@@ -14,6 +14,12 @@ public class Lengths implements Serializable {
 
 	public Lengths() {
 
+	}
+
+	public Lengths(double lengthX, double lengthY, double lengthZ) {
+		this.lengthX = lengthX;
+		this.lengthY = lengthY;
+		this.lengthZ = lengthZ;
 	}
 
 	public Lengths(Double lengthX, Double lengthY, Double lengthZ) {
@@ -55,11 +61,11 @@ public class Lengths implements Serializable {
 
 	public Double getLength(int axisId) {
 		switch (axisId) {
-		case AvK.AXIS_X:
+		case Spatial.AXIS_X:
 			return lengthX;
-		case AvK.AXIS_Y:
+		case Spatial.AXIS_Y:
 			return lengthY;
-		case AvK.AXIS_Z:
+		case Spatial.AXIS_Z:
 			return lengthZ;
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
@@ -82,11 +88,11 @@ public class Lengths implements Serializable {
 
 	public void setLength(Double length, int axisId) {
 		switch (axisId) {
-		case AvK.AXIS_X:
+		case Spatial.AXIS_X:
 			lengthX = length;
-		case AvK.AXIS_Y:
+		case Spatial.AXIS_Y:
 			lengthY = length;
-		case AvK.AXIS_Z:
+		case Spatial.AXIS_Z:
 			lengthZ = length;
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
@@ -99,7 +105,7 @@ public class Lengths implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Lengths [lengthX=" + lengthX + ", lengthY=" + lengthY + ", lengthZ=" + lengthZ + "]";
+		return "[lengthX=" + lengthX + ", lengthY=" + lengthY + ", lengthZ=" + lengthZ + "]";
 	}
 
 }
