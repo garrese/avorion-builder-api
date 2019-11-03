@@ -1,7 +1,7 @@
 package avuilder4j.entities.game;
 
 import avuilder4j.entities.spatial.Cuboid;
-import avuilder4j.entities.spatial.Lengths;
+import avuilder4j.entities.spatial.util.Lengths;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.utils.AvValidations;
@@ -179,6 +179,10 @@ public class Block extends Cuboid {
 	 */
 	@Override
 	public String toString() {
+
+		String tags = "";
+		if (this.tags != null)
+			tags = this.tags;
 
 		String parentSring = null;
 		if (parent != null)

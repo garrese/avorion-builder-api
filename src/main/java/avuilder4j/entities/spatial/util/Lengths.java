@@ -1,4 +1,4 @@
-package avuilder4j.entities.spatial;
+package avuilder4j.entities.spatial.util;
 
 import java.io.Serializable;
 
@@ -8,9 +8,9 @@ import avuilder4j.values.Spatial;
 public class Lengths implements Serializable {
 	private static final long serialVersionUID = -3737835992118370776L;
 
-	Double lengthX;
-	Double lengthY;
-	Double lengthZ;
+	public Double lengthX;
+	public Double lengthY;
+	public Double lengthZ;
 
 	public Lengths() {
 

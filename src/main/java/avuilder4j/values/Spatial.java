@@ -1,6 +1,6 @@
 package avuilder4j.values;
 
-import avuilder4j.entities.spatial.Point;
+import avuilder4j.entities.spatial.util.Point;
 import avuilder4j.error.AvErrors;
 
 public class Spatial {

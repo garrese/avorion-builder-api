@@ -1,14 +1,14 @@
 package avuilder4j.design;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import avuilder4j.entities.game.Block;
+import avuilder4j.entities.game.Structure;
 import avuilder4j.entities.game.TypeLook;
-import avuilder4j.entities.spatial.Lengths;
+import avuilder4j.entities.spatial.util.Lengths;
 import avuilder4j.values.Game;
 
 /**
@@ -20,7 +20,7 @@ import avuilder4j.values.Game;
  */
 public class DesignIndexer {
 
-	private List<Block> blocks = new ArrayList<Block>();
+	private Structure structure = new Structure();
 	private int indexCount;
 
 	public String defaultColor = Game.DEFAULT_COLOR;
@@ -35,7 +35,7 @@ public class DesignIndexer {
 	public void indexBlock(Block block) {
 		indexCount++;
 		block.setIndex(indexCount);
-		blocks.add(block);
+		structure.add(block);
 	}
 
 	public Block createBlockBlank() {
@@ -73,20 +73,20 @@ public class DesignIndexer {
 	}
 
 	public boolean remove(Block block) {
-		return blocks.remove(block);
+		return structure.remove(block);
 	}
 
 	public int remove(List<Block> blocks) {
 		int removed = 0;
 		for (Block block : blocks) {
-			if (this.blocks.remove(block))
+			if (this.structure.remove(block))
 				removed++;
 		}
 		return removed;
 	}
 
 	public void clearBlocks() {
-		blocks.clear();
+		structure.clear();
 		indexCount = 0;
 	}
 
@@ -96,13 +96,13 @@ public class DesignIndexer {
 				indexBlock(block);
 			} else {
 				indexCount = block.getIndex();
-				blocks.add(block);
+				structure.add(block);
 			}
 		}
 	}
 
-	public List<Block> getDesignStructure() {
-		return blocks;
+	public List<Block> getStructure() {
+		return structure;
 	}
 
 	public int getIndexCount() {
@@ -111,16 +111,16 @@ public class DesignIndexer {
 
 	public String getDesignReport() {
 		String report = "";
-		for (int i = 0; i < blocks.size(); i++) {
-			report += blocks.get(i) + "\n";
+		for (int i = 0; i < structure.size(); i++) {
+			report += structure.get(i) + "\n";
 		}
-		report += "Total blocks= " + blocks.size();
+		report += "Total blocks= " + structure.size();
 		return report;
 	}
 
 	public void getIndexesMap() {
 		Map<Integer, Integer> indexes = new HashMap<>();
-		for (Block block : blocks) {
+		for (Block block : structure) {
 			Integer index = block.getIndex();
 			if (index != null)
 				indexes.put(index, index);

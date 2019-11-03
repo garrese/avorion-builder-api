@@ -2,8 +2,10 @@ package avuilder4j.entities.spatial;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
+import avuilder4j.entities.spatial.util.Lengths;
+import avuilder4j.entities.spatial.util.Point;
+import avuilder4j.entities.spatial.util.Vector;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.utils.AvValidations;
@@ -55,117 +57,6 @@ public class Cuboid implements Serializable {
 			c.setAxisZ(AxisEnds.deepCopy(cuboid.getAxisZ()));
 		}
 		return c;
-	}
-
-	public static void escalateStructure(List<? extends Cuboid> cuboids, double ratio) {
-		escalateStructure(cuboids, ratio);
-	}
-
-	public static void escalateStructure(List<? extends Cuboid> cuboids, double ratioX, double ratioY, double ratioZ) {
-		AvValidations.validateRatios(ratioX, ratioY, ratioZ);
-
-		for (Cuboid cuboid : cuboids) {
-			cuboid.validateCuboid();
-		}
-
-		for (Cuboid cuboid : cuboids) {
-			cuboid.getAxisX().escalateRelative(ratioX);
-			cuboid.getAxisY().escalateRelative(ratioY);
-			cuboid.getAxisZ().escalateRelative(ratioZ);
-		}
-	}
-
-	public static void escalateStructure(List<? extends Cuboid> cuboids, double ratio, int... axesIds) {
-		AvValidations.validateRatios(ratio);
-		AvValidations.validateAxesExistance(axesIds);
-		AvValidations.validateAxesRepetition(axesIds);
-		if (axesIds.length == 0) {
-			axesIds = Spatial.AXES_LIST;
-		}
-
-		for (Cuboid cuboid : cuboids) {
-			cuboid.validateCuboid();
-		}
-
-		for (Cuboid cuboid : cuboids) {
-			for (int axisId : axesIds) {
-				cuboid.getAxis(axisId).escalateRelative(ratio);
-			}
-		}
-	}
-
-	public static void escalateStructureByVolume(List<? extends Cuboid> cuboids, double finalVolume) {
-		escalateStructureByVolume(cuboids, finalVolume, new int[0]);
-	}
-
-	public static void escalateStructureByVolume(List<? extends Cuboid> cuboids, double finalVolume, int... axesIds) {
-		AvValidations.validateVolumes(finalVolume);
-		AvValidations.validateAxesExistance(axesIds);
-		AvValidations.validateAxesRepetition(axesIds);
-		if (axesIds.length == 0) {
-			axesIds = Spatial.AXES_LIST;
-		}
-
-		for (Cuboid cuboid : cuboids) {
-			cuboid.validateCuboid();
-		}
-		double currentVol = 0;
-		for (Cuboid cuboid : cuboids) {
-			currentVol += cuboid.getVolume();
-		}
-
-		double ratio;
-		switch (axesIds.length) {
-		case 0:
-		case 3:
-			ratio = Math.cbrt(finalVolume / currentVol);
-			break;
-		case 2:
-			ratio = Math.sqrt(finalVolume / currentVol);
-			break;
-		case 1:
-			ratio = finalVolume / currentVol;
-			break;
-		default:
-			throw new Avuilder4jRuntimeException(AvErrors.AXIS_AMOUNT);
-		}
-		escalateStructure(cuboids, ratio, axesIds);
-	}
-
-	public static List<? extends Cuboid> getByTag(List<? extends Cuboid> cuboids, String tags) {
-		List<Cuboid> r = new ArrayList<Cuboid>();
-		for (Cuboid cuboid : cuboids) {
-			if (cuboid.hasTags(tags))
-				r.add(cuboid);
-		}
-		return r;
-	}
-
-	public static void rotateStructure(List<? extends Cuboid> cuboids, int rotationId) {
-		rotateStructure(cuboids, rotationId, 1);
-	}
-
-	public static void rotateStructure(List<? extends Cuboid> cuboids, int rotationId, int times) {
-		AvValidations.validateRotationsExistance(rotationId);
-		if (times <= 0)
-			throw new IllegalArgumentException("'times' argument can not be lower than 1.");
-
-		int[] axesIds = Spatial.getAxesIdsInvolvedInRotation(rotationId);
-		try {
-			for (Cuboid cuboid : cuboids) {
-				AxisEnds axis0 = cuboid.getAxis(axesIds[0]);
-				AxisEnds axis1 = cuboid.getAxis(axesIds[1]);
-				axis0.validateAxisEnds();
-				axis1.validateAxisEnds();
-
-				AxisEnds axis0Aux = axis0;
-				AxisEnds axis1Aux = axis1;
-				cuboid.setAxis(axesIds[0], axis1Aux);
-				cuboid.setAxis(axesIds[1], axis0Aux);
-			}
-		} catch (Exception e) {
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED, e);
-		}
 	}
 
 	public Cuboid() {
@@ -744,9 +635,16 @@ public class Cuboid implements Serializable {
 		this.index = index;
 	}
 
+	public void setLengths(Lengths lengths) {
+		setLengths(lengths, null);
+	}
+
 	public void setLengths(Lengths lengths, int... fixedFacesIds) {
 		if (lengths == null) {
 			lengths = new Lengths();
+		}
+		if (fixedFacesIds == null) {
+			fixedFacesIds = new int[0];
 		}
 		AvValidations.validateFacesExistance(fixedFacesIds);
 		AvValidations.validateFacesRepetition(fixedFacesIds);
