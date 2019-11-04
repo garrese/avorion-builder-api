@@ -2,15 +2,16 @@ package avuilder4j.formulae;
 
 public class Formulae {
 
-	public static double getSlotVolumeBarrier(int slots) {
+	public static double getSystemSlotVolumeBarrier(int systemSlots) {
 		double base = 2000.0;
 		double powBase = 2.5;
-		double powModTill10 = 6;
-		double pow = 0;
-		if (slots > 10) {
-			pow = slots - powModTill10;
+		double powModTill11 = 6;
+
+		double pow;
+		if (systemSlots > 0 && systemSlots < 11) {
+			pow = systemSlots - powModTill11;
 		} else {
-			switch (slots) {
+			switch (systemSlots) {
 			case 11:
 				pow = 3.35;
 				break;
@@ -26,6 +27,8 @@ public class Formulae {
 			case 15:
 				pow = 4.7;
 				break;
+			default:
+				throw new IllegalArgumentException("System slots number must be from 1 to 15.");
 			}
 		}
 		return base * Math.pow(powBase, pow);
