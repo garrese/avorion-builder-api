@@ -1,15 +1,19 @@
-package avuilder4j.entities.spatial;
+package avuilder4j.spatial;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import avuilder4j.entities.spatial.util.Lengths;
-import avuilder4j.entities.spatial.util.Point;
-import avuilder4j.entities.spatial.util.Vector;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
+import avuilder4j.spatial.dtos.Lengths;
+import avuilder4j.spatial.dtos.Point;
+import avuilder4j.spatial.dtos.Vector;
+import avuilder4j.spatial.enums.Axis;
+import avuilder4j.spatial.enums.Corner;
+import avuilder4j.spatial.enums.End;
+import avuilder4j.spatial.enums.Face;
+import avuilder4j.spatial.enums.Rotation;
 import avuilder4j.utils.AvValidations;
-import avuilder4j.values.Spatial;
 
 /**
  * Represents a cuboid in a Cartesian coordinate system.
@@ -59,8 +63,7 @@ public class Cuboid implements Serializable {
 		return c;
 	}
 
-	public Cuboid() {
-	}
+	public Cuboid() {}
 
 	public Cuboid(Integer index) {
 		super();
@@ -77,7 +80,7 @@ public class Cuboid implements Serializable {
 		setLengths(lengths);
 	}
 
-	public void attachTo(Cuboid destinationCuboid, int destinationFaceId) {
+	public void attachTo(Cuboid destinationCuboid, Face destinationFaceId) {
 		Point faceOrigin = null;
 		Point faceDestination = null;
 
@@ -142,32 +145,30 @@ public class Cuboid implements Serializable {
 		escalate(ratio, null, null);
 	}
 
-	public void escalate(double ratio, int[] fixedFacesIds) {
-		escalate(ratio, null, fixedFacesIds);
+	public void escalate(double ratio, Face[] fixedFacesIds) {
+		escalate(ratio, fixedFacesIds, null);
 	}
 
-	public void escalate(double ratio, int[] fixedFacesIds, int[] axesIds) {
-		if (axesIds == null || axesIds.length == 0) {
-			axesIds = Spatial.AXES_LIST;
+	public void escalate(double ratio, Face[] fixedFaces, Axis[] axes) {
+		if (axes == null || axes.length == 0) {
+			axes = Axis.values();
 		}
-		if (fixedFacesIds == null) {
-			fixedFacesIds = new int[0];
+		if (fixedFaces == null) {
+			fixedFaces = new Face[0];
 		}
 		validateCuboid();
 		AvValidations.validateRatios(ratio);
-		AvValidations.validateFacesExistance(fixedFacesIds);
-		AvValidations.validateFixedFacesMaxNumber(fixedFacesIds);
-		AvValidations.validateFixedFacesAxes(fixedFacesIds);
-		AvValidations.validateAxesExistance(axesIds);
-		AvValidations.validateAxesRepetition(axesIds);
+		AvValidations.validateFixedFacesMaxNumber(fixedFaces);
+		AvValidations.validateFixedFacesAxes(fixedFaces);
+		AvValidations.validateAxesRepetition(axes);
 
-		for (int axisId : axesIds) {
+		for (Axis axisId : axes) {
 			AxisEnds axis = getAxis(axisId);
 			boolean axisCompleted = false;
-			for (int faceId : fixedFacesIds) {
-				int faceIdAxisId = Spatial.getAxisIdByFaceId(faceId);
+			for (Face faceId : fixedFaces) {
+				Axis faceIdAxisId = Axis.getAxisIdByFaceId(faceId);
 				if (axisId == faceIdAxisId) {
-					Integer endId = Spatial.getEndIdByFaceId(axisId);
+					End endId = End.getEndIdByFaceId(faceId);
 					axis.escalateStatic(ratio, endId);
 					axisCompleted = true;
 				}
@@ -182,16 +183,15 @@ public class Cuboid implements Serializable {
 		escalateByVolume(finalVolume, null, null);
 	}
 
-	public void escalateByVolume(double finalVolume, int... fixedFacesIds) {
+	public void escalateByVolume(double finalVolume, Face... fixedFacesIds) {
 		escalateByVolume(finalVolume, fixedFacesIds, null);
 	}
 
-	public void escalateByVolume(double finalVolume, int[] fixedFacesIds, int[] axesIds) {
+	public void escalateByVolume(double finalVolume, Face[] fixedFacesIds, Axis[] axesIds) {
 		if (axesIds == null) {
-			axesIds = Spatial.AXES_LIST;
+			axesIds = Axis.values();
 		}
 		validateCuboid();
-		AvValidations.validateAxesExistance(axesIds);
 		AvValidations.validateAxesRepetition(axesIds);
 
 		double ratio;
@@ -220,13 +220,13 @@ public class Cuboid implements Serializable {
 		return list;
 	}
 
-	public AxisEnds getAxis(int axisId) {
-		switch (axisId) {
-		case Spatial.AXIS_X:
+	public AxisEnds getAxis(Axis axis) {
+		switch (axis) {
+		case X:
 			return getAxisX();
-		case Spatial.AXIS_Y:
+		case Y:
 			return getAxisY();
-		case Spatial.AXIS_Z:
+		case Z:
 			return getAxisZ();
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
@@ -238,27 +238,21 @@ public class Cuboid implements Serializable {
 	 * 
 	 * @return the {@link #axisX}.
 	 */
-	public AxisEnds getAxisX() {
-		return axisX;
-	}
+	public AxisEnds getAxisX() { return axisX; }
 
 	/**
 	 * Gets the {@link #axisY}.
 	 * 
 	 * @return the {@link #axisY}.
 	 */
-	public AxisEnds getAxisY() {
-		return axisY;
-	}
+	public AxisEnds getAxisY() { return axisY; }
 
 	/**
 	 * Gets the {@link #axisZ}.
 	 * 
 	 * @return the {@link #axisZ}.
 	 */
-	public AxisEnds getAxisZ() {
-		return axisZ;
-	}
+	public AxisEnds getAxisZ() { return axisZ; }
 
 	/**
 	 * Calculates the central point of the cuboid.
@@ -276,48 +270,48 @@ public class Cuboid implements Serializable {
 		return p;
 	}
 
-	public Point getCorner(int cornerId) {
+	public Point getCorner(Corner cornerId) {
 		Point p = null;
 
 		if (isCuboidDefined()) {
 			p = new Point();
 			switch (cornerId) {
-			case Spatial.CORNER_BASE_1:
+			case CORNER_BASE_1:
 				p.x = getAxisX().getLowerEnd();
 				p.y = getAxisY().getLowerEnd();
 				p.z = getAxisZ().getLowerEnd();
 				break;
-			case Spatial.CORNER_BASE_2:
+			case CORNER_BASE_2:
 				p.x = getAxisX().getUpperEnd();
 				p.y = getAxisY().getLowerEnd();
 				p.z = getAxisZ().getLowerEnd();
 				break;
-			case Spatial.CORNER_BASE_3:
+			case CORNER_BASE_3:
 				p.x = getAxisX().getUpperEnd();
 				p.y = getAxisY().getLowerEnd();
 				p.z = getAxisZ().getUpperEnd();
 				break;
-			case Spatial.CORNER_BASE_4:
+			case CORNER_BASE_4:
 				p.x = getAxisX().getLowerEnd();
 				p.y = getAxisY().getLowerEnd();
 				p.z = getAxisZ().getUpperEnd();
 				break;
-			case Spatial.CORNER_TOP_1:
+			case CORNER_TOP_1:
 				p.x = getAxisX().getLowerEnd();
 				p.y = getAxisY().getUpperEnd();
 				p.z = getAxisZ().getLowerEnd();
 				break;
-			case Spatial.CORNER_TOP_2:
+			case CORNER_TOP_2:
 				p.x = getAxisX().getUpperEnd();
 				p.y = getAxisY().getUpperEnd();
 				p.z = getAxisZ().getLowerEnd();
 				break;
-			case Spatial.CORNER_TOP_3:
+			case CORNER_TOP_3:
 				p.x = getAxisX().getUpperEnd();
 				p.y = getAxisY().getUpperEnd();
 				p.z = getAxisZ().getUpperEnd();
 				break;
-			case Spatial.CORNER_TOP_4:
+			case CORNER_TOP_4:
 				p.x = getAxisX().getLowerEnd();
 				p.y = getAxisY().getUpperEnd();
 				p.z = getAxisZ().getUpperEnd();
@@ -330,28 +324,28 @@ public class Cuboid implements Serializable {
 		return p;
 	}
 
-	public Point getFaceCenter(int faceId) {
+	public Point getFaceCenter(Face faceId) {
 		Point p = null;
 
 		if (isCuboidDefined()) {
 			p = getCenter();
 			switch (faceId) {
-			case Spatial.FACE_WALL_XU:
+			case FACE_WALL_XU:
 				p.x = getAxisX().getUpperEnd();
 				break;
-			case Spatial.FACE_WALL_XL:
+			case FACE_WALL_XL:
 				p.x = getAxisX().getLowerEnd();
 				break;
-			case Spatial.FACE_WALL_YU:
+			case FACE_WALL_YU:
 				p.y = getAxisY().getUpperEnd();
 				break;
-			case Spatial.FACE_WALL_YL:
+			case FACE_WALL_YL:
 				p.y = getAxisY().getLowerEnd();
 				break;
-			case Spatial.FACE_WALL_ZU:
+			case FACE_WALL_ZU:
 				p.z = getAxisZ().getUpperEnd();
 				break;
-			case Spatial.FACE_WALL_ZL:
+			case FACE_WALL_ZL:
 				p.z = getAxisZ().getLowerEnd();
 				break;
 			default:
@@ -367,9 +361,7 @@ public class Cuboid implements Serializable {
 	 * 
 	 * @return the {@link #index}.
 	 */
-	public Integer getIndex() {
-		return index;
-	}
+	public Integer getIndex() { return index; }
 
 	public Lengths getLengths() {
 		Double lenX = null;
@@ -384,20 +376,20 @@ public class Cuboid implements Serializable {
 		return new Lengths(lenX, lenY, lenZ);
 	}
 
-	public int getOppositeFaceId(int faceId) {
+	public Face getOppositeFaceId(Face faceId) {
 		switch (faceId) {
-		case Spatial.FACE_WALL_XU:
-			return Spatial.FACE_WALL_XL;
-		case Spatial.FACE_WALL_XL:
-			return Spatial.FACE_WALL_XU;
-		case Spatial.FACE_WALL_YU:
-			return Spatial.FACE_WALL_YL;
-		case Spatial.FACE_WALL_YL:
-			return Spatial.FACE_WALL_YU;
-		case Spatial.FACE_WALL_ZU:
-			return Spatial.FACE_WALL_ZL;
-		case Spatial.FACE_WALL_ZL:
-			return Spatial.FACE_WALL_ZU;
+		case FACE_WALL_XU:
+			return Face.FACE_WALL_XL;
+		case FACE_WALL_XL:
+			return Face.FACE_WALL_XU;
+		case FACE_WALL_YU:
+			return Face.FACE_WALL_YL;
+		case FACE_WALL_YL:
+			return Face.FACE_WALL_YU;
+		case FACE_WALL_ZU:
+			return Face.FACE_WALL_ZL;
+		case FACE_WALL_ZL:
+			return Face.FACE_WALL_ZU;
 		default:
 			throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
 		}
@@ -408,18 +400,14 @@ public class Cuboid implements Serializable {
 	 * 
 	 * @return the {@link #parent}.
 	 */
-	public Cuboid getParent() {
-		return parent;
-	}
+	public Cuboid getParent() { return parent; }
 
 	/**
 	 * Gets the {@link #tags}.
 	 * 
 	 * @return the {@link #tags}.
 	 */
-	public String getTags() {
-		return tags;
-	}
+	public String getTags() { return tags; }
 
 	public Double getVolume() {
 		if (isCuboidDefined()) {
@@ -477,35 +465,34 @@ public class Cuboid implements Serializable {
 		return true;
 	}
 
-	public void matchToFace(Cuboid reference, int faceMatching) {
+	public void matchToFace(Cuboid reference, Face faceMatching) {
 		matchToFace(reference, faceMatching, true);
 	}
 
-	public void matchToFace(Cuboid reference, int faceMatching, boolean attach) {
-		AvValidations.validateFacesExistance(faceMatching);
+	public void matchToFace(Cuboid reference, Face faceMatching, boolean attach) {
 
-		int[] matchingAxesIds = new int[2];
+		Axis[] matchingAxesIds = new Axis[2];
 		switch (faceMatching) {
-		case Spatial.FACE_WALL_YU:
-		case Spatial.FACE_WALL_YL:
-			matchingAxesIds[0] = Spatial.AXIS_X;
-			matchingAxesIds[1] = Spatial.AXIS_Z;
+		case FACE_WALL_YU:
+		case FACE_WALL_YL:
+			matchingAxesIds[0] = Axis.X;
+			matchingAxesIds[1] = Axis.Z;
 			break;
-		case Spatial.FACE_WALL_ZU:
-		case Spatial.FACE_WALL_ZL:
-			matchingAxesIds[0] = Spatial.AXIS_X;
-			matchingAxesIds[1] = Spatial.AXIS_Y;
+		case FACE_WALL_ZU:
+		case FACE_WALL_ZL:
+			matchingAxesIds[0] = Axis.X;
+			matchingAxesIds[1] = Axis.Y;
 			break;
-		case Spatial.FACE_WALL_XU:
-		case Spatial.FACE_WALL_XL:
-			matchingAxesIds[0] = Spatial.AXIS_Y;
-			matchingAxesIds[1] = Spatial.AXIS_Z;
+		case FACE_WALL_XU:
+		case FACE_WALL_XL:
+			matchingAxesIds[0] = Axis.Y;
+			matchingAxesIds[1] = Axis.Z;
 			break;
 		default:
 			throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
 		}
 
-		for (int axisId : matchingAxesIds) {
+		for (Axis axisId : matchingAxesIds) {
 			getAxis(axisId).validateAxisEnds();
 			reference.getAxis(axisId).validateAxisEnds();
 
@@ -536,13 +523,13 @@ public class Cuboid implements Serializable {
 //	}
 
 	public void moveCenterByVector(Vector vector) {
-		for (int axisId : Spatial.AXES_LIST) {
+		for (Axis axisId : Axis.values()) {
 			getAxis(axisId).moveCenterByVector(vector.getAxisComponent(axisId));
 		}
 	}
 
 	public void moveCenterToPoint(Point point) {
-		for (int axisId : Spatial.AXES_LIST) {
+		for (Axis axisId : Axis.values()) {
 			getAxis(axisId).moveCenterToPoint(point.getAxisComponent(axisId));
 		}
 	}
@@ -551,26 +538,25 @@ public class Cuboid implements Serializable {
 		rotate(rotationId);
 	}
 
-	public void rotate(int rotationId, int... fixedFacesIds) {
-		AvValidations.validateRotationsExistance(rotationId);
+	public void rotate(Rotation rotationId, Face... fixedFacesIds) {
 		AvValidations.validateFixedFacesMaxNumber(fixedFacesIds);
 		AvValidations.validateFixedFacesAxes(fixedFacesIds);
 
-		int[] axesIds = Spatial.getAxesIdsInvolvedInRotation(rotationId);
+		Axis[] axesIds = Axis.getAxesInvolvedInRotation(rotationId);
 		try {
 			AxisEnds axis0 = getAxis(axesIds[0]);
 			AxisEnds axis1 = getAxis(axesIds[1]);
 			axis0.validateAxisEnds();
 			axis1.validateAxisEnds();
 
-			Integer axis0FixedEnd = null;
-			Integer axis1FixedEnd = null;
-			for (int faceId : fixedFacesIds) {
-				if (axesIds[0] == Spatial.getAxisIdByFaceId(faceId)) {
-					axis0FixedEnd = Spatial.getEndIdByFaceId(faceId);
+			End axis0FixedEnd = null;
+			End axis1FixedEnd = null;
+			for (Face faceId : fixedFacesIds) {
+				if (axesIds[0] == Axis.getAxisIdByFaceId(faceId)) {
+					axis0FixedEnd = End.getEndIdByFaceId(faceId);
 				}
-				if (axesIds[1] == Spatial.getAxisIdByFaceId(faceId)) {
-					axis1FixedEnd = Spatial.getEndIdByFaceId(faceId);
+				if (axesIds[1] == Axis.getAxisIdByFaceId(faceId)) {
+					axis1FixedEnd = End.getEndIdByFaceId(faceId);
 				}
 			}
 
@@ -583,16 +569,16 @@ public class Cuboid implements Serializable {
 		}
 	}
 
-	public void setAxis(int axisId, AxisEnds axis) {
-		switch (axisId) {
-		case Spatial.AXIS_X:
-			setAxisX(axis);
+	public void setAxis(Axis axis, AxisEnds axisEnds) {
+		switch (axis) {
+		case X:
+			setAxisX(axisEnds);
 			break;
-		case Spatial.AXIS_Y:
-			setAxisY(axis);
+		case Y:
+			setAxisY(axisEnds);
 			break;
-		case Spatial.AXIS_Z:
-			setAxisZ(axis);
+		case Z:
+			setAxisZ(axisEnds);
 			break;
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
@@ -604,55 +590,46 @@ public class Cuboid implements Serializable {
 	 * 
 	 * @param lineX the {@link #axisX} to set.
 	 */
-	public void setAxisX(AxisEnds lineX) {
-		this.axisX = lineX;
-	}
+	public void setAxisX(AxisEnds lineX) { this.axisX = lineX; }
 
 	/**
 	 * Sets the {@link #axisY}.
 	 * 
 	 * @param lineY the {@link #axisY} to set.
 	 */
-	public void setAxisY(AxisEnds lineY) {
-		this.axisY = lineY;
-	}
+	public void setAxisY(AxisEnds lineY) { this.axisY = lineY; }
 
 	/**
 	 * Sets the {@link #axisZ}.
 	 * 
 	 * @param lineZ the {@link #axisZ} to set.
 	 */
-	public void setAxisZ(AxisEnds lineZ) {
-		this.axisZ = lineZ;
-	}
+	public void setAxisZ(AxisEnds lineZ) { this.axisZ = lineZ; }
 
 	/**
 	 * Sets the {@link #index}.
 	 * 
 	 * @param index the {@link #index} to set.
 	 */
-	public void setIndex(Integer index) {
-		this.index = index;
-	}
+	public void setIndex(Integer index) { this.index = index; }
 
 	public void setLengths(Lengths lengths) {
-		setLengths(lengths, null);
+		setLengths(lengths, (Face[]) null);
 	}
 
-	public void setLengths(Lengths lengths, int... fixedFacesIds) {
+	public void setLengths(Lengths lengths, Face... fixedFacesIds) {
 		if (lengths == null) {
 			lengths = new Lengths();
 		}
 		if (fixedFacesIds == null) {
-			fixedFacesIds = new int[0];
+			fixedFacesIds = new Face[0];
 		}
-		AvValidations.validateFacesExistance(fixedFacesIds);
 		AvValidations.validateFacesRepetition(fixedFacesIds);
 		AvValidations.validateFixedFacesMaxNumber(fixedFacesIds);
 		AvValidations.validateFixedFacesAxes(fixedFacesIds);
 
 		if (fixedFacesIds.length == 0) {
-			for (int axisId : Spatial.AXES_LIST) {
+			for (Axis axisId : Axis.values()) {
 				getAxis(axisId).setLength(lengths.getLength(axisId));
 			}
 
@@ -662,16 +639,16 @@ public class Cuboid implements Serializable {
 			boolean notFixedY = true;
 			boolean notFixedZ = true;
 			for (int i = 0; i < fixedFacesIds.length; i++) {
-				int axisId = Spatial.getAxisIdByFaceId(fixedFacesIds[i]);
-				int endId = Spatial.getEndIdByFaceId(fixedFacesIds[i]);
+				Axis axisId = Axis.getAxisIdByFaceId(fixedFacesIds[i]);
+				End endId = End.getEndIdByFaceId(fixedFacesIds[i]);
 				getAxis(axisId).setLength(lengths.getLength(axisId), endId);
 
-				if (axisId == Spatial.AXIS_X) {
+				if (axisId == Axis.X) {
 					notFixedX = false;
-				} else if (axisId == Spatial.AXIS_Y) {
-					notFixedX = false;
-				} else if (axisId == Spatial.AXIS_Y) {
-					notFixedX = false;
+				} else if (axisId == Axis.Y) {
+					notFixedY = false;
+				} else if (axisId == Axis.Z) {
+					notFixedZ = false;
 				}
 			}
 
@@ -690,18 +667,14 @@ public class Cuboid implements Serializable {
 	 * 
 	 * @param parent the {@link #parent} to set.
 	 */
-	public void setParent(Cuboid parent) {
-		this.parent = parent;
-	}
+	public void setParent(Cuboid parent) { this.parent = parent; }
 
 	/**
 	 * Sets the {@link #tags}.
 	 * 
 	 * @param tags the {@link #tags} to set.
 	 */
-	public void setTags(String tags) {
-		this.tags = tags;
-	}
+	public void setTags(String tags) { this.tags = tags; }
 
 	/*
 	 * (non-Javadoc)

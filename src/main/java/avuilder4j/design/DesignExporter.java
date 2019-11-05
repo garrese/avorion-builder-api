@@ -16,8 +16,8 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import avuilder4j.entities.game.Block;
 import avuilder4j.error.Avuilder4jException;
+import avuilder4j.game.Block;
 
 public class DesignExporter {
 

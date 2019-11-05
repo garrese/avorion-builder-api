@@ -1,4 +1,4 @@
-package avuilder4j.values;
+package avuilder4j.game.values;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;

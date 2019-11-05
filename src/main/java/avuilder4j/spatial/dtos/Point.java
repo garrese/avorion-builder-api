@@ -1,11 +1,10 @@
-package avuilder4j.entities.spatial.util;
+package avuilder4j.spatial.dtos;
 
 import java.io.Serializable;
 
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
-import avuilder4j.utils.AvValidations;
-import avuilder4j.values.Spatial;
+import avuilder4j.spatial.enums.Axis;
 
 /**
  * Represents a point in a Cartesian coordinate system.
@@ -15,8 +14,7 @@ public class Point implements Serializable {
 
 	public Double x, y, z;
 
-	public Point() {
-	}
+	public Point() {}
 
 	public Point(double x, double y, double z) {
 		this.x = x;
@@ -59,14 +57,13 @@ public class Point implements Serializable {
 			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
-	public Double getAxisComponent(int axisId) {
-		AvValidations.validateAxesExistance(axisId);
-		switch (axisId) {
-		case Spatial.AXIS_X:
+	public Double getAxisComponent(Axis axis) {
+		switch (axis) {
+		case X:
 			return x;
-		case Spatial.AXIS_Y:
+		case Y:
 			return y;
-		case Spatial.AXIS_Z:
+		case Z:
 			return z;
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);

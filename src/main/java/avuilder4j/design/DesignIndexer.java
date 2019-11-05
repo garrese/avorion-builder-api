@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import avuilder4j.entities.game.Block;
-import avuilder4j.entities.game.Structure;
-import avuilder4j.entities.game.TypeLook;
-import avuilder4j.entities.spatial.util.Lengths;
-import avuilder4j.values.Game;
+import avuilder4j.game.Block;
+import avuilder4j.game.Structure;
+import avuilder4j.game.TypeLook;
+import avuilder4j.spatial.dtos.Lengths;
+import avuilder4j.utils.AvUtils;
 
 /**
  * Para tener todos bloques ya almacenados. <br>
@@ -23,14 +23,13 @@ public class DesignIndexer {
 	private Structure structure = new Structure();
 	private int indexCount;
 
-	public String defaultColor = Game.DEFAULT_COLOR;
-	public Integer defaultMaterial = Game.DEFAULT_MATERIAL;
-	public Integer defaultType = Game.DEFAULT_TYPE;
-	public Lengths defaultLengths = new Lengths(Game.DEFAULT_LENGTH, Game.DEFAULT_LENGTH, Game.DEFAULT_LENGTH);
-	public TypeLook defaultOrientation = Game.TYPE_LOOK_ZERO;
+	public String defaultColor = AvUtils.DEFAULT_COLOR;
+	public Integer defaultMaterial = AvUtils.DEFAULT_MATERIAL;
+	public Integer defaultType = AvUtils.DEFAULT_TYPE;
+	public Lengths defaultLengths = new Lengths(AvUtils.DEFAULT_LENGTH, AvUtils.DEFAULT_LENGTH, AvUtils.DEFAULT_LENGTH);
+	public TypeLook defaultOrientation = AvUtils.DEFAULT_ORIENTATION;
 
-	public DesignIndexer() {
-	}
+	public DesignIndexer() {}
 
 	public void indexBlock(Block block) {
 		indexCount++;
@@ -101,13 +100,9 @@ public class DesignIndexer {
 		}
 	}
 
-	public List<Block> getStructure() {
-		return structure;
-	}
+	public List<Block> getStructure() { return structure; }
 
-	public int getIndexCount() {
-		return indexCount;
-	}
+	public int getIndexCount() { return indexCount; }
 
 	public String getDesignReport() {
 		String report = "";

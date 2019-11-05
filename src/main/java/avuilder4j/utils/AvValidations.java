@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import avuilder4j.error.AvErrors;
-import avuilder4j.values.Spatial;
+import avuilder4j.spatial.enums.Axis;
+import avuilder4j.spatial.enums.Face;
 
 public class AvValidations {
 
 	public static final String COLOR_REGEX = "[0-9|a-fA-F]{8}";
+
+	public static final int MAX_FIXED_FACES = 2;
 
 	public static void validateVolumes(double... volume) {
 		for (Double vol : volume) {
@@ -38,38 +41,22 @@ public class AvValidations {
 		}
 	}
 
-	public static void validateRotationsExistance(int... rotationIds) {
-		validateIdArgsExistance(rotationIds, Spatial.ROTATIONS_LIST, AvErrors.ROTATION_NOT_EXISTS);
-	}
-
-	public static void validateAxesExistance(int... axesIds) {
-		validateIdArgsExistance(axesIds, Spatial.AXES_LIST, AvErrors.AXIS_NOT_EXISTS);
-	}
-
-	public static void validateAxesRepetition(int... axesIds) {
+	public static void validateAxesRepetition(Axis... axesIds) {
 		validateIdArgsRepetition(axesIds, AvErrors.AXIS_REPEATED);
 	}
 
-	public static void validateCornersExistance(int... cornersIds) {
-		validateIdArgsExistance(cornersIds, Spatial.CORNERS_LIST, AvErrors.CORNER_NOT_EXISTS);
-	}
-
-	public static void validateFacesExistance(int... facesIds) {
-		validateIdArgsExistance(facesIds, Spatial.FACES_LIST, AvErrors.FACE_NOT_EXISTS);
-	}
-
-	public static void validateFacesRepetition(int... facesIds) {
+	public static void validateFacesRepetition(Face... facesIds) {
 		validateIdArgsRepetition(facesIds, AvErrors.FACE_REPEATED);
 	}
 
-	public static void validateFixedFacesMaxNumber(int... fixedFacesIds) {
-		validateIdArgsMaxNumber(fixedFacesIds, Spatial.MAX_FIXED_FACES, AvErrors.FACE_FIXED_MAX_NUMBER);
+	public static void validateFixedFacesMaxNumber(Face... fixedFacesIds) {
+		validateIdArgsMaxNumber(fixedFacesIds, MAX_FIXED_FACES, AvErrors.FACE_FIXED_MAX_NUMBER);
 	}
 
-	public static void validateFixedFacesAxes(int... fixedFacesIds) {
-		int[] fixedFacesAxes = new int[fixedFacesIds.length];
+	public static void validateFixedFacesAxes(Face... fixedFacesIds) {
+		Axis[] fixedFacesAxes = new Axis[fixedFacesIds.length];
 		for (int i = 0; i < fixedFacesIds.length; i++) {
-			fixedFacesAxes[i] = Spatial.getAxisIdByFaceId(fixedFacesIds[i]);
+			fixedFacesAxes[i] = Axis.getAxisIdByFaceId(fixedFacesIds[i]);
 		}
 		AvValidations.validateIdArgsRepetition(fixedFacesAxes, AvErrors.FACE_FIXED_AXES);
 	}
@@ -102,7 +89,24 @@ public class AvValidations {
 		}
 	}
 
+	public static void validateIdArgsRepetition(Object[] validatingArgs, String errorMsg) {
+		List<Object> listedArgs = new ArrayList<Object>();
+		for (Object validating : validatingArgs) {
+			for (Object listed : listedArgs) {
+				if (validating.equals(listed)) {
+					throw new IllegalArgumentException(errorMsg);
+				}
+			}
+			listedArgs.add(validating);
+		}
+	}
+
 	public static void validateIdArgsMaxNumber(int[] validatingArgs, int maxNumber, String errorMsg) {
+		if (validatingArgs.length > maxNumber)
+			throw new IllegalArgumentException(errorMsg);
+	}
+
+	public static void validateIdArgsMaxNumber(Object[] validatingArgs, int maxNumber, String errorMsg) {
 		if (validatingArgs.length > maxNumber)
 			throw new IllegalArgumentException(errorMsg);
 	}

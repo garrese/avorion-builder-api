@@ -1,11 +1,11 @@
-package avuilder4j.entities.spatial;
+package avuilder4j.spatial;
 
 import java.io.Serializable;
 
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
+import avuilder4j.spatial.enums.End;
 import avuilder4j.utils.AvValidations;
-import avuilder4j.values.Spatial;
 
 /**
  * Represents a line in a single coordinate axis.
@@ -34,8 +34,7 @@ public class AxisEnds implements Serializable {
 		return line;
 	}
 
-	public AxisEnds() {
-	}
+	public AxisEnds() {}
 
 	/**
 	 * @param lP the {@link #lowerEnd}.
@@ -51,23 +50,23 @@ public class AxisEnds implements Serializable {
 		upperEnd = null;
 	}
 
-	public void sumToLowerEnd(double x) {
+	public void sumToLowerEnd(double value) {
 		if (lowerEnd == null)
 			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-		setLowerEnd(lowerEnd + x);
+		setLowerEnd(lowerEnd + value);
 	}
 
-	public void sumToUpperEnd(double x) {
+	public void sumToUpperEnd(double value) {
 		if (upperEnd == null)
 			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-		setUpperEnd(lowerEnd + x);
+		setUpperEnd(lowerEnd + value);
 	}
 
-	public void sumToEnd(int endId, double x) {
-		Double endValue = getEnd(endId);
+	public void sumToEnd(End end, double value) {
+		Double endValue = getEnd(end);
 		if (endValue == null)
 			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-		setEnd(endId, endValue + x);
+		setEnd(end, endValue + value);
 	}
 
 	@Override
@@ -99,10 +98,10 @@ public class AxisEnds implements Serializable {
 		lowerEnd *= ratio;
 	}
 
-	public void escalateStatic(double ratio, Integer fixedEndId) {
+	public void escalateStatic(double ratio, End fixedEnd) {
 		AvValidations.validateRatios(ratio);
 		validateAxisEnds();
-		setLength(getLength() * ratio, fixedEndId);
+		setLength(getLength() * ratio, fixedEnd);
 	}
 
 	/**
@@ -118,11 +117,11 @@ public class AxisEnds implements Serializable {
 			return null;
 	}
 
-	public Double getEnd(int endId) {
-		switch (endId) {
-		case Spatial.END_UPPER:
+	public Double getEnd(End end) {
+		switch (end) {
+		case END_UPPER:
 			return upperEnd;
-		case Spatial.END_LOWER:
+		case END_LOWER:
 			return lowerEnd;
 		default:
 			throw new IllegalArgumentException(AvErrors.END_NOT_RECOGNIZED);
@@ -155,18 +154,14 @@ public class AxisEnds implements Serializable {
 	 * 
 	 * @return the {@link #lowerEnd}.
 	 */
-	public Double getLowerEnd() {
-		return lowerEnd;
-	}
+	public Double getLowerEnd() { return lowerEnd; }
 
 	/**
 	 * Gets the {@link #upperEnd}.
 	 * 
 	 * @return the {@link #upperEnd}.
 	 */
-	public Double getUpperEnd() {
-		return upperEnd;
-	}
+	public Double getUpperEnd() { return upperEnd; }
 
 	@Override
 	public int hashCode() {
@@ -212,27 +207,27 @@ public class AxisEnds implements Serializable {
 		setLowerEnd(upperEnd - length);
 	}
 
-	public void setByEndAndLength(int endId, double end, double length) {
+	public void setByEndAndLength(End end, double value, double length) {
 		AvValidations.validateLengths(length);
 
-		switch (endId) {
-		case Spatial.END_UPPER:
-			setByUpperEndAndLength(end, length);
+		switch (end) {
+		case END_UPPER:
+			setByUpperEndAndLength(value, length);
 			break;
-		case Spatial.END_LOWER:
-			setByLowerEndAndLength(end, length);
+		case END_LOWER:
+			setByLowerEndAndLength(value, length);
 			break;
 		default:
 			throw new IllegalArgumentException(AvErrors.END_NOT_RECOGNIZED);
 		}
 	}
 
-	public void setEnd(int endId, Double end) {
-		switch (endId) {
-		case Spatial.END_UPPER:
-			setUpperEnd(end);
-		case Spatial.END_LOWER:
-			setLowerEnd(end);
+	public void setEnd(End end, Double value) {
+		switch (end) {
+		case END_UPPER:
+			setUpperEnd(value);
+		case END_LOWER:
+			setLowerEnd(value);
 		default:
 			throw new IllegalArgumentException(AvErrors.END_NOT_RECOGNIZED);
 		}
@@ -242,14 +237,14 @@ public class AxisEnds implements Serializable {
 		setLength(length, null);
 	}
 
-	public void setLength(Double length, Integer fixedEndId) {
+	public void setLength(Double length, End fixedEnd) {
 		if (length == null) {
 			upperEnd = null;
 			lowerEnd = null;
 		} else {
 			AvValidations.validateLengths(length);
 
-			if (fixedEndId == null) {
+			if (fixedEnd == null) {
 				double center = 0;
 				if (isAxisEndsDefined()) {
 					center = getCenter();
@@ -258,13 +253,13 @@ public class AxisEnds implements Serializable {
 				lowerEnd = center - length / 2;
 
 			} else {
-				switch (fixedEndId) {
-				case Spatial.END_UPPER:
+				switch (fixedEnd) {
+				case END_UPPER:
 					if (upperEnd == null)
 						upperEnd = 0.0;
 					lowerEnd = upperEnd - length;
 					break;
-				case Spatial.END_LOWER:
+				case END_LOWER:
 					if (lowerEnd == null)
 						lowerEnd = 0.0;
 					upperEnd = lowerEnd + length;

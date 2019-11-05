@@ -1,4 +1,4 @@
-package avuilder4j.entities.spatial;
+package avuilder4j.spatial;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,14 +6,15 @@ import java.util.List;
 
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
+import avuilder4j.spatial.enums.Axis;
+import avuilder4j.spatial.enums.Rotation;
 import avuilder4j.utils.AvValidations;
-import avuilder4j.values.Spatial;
 
-public class CuboidStructure<T extends Cuboid> extends ArrayList<T> implements Serializable {
+public class CuboidalStructure<T extends Cuboid> extends ArrayList<T> implements Serializable {
 	private static final long serialVersionUID = 3084475335938461639L;
 
 	public void escalate(double ratio) {
-		escalate(ratio, null);
+		escalate(ratio, (Axis[]) null);
 	}
 
 	public void escalate(double ratioX, double ratioY, double ratioZ) {
@@ -30,12 +31,11 @@ public class CuboidStructure<T extends Cuboid> extends ArrayList<T> implements S
 		}
 	}
 
-	public void escalate(double ratio, int... axesIds) {
+	public void escalate(double ratio, Axis... axesIds) {
 		if (axesIds == null || axesIds.length == 0) {
-			axesIds = Spatial.AXES_LIST;
+			axesIds = Axis.values();
 		}
 		AvValidations.validateRatios(ratio);
-		AvValidations.validateAxesExistance(axesIds);
 		AvValidations.validateAxesRepetition(axesIds);
 
 		for (Cuboid cuboid : this) {
@@ -43,22 +43,21 @@ public class CuboidStructure<T extends Cuboid> extends ArrayList<T> implements S
 		}
 
 		for (Cuboid cuboid : this) {
-			for (int axisId : axesIds) {
+			for (Axis axisId : axesIds) {
 				cuboid.getAxis(axisId).escalateRelative(ratio);
 			}
 		}
 	}
 
 	public void escalateByVolume(double finalVolume) {
-		escalateByVolume(finalVolume, new int[0]);
+		escalateByVolume(finalVolume, (Axis[]) null);
 	}
 
-	public void escalateByVolume(double finalVolume, int... axesIds) {
+	public void escalateByVolume(double finalVolume, Axis... axesIds) {
 		AvValidations.validateVolumes(finalVolume);
-		AvValidations.validateAxesExistance(axesIds);
 		AvValidations.validateAxesRepetition(axesIds);
-		if (axesIds.length == 0) {
-			axesIds = Spatial.AXES_LIST;
+		if (axesIds == null || axesIds.length == 0) {
+			axesIds = Axis.values();
 		}
 
 		for (Cuboid cuboid : this) {
@@ -104,27 +103,28 @@ public class CuboidStructure<T extends Cuboid> extends ArrayList<T> implements S
 		return null;
 	}
 
-	public void rotate(int rotationId) {
+	public void rotate(Rotation rotationId) {
 		rotate(rotationId, 1);
 	}
 
-	public void rotate(int rotationId, int times) {
-		AvValidations.validateRotationsExistance(rotationId);
+	public void rotate(Rotation rotationId, int times) {
 		if (times <= 0)
 			throw new IllegalArgumentException("'times' argument can not be lower than 1.");
 
-		int[] axesIds = Spatial.getAxesIdsInvolvedInRotation(rotationId);
+		Axis[] axesIds = Axis.getAxesInvolvedInRotation(rotationId);
 		try {
-			for (Cuboid cuboid : this) {
-				AxisEnds axis0 = cuboid.getAxis(axesIds[0]);
-				AxisEnds axis1 = cuboid.getAxis(axesIds[1]);
-				axis0.validateAxisEnds();
-				axis1.validateAxisEnds();
+			for (int i = 0; i < times; i++) {
+				for (Cuboid cuboid : this) {
+					AxisEnds axis0 = cuboid.getAxis(axesIds[0]);
+					AxisEnds axis1 = cuboid.getAxis(axesIds[1]);
+					axis0.validateAxisEnds();
+					axis1.validateAxisEnds();
 
-				AxisEnds axis0Aux = axis0;
-				AxisEnds axis1Aux = axis1;
-				cuboid.setAxis(axesIds[0], axis1Aux);
-				cuboid.setAxis(axesIds[1], axis0Aux);
+					AxisEnds axis0Aux = axis0;
+					AxisEnds axis1Aux = axis1;
+					cuboid.setAxis(axesIds[0], axis1Aux);
+					cuboid.setAxis(axesIds[1], axis0Aux);
+				}
 			}
 		} catch (Exception e) {
 			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED, e);

@@ -1,9 +1,9 @@
-package avuilder4j.entities.spatial.util;
+package avuilder4j.spatial.dtos;
 
 import java.io.Serializable;
 
 import avuilder4j.error.AvErrors;
-import avuilder4j.values.Spatial;
+import avuilder4j.spatial.enums.Axis;
 
 public class Lengths implements Serializable {
 	private static final long serialVersionUID = -3737835992118370776L;
@@ -59,13 +59,13 @@ public class Lengths implements Serializable {
 		return true;
 	}
 
-	public Double getLength(int axisId) {
-		switch (axisId) {
-		case Spatial.AXIS_X:
+	public Double getLength(Axis axis) {
+		switch (axis) {
+		case X:
 			return lengthX;
-		case Spatial.AXIS_Y:
+		case Y:
 			return lengthY;
-		case Spatial.AXIS_Z:
+		case Z:
 			return lengthZ;
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
@@ -86,13 +86,13 @@ public class Lengths implements Serializable {
 		return result;
 	}
 
-	public void setLength(Double length, int axisId) {
+	public void setLength(Double length, Axis axisId) {
 		switch (axisId) {
-		case Spatial.AXIS_X:
+		case X:
 			lengthX = length;
-		case Spatial.AXIS_Y:
+		case Y:
 			lengthY = length;
-		case Spatial.AXIS_Z:
+		case Z:
 			lengthZ = length;
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);

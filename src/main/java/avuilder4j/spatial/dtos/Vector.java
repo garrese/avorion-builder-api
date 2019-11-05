@@ -1,4 +1,4 @@
-package avuilder4j.entities.spatial.util;
+package avuilder4j.spatial.dtos;
 
 import java.io.Serializable;
 

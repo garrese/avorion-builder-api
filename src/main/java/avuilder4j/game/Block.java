@@ -1,9 +1,9 @@
-package avuilder4j.entities.game;
+package avuilder4j.game;
 
-import avuilder4j.entities.spatial.Cuboid;
-import avuilder4j.entities.spatial.util.Lengths;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
+import avuilder4j.spatial.Cuboid;
+import avuilder4j.spatial.dtos.Lengths;
 import avuilder4j.utils.AvValidations;
 
 /**

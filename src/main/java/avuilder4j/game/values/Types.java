@@ -1,11 +1,11 @@
-package avuilder4j.values;
+package avuilder4j.game.values;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import avuilder4j.entities.game.TypeLook;
 import avuilder4j.formulae.TypeStats;
+import avuilder4j.game.TypeLook;
 
 public class Types {
 
