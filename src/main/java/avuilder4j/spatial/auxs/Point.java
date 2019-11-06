@@ -1,4 +1,4 @@
-package avuilder4j.spatial.dtos;
+package avuilder4j.spatial.auxs;
 
 import java.io.Serializable;
 
@@ -33,18 +33,18 @@ public class Point implements Serializable {
 	}
 
 	public static Point vectorSum(Point a, Vector b) {
-		a.validatePoint();
-		b.validatePoint();
+		a.validate();
+		b.validate();
 		return new Point(a.x + b.x, a.y + b.y, a.z + b.z);
 	}
 
 	public static Point vectorSub(Point a, Vector b) {
-		a.validatePoint();
-		b.validatePoint();
+		a.validate();
+		b.validate();
 		return new Point(a.x - b.x, a.y - b.y, a.z - b.z);
 	}
 
-	public boolean isPointDefined() {
+	public boolean isDefined() {
 		if (x != null && y != null && z != null) {
 			return true;
 		} else {
@@ -52,8 +52,8 @@ public class Point implements Serializable {
 		}
 	}
 
-	public void validatePoint() {
-		if (!isPointDefined())
+	public void validate() {
+		if (!isDefined())
 			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 

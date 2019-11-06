@@ -1,4 +1,4 @@
-package avuilder4j.spatial.dtos;
+package avuilder4j.spatial.auxs;
 
 import java.io.Serializable;
 
@@ -24,7 +24,7 @@ public class Line implements Serializable {
 	}
 
 	public boolean isLineDefined() {
-		if (p1 != null && p2 != null && p1.isPointDefined() && p2.isPointDefined())
+		if (p1 != null && p2 != null && p1.isDefined() && p2.isDefined())
 			return true;
 		else
 			return false;

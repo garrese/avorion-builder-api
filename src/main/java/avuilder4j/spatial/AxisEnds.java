@@ -119,9 +119,9 @@ public class AxisEnds implements Serializable {
 
 	public Double getEnd(End end) {
 		switch (end) {
-		case END_UPPER:
+		case UPPER:
 			return upperEnd;
-		case END_LOWER:
+		case LOWER:
 			return lowerEnd;
 		default:
 			throw new IllegalArgumentException(AvErrors.END_NOT_RECOGNIZED);
@@ -211,10 +211,10 @@ public class AxisEnds implements Serializable {
 		AvValidations.validateLengths(length);
 
 		switch (end) {
-		case END_UPPER:
+		case UPPER:
 			setByUpperEndAndLength(value, length);
 			break;
-		case END_LOWER:
+		case LOWER:
 			setByLowerEndAndLength(value, length);
 			break;
 		default:
@@ -224,9 +224,9 @@ public class AxisEnds implements Serializable {
 
 	public void setEnd(End end, Double value) {
 		switch (end) {
-		case END_UPPER:
+		case UPPER:
 			setUpperEnd(value);
-		case END_LOWER:
+		case LOWER:
 			setLowerEnd(value);
 		default:
 			throw new IllegalArgumentException(AvErrors.END_NOT_RECOGNIZED);
@@ -254,12 +254,12 @@ public class AxisEnds implements Serializable {
 
 			} else {
 				switch (fixedEnd) {
-				case END_UPPER:
+				case UPPER:
 					if (upperEnd == null)
 						upperEnd = 0.0;
 					lowerEnd = upperEnd - length;
 					break;
-				case END_LOWER:
+				case LOWER:
 					if (lowerEnd == null)
 						lowerEnd = 0.0;
 					upperEnd = lowerEnd + length;

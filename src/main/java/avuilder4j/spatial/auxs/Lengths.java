@@ -1,4 +1,4 @@
-package avuilder4j.spatial.dtos;
+package avuilder4j.spatial.auxs;
 
 import java.io.Serializable;
 
@@ -28,10 +28,6 @@ public class Lengths implements Serializable {
 		this.lengthZ = lengthZ;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -72,10 +68,6 @@ public class Lengths implements Serializable {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -99,10 +91,6 @@ public class Lengths implements Serializable {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "[lengthX=" + lengthX + ", lengthY=" + lengthY + ", lengthZ=" + lengthZ + "]";

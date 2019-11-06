@@ -1,4 +1,4 @@
-package avuilder4j.formulae;
+package avuilder4j.stats;
 
 public class Formulae {
 

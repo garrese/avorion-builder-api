@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ship_design>
+	<turretDesign size="0.5" coaxial="false" shot_color="0" blockIndex="19">
+		<base px="0" py="0" pz="0">
+			<plan accumulateHealth="true" convex="false"/>
+		</base>
+		<body px="0" py="0" pz="0">
+			<plan accumulateHealth="true" convex="false"/>
+		</body>
+		<barrel px="0" py="0" pz="0">
+			<plan accumulateHealth="true" convex="false"/>
+		</barrel>
+		<version major="2" minor="0" patch="0"/>
+	</turretDesign>
+	<plan accumulateHealth="true" convex="false">
+		<item parent="-1" index="0">
+			<block lx="-1" ly="-2" lz="50" ux="1" uy="-1.1920929e-007" uz="52" index="1" material="6" look="1" up="3" color="ff696969"/>
+		</item>
+		<item parent="0" index="1">
+			<block lx="-1" ly="-2" lz="48" ux="1" uy="-1.1920929e-007" uz="50" index="2" material="3" look="1" up="3" color="ffeee9e9"/>
+		</item>
+		<item parent="1" index="2">
+			<block lx="-1" ly="-2" lz="46" ux="1" uy="-1.1920929e-007" uz="48" index="3" material="3" look="1" up="3" color="ffdcdcdc"/>
+		</item>
+		<item parent="2" index="3">
+			<block lx="-1" ly="-2" lz="44" ux="1" uy="-1.1920929e-007" uz="46" index="4" material="3" look="1" up="3" color="ffcd0000"/>
+		</item>
+		<item parent="3" index="4">
+			<block lx="-1" ly="-2" lz="42" ux="1" uy="-1.1920929e-007" uz="44" index="5" material="3" look="1" up="3" color="ffff0000"/>
+		</item>
+		<item parent="4" index="5">
+			<block lx="-1" ly="-2" lz="40" ux="1" uy="-1.1920929e-007" uz="42" index="6" material="3" look="1" up="3" color="ffeeb4b4"/>
+		</item>
+		<item parent="5" index="6">
+			<block lx="-1" ly="-2" lz="38" ux="1" uy="-1.1920929e-007" uz="40" index="7" material="3" look="1" up="3" color="ffcd5555"/>
+		</item>
+		<item parent="6" index="7">
+			<block lx="-1" ly="-2" lz="36" ux="1" uy="-1.1920929e-007" uz="38" index="8" material="3" look="1" up="3" color="ffff6347"/>
+		</item>
+		<item parent="7" index="8">
+			<block lx="-1" ly="-2" lz="34" ux="1" uy="-1.1920929e-007" uz="36" index="9" material="3" look="1" up="3" color="ff8b3626"/>
+		</item>
+		<item parent="8" index="9">
+			<block lx="-1" ly="-2" lz="32" ux="1" uy="-1.1920929e-007" uz="34" index="10" material="3" look="5" up="3" color="ffff0000"/>
+		</item>
+		<item parent="9" index="10">
+			<block lx="-1" ly="-2" lz="30" ux="1" uy="-1.1920929e-007" uz="32" index="11" material="3" look="5" up="3" color="ffee8262"/>
+		</item>
+		<item parent="10" index="11">
+			<block lx="-1" ly="-2" lz="28" ux="1" uy="-1.1920929e-007" uz="30" index="12" material="3" look="1" up="3" color="ffff8c69"/>
+		</item>
+		<item parent="11" index="12">
+			<block lx="-1" ly="-2" lz="26" ux="1" uy="-1.1920929e-007" uz="28" index="13" material="3" look="5" up="3" color="ff8b4513"/>
+		</item>
+		<item parent="12" index="14">
+			<block lx="-1" ly="-2" lz="24" ux="1" uy="-1.1920929e-007" uz="26" index="15" material="0" look="1" up="3" color="ffcd853f"/>
+		</item>
+		<item parent="14" index="15">
+			<block lx="-1" ly="-2" lz="22" ux="1" uy="-1.1920929e-007" uz="24" index="16" material="3" look="1" up="3" color="ffff0000"/>
+		</item>
+		<item parent="15" index="16">
+			<block lx="-1" ly="-2" lz="20" ux="1" uy="-1.1920929e-007" uz="22" index="17" material="3" look="1" up="3" color="ffcdb79e"/>
+		</item>
+		<item parent="16" index="17">
+			<block lx="-1" ly="-2" lz="18" ux="1" uy="-1.1920929e-007" uz="20" index="18" material="3" look="5" up="3" color="ffcd8500"/>
+		</item>
+		<item parent="17" index="18">
+			<block lx="-1" ly="-2" lz="16" ux="1" uy="-1.1920929e-007" uz="18" index="19" material="3" look="1" up="3" color="ff8b8878"/>
+		</item>
+		<item parent="18" index="19">
+			<block lx="-1" ly="-2" lz="14" ux="1" uy="-1.1920929e-007" uz="16" index="20" material="3" look="1" up="3" color="ffffd700"/>
+		</item>
+		<item parent="19" index="20">
+			<block lx="-1" ly="-2" lz="12" ux="1" uy="-1.1920929e-007" uz="14" index="51" material="3" look="1" up="3" color="ffff0000"/>
+		</item>
+		<item parent="20" index="21">
+			<block lx="-1" ly="-2" lz="10" ux="1" uy="-1.1920929e-007" uz="12" index="52" material="3" look="1" up="3" color="ffcdc673"/>
+		</item>
+		<item parent="21" index="22">
+			<block lx="-1" ly="-2" lz="8" ux="1" uy="-1.1920929e-007" uz="10" index="53" material="3" look="1" up="3" color="ffffff00"/>
+		</item>
+		<item parent="22" index="23">
+			<block lx="-1" ly="-2" lz="6" ux="1" uy="-1.1920929e-007" uz="8" index="50" material="3" look="1" up="3" color="fffffff0"/>
+		</item>
+		<item parent="23" index="24">
+			<block lx="-1" ly="-2" lz="4" ux="1" uy="-1.1920929e-007" uz="6" index="55" material="3" look="1" up="3" color="ff00ff00"/>
+		</item>
+		<item parent="24" index="25">
+			<block lx="-1" ly="-2" lz="2" ux="1" uy="-1.1920929e-007" uz="4" index="54" material="3" look="1" up="3" color="ffff0000"/>
+		</item>
+		<item parent="25" index="26">
+			<block lx="-1" ly="-2" lz="0" ux="1" uy="-1.1920929e-007" uz="2" index="57" material="3" look="1" up="3" color="ff838b83"/>
+		</item>
+		<item parent="26" index="27">
+			<block lx="-1" ly="-2" lz="-2" ux="1" uy="-1.1920929e-007" uz="0" index="56" material="4" look="1" up="3" color="ffbfbfa3"/>
+		</item>
+		<item parent="27" index="28">
+			<block lx="-1" ly="-2" lz="-4" ux="1" uy="-1.1920929e-007" uz="-2" index="58" material="4" look="1" up="3" color="ff006400"/>
+		</item>
+		<item parent="28" index="30">
+			<block lx="-1" ly="-2" lz="-6" ux="1" uy="-1.1920929e-007" uz="-4" index="60" material="4" look="1" up="3" color="ff2e8b57"/>
+		</item>
+		<item parent="30" index="31">
+			<block lx="-1" ly="-2" lz="-8" ux="1" uy="-1.1920929e-007" uz="-6" index="61" material="4" look="5" up="3" color="ffff0000"/>
+		</item>
+		<item parent="31" index="32">
+			<block lx="-1" ly="-2" lz="-10" ux="1" uy="-1.1920929e-007" uz="-8" index="150" material="4" look="1" up="3" color="ff20b2aa"/>
+		</item>
+		<item parent="32" index="33">
+			<block lx="-1" ly="-2" lz="-12" ux="1" uy="-1.1920929e-007" uz="-10" index="170" material="4" look="1" up="3" color="ff00ffff"/>
+		</item>
+		<item parent="33" index="35">
+			<block lx="-1" ly="-2" lz="-14" ux="1" uy="-1.1920929e-007" uz="-12" index="180" material="4" look="1" up="3" color="ff97ffff"/>
+		</item>
+		<item parent="35" index="36">
+			<block lx="-1" ly="1.1920929e-007" lz="-14" ux="1" uy="2" uz="-12" index="190" material="4" look="1" up="3" color="ff8ee5ee"/>
+		</item>
+		<item parent="35" index="37">
+			<block lx="-1" ly="-2" lz="-16" ux="1" uy="-1.1920929e-007" uz="-14" index="510" material="4" look="1" up="3" color="ffff0000"/>
+		</item>
+		<item parent="37" index="38">
+			<block lx="-1" ly="-2" lz="-18" ux="1" uy="-1.1920929e-007" uz="-16" index="520" material="4" look="1" up="3" color="ffb2dfee"/>
+		</item>
+		<item parent="38" index="40">
+			<block lx="-1" ly="-2" lz="-20" ux="1" uy="-1.1920929e-007" uz="-18" index="1" material="3" look="1" up="3" color="ff00688b"/>
+		</item>
+		<item parent="40" index="41">
+			<block lx="-1" ly="-2" lz="-22" ux="1" uy="-1.1920929e-007" uz="-20" index="1" material="3" look="1" up="3" color="ffa4d3ee"/>
+		</item>
+		<item parent="41" index="42">
+			<block lx="-1" ly="-2" lz="-24" ux="1" uy="-1.1920929e-007" uz="-22" index="1" material="3" look="1" up="3" color="ff0000ff"/>
+		</item>
+		<item parent="42" index="43">
+			<block lx="-1" ly="-2" lz="-26" ux="1" uy="-1.1920929e-007" uz="-24" index="1" material="3" look="1" up="3" color="ffff0000"/>
+		</item>
+		<item parent="43" index="44">
+			<block lx="-1" ly="-2" lz="-28" ux="1" uy="-1.1920929e-007" uz="-26" index="1" material="3" look="1" up="3" color="ff473c8b"/>
+		</item>
+		<item parent="44" index="45">
+			<block lx="-1" ly="-2" lz="-30" ux="1" uy="-1.1920929e-007" uz="-28" index="1" material="3" look="1" up="3" color="ffff00ff"/>
+		</item>
+		<item parent="45" index="46">
+			<block lx="-1" ly="-2" lz="-32" ux="1" uy="-1.1920929e-007" uz="-30" index="1" material="3" look="1" up="3" color="ffee82ee"/>
+		</item>
+		<item parent="46" index="47">
+			<block lx="-1" ly="-2" lz="-34" ux="1" uy="-1.1920929e-007" uz="-32" index="1" material="3" look="1" up="3" color="ff8b1c62"/>
+		</item>
+		<item parent="47" index="48">
+			<block lx="-1" ly="-2" lz="-36" ux="1" uy="-1.1920929e-007" uz="-34" index="1" material="3" look="1" up="3" color="ffff0000"/>
+		</item>
+		<item parent="48" index="52">
+			<block lx="-1" ly="-2" lz="-38" ux="1" uy="-1.1920929e-007" uz="-36" index="1" material="3" look="1" up="3" color="ffff3e96"/>
+		</item>
+		<item parent="52" index="67">
+			<block lx="-1" ly="-2" lz="-40" ux="1" uy="-1.1920929e-007" uz="-38" index="1" material="0" look="1" up="3" color="ffeee0e5"/>
+		</item>
+		<item parent="67" index="74">
+			<block lx="-1" ly="-2" lz="-42" ux="1" uy="0" uz="-40" index="1" material="0" look="1" up="3" color="ffbfaea3"/>
+		</item>
+		<item parent="74" index="75">
+			<block lx="-1" ly="-2" lz="-44" ux="1" uy="0" uz="-42" index="1" material="1" look="1" up="3" color="bfbfbfbf"/>
+		</item>
+		<item parent="75" index="76">
+			<block lx="-1" ly="-2" lz="-46" ux="1" uy="0" uz="-44" index="1" material="2" look="1" up="3" color="ffa3bfa3"/>
+		</item>
+		<item parent="76" index="77">
+			<block lx="-1" ly="-2" lz="-48" ux="1" uy="0" uz="-46" index="1" material="3" look="1" up="3" color="ffa3afbf"/>
+		</item>
+		<item parent="77" index="78">
+			<block lx="-1" ly="-2" lz="-50" ux="1" uy="0" uz="-48" index="1" material="4" look="1" up="3" color="ffbfbfa3"/>
+		</item>
+		<item parent="78" index="80">
+			<block lx="-1" ly="-2" lz="-52" ux="1" uy="0" uz="-50" index="1" material="5" look="1" up="3" color="ffbfada3"/>
+		</item>
+		<item parent="80" index="81">
+			<block lx="-1" ly="-2" lz="-54" ux="1" uy="0" uz="-52" index="1" material="6" look="1" up="3" color="ffbc9f9f"/>
+		</item>
+	</plan>
+</ship_design>

@@ -1,4 +1,4 @@
-package avuilder4j.game;
+package avuilder4j.structural;
 
 import avuilder4j.spatial.CuboidalStructure;
 

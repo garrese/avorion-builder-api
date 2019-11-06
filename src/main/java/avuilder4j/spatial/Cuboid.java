@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
-import avuilder4j.spatial.dtos.Lengths;
-import avuilder4j.spatial.dtos.Point;
-import avuilder4j.spatial.dtos.Vector;
+import avuilder4j.spatial.auxs.Lengths;
+import avuilder4j.spatial.auxs.Point;
+import avuilder4j.spatial.auxs.Vector;
 import avuilder4j.spatial.enums.Axis;
 import avuilder4j.spatial.enums.Corner;
 import avuilder4j.spatial.enums.End;
@@ -234,7 +234,7 @@ public class Cuboid implements Serializable {
 	}
 
 	/**
-	 * Gets the {@link #axisX}.
+	 * Gets the {@link Cuboid#axisX}.
 	 * 
 	 * @return the {@link #axisX}.
 	 */
@@ -276,42 +276,42 @@ public class Cuboid implements Serializable {
 		if (isCuboidDefined()) {
 			p = new Point();
 			switch (cornerId) {
-			case CORNER_BASE_1:
+			case BASE_1:
 				p.x = getAxisX().getLowerEnd();
 				p.y = getAxisY().getLowerEnd();
 				p.z = getAxisZ().getLowerEnd();
 				break;
-			case CORNER_BASE_2:
+			case BASE_2:
 				p.x = getAxisX().getUpperEnd();
 				p.y = getAxisY().getLowerEnd();
 				p.z = getAxisZ().getLowerEnd();
 				break;
-			case CORNER_BASE_3:
+			case BASE_3:
 				p.x = getAxisX().getUpperEnd();
 				p.y = getAxisY().getLowerEnd();
 				p.z = getAxisZ().getUpperEnd();
 				break;
-			case CORNER_BASE_4:
+			case BASE_4:
 				p.x = getAxisX().getLowerEnd();
 				p.y = getAxisY().getLowerEnd();
 				p.z = getAxisZ().getUpperEnd();
 				break;
-			case CORNER_TOP_1:
+			case TOP_1:
 				p.x = getAxisX().getLowerEnd();
 				p.y = getAxisY().getUpperEnd();
 				p.z = getAxisZ().getLowerEnd();
 				break;
-			case CORNER_TOP_2:
+			case TOP_2:
 				p.x = getAxisX().getUpperEnd();
 				p.y = getAxisY().getUpperEnd();
 				p.z = getAxisZ().getLowerEnd();
 				break;
-			case CORNER_TOP_3:
+			case TOP_3:
 				p.x = getAxisX().getUpperEnd();
 				p.y = getAxisY().getUpperEnd();
 				p.z = getAxisZ().getUpperEnd();
 				break;
-			case CORNER_TOP_4:
+			case TOP_4:
 				p.x = getAxisX().getLowerEnd();
 				p.y = getAxisY().getUpperEnd();
 				p.z = getAxisZ().getUpperEnd();
@@ -330,22 +330,22 @@ public class Cuboid implements Serializable {
 		if (isCuboidDefined()) {
 			p = getCenter();
 			switch (faceId) {
-			case FACE_WALL_XU:
+			case UX:
 				p.x = getAxisX().getUpperEnd();
 				break;
-			case FACE_WALL_XL:
+			case LX:
 				p.x = getAxisX().getLowerEnd();
 				break;
-			case FACE_WALL_YU:
+			case UY:
 				p.y = getAxisY().getUpperEnd();
 				break;
-			case FACE_WALL_YL:
+			case LY:
 				p.y = getAxisY().getLowerEnd();
 				break;
-			case FACE_WALL_ZU:
+			case UZ:
 				p.z = getAxisZ().getUpperEnd();
 				break;
-			case FACE_WALL_ZL:
+			case LZ:
 				p.z = getAxisZ().getLowerEnd();
 				break;
 			default:
@@ -378,18 +378,18 @@ public class Cuboid implements Serializable {
 
 	public Face getOppositeFaceId(Face faceId) {
 		switch (faceId) {
-		case FACE_WALL_XU:
-			return Face.FACE_WALL_XL;
-		case FACE_WALL_XL:
-			return Face.FACE_WALL_XU;
-		case FACE_WALL_YU:
-			return Face.FACE_WALL_YL;
-		case FACE_WALL_YL:
-			return Face.FACE_WALL_YU;
-		case FACE_WALL_ZU:
-			return Face.FACE_WALL_ZL;
-		case FACE_WALL_ZL:
-			return Face.FACE_WALL_ZU;
+		case UX:
+			return Face.LX;
+		case LX:
+			return Face.UX;
+		case UY:
+			return Face.LY;
+		case LY:
+			return Face.UY;
+		case UZ:
+			return Face.LZ;
+		case LZ:
+			return Face.UZ;
 		default:
 			throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
 		}
@@ -473,18 +473,18 @@ public class Cuboid implements Serializable {
 
 		Axis[] matchingAxesIds = new Axis[2];
 		switch (faceMatching) {
-		case FACE_WALL_YU:
-		case FACE_WALL_YL:
+		case UY:
+		case LY:
 			matchingAxesIds[0] = Axis.X;
 			matchingAxesIds[1] = Axis.Z;
 			break;
-		case FACE_WALL_ZU:
-		case FACE_WALL_ZL:
+		case UZ:
+		case LZ:
 			matchingAxesIds[0] = Axis.X;
 			matchingAxesIds[1] = Axis.Y;
 			break;
-		case FACE_WALL_XU:
-		case FACE_WALL_XL:
+		case UX:
+		case LX:
 			matchingAxesIds[0] = Axis.Y;
 			matchingAxesIds[1] = Axis.Z;
 			break;

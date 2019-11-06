@@ -4,21 +4,21 @@ import avuilder4j.error.AvErrors;
 
 public enum Face {
 
-	FACE_WALL_XL,
-	FACE_WALL_XU,
-	FACE_WALL_YL,
-	FACE_WALL_YU,
-	FACE_WALL_ZL,
-	FACE_WALL_ZU;
+	LX,
+	UX,
+	LY,
+	UY,
+	LZ,
+	UZ;
 
 	public static Face[] getFacesByAxis(Axis axis) {
 		switch (axis) {
 		case X:
-			return new Face[] { FACE_WALL_XL, FACE_WALL_XU };
+			return new Face[] { LX, UX };
 		case Y:
-			return new Face[] { FACE_WALL_YL, FACE_WALL_YU };
+			return new Face[] { LY, UY };
 		case Z:
-			return new Face[] { FACE_WALL_ZL, FACE_WALL_ZU };
+			return new Face[] { LZ, UZ };
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
 		}

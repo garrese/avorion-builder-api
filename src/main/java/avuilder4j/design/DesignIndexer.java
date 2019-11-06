@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import avuilder4j.game.Block;
-import avuilder4j.game.Structure;
-import avuilder4j.game.TypeLook;
-import avuilder4j.spatial.dtos.Lengths;
-import avuilder4j.utils.AvUtils;
+import avuilder4j.spatial.auxs.Lengths;
+import avuilder4j.structural.Block;
+import avuilder4j.structural.Structure;
+import avuilder4j.structural.dtos.TypeLook;
+import avuilder4j.structural.values.Colors;
+import avuilder4j.structural.values.Mats;
+import avuilder4j.structural.values.Types;
 
 /**
  * Para tener todos bloques ya almacenados. <br>
@@ -23,11 +25,11 @@ public class DesignIndexer {
 	private Structure structure = new Structure();
 	private int indexCount;
 
-	public String defaultColor = AvUtils.DEFAULT_COLOR;
-	public Integer defaultMaterial = AvUtils.DEFAULT_MATERIAL;
-	public Integer defaultType = AvUtils.DEFAULT_TYPE;
-	public Lengths defaultLengths = new Lengths(AvUtils.DEFAULT_LENGTH, AvUtils.DEFAULT_LENGTH, AvUtils.DEFAULT_LENGTH);
-	public TypeLook defaultOrientation = AvUtils.DEFAULT_ORIENTATION;
+	public String defaultColor = Colors.MATERIAL_00_IRON;
+	public Integer defaultMaterial = Mats.IRON;
+	public Integer defaultType = Types.BLANK_HULL;
+	public Lengths defaultLengths = new Lengths(2, 2, 2);
+	public TypeLook defaultOrientation = new TypeLook();
 
 	public DesignIndexer() {}
 

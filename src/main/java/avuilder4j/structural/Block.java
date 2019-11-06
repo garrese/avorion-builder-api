@@ -1,9 +1,10 @@
-package avuilder4j.game;
+package avuilder4j.structural;
 
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.spatial.Cuboid;
-import avuilder4j.spatial.dtos.Lengths;
+import avuilder4j.spatial.auxs.Lengths;
+import avuilder4j.structural.dtos.TypeLook;
 import avuilder4j.utils.AvValidations;
 
 /**
@@ -44,8 +45,7 @@ public class Block extends Cuboid {
 	 */
 	private Integer type;
 
-	public Block() {
-	}
+	public Block() {}
 
 	public Block(Lengths lengths) {
 		super(lengths);
@@ -103,26 +103,18 @@ public class Block extends Cuboid {
 	 * 
 	 * @return the {@link #color}.
 	 */
-	public String getColor() {
-		return color;
-	}
+	public String getColor() { return color; }
 
-	public Integer getMaterial() {
-		return material;
-	}
+	public Integer getMaterial() { return material; }
 
 	/**
 	 * Gets the {@link #typeLook}.
 	 * 
 	 * @return the {@link #typeLook}.
 	 */
-	public TypeLook getTypeLook() {
-		return typeLook;
-	}
+	public TypeLook getTypeLook() { return typeLook; }
 
-	public Integer getType() {
-		return type;
-	}
+	public Integer getType() { return type; }
 
 	@Override
 	public int hashCode() {
@@ -138,8 +130,7 @@ public class Block extends Cuboid {
 	public boolean isBlockDefined() {
 		if (!isCuboidDefined()) {
 			return false;
-		} else if (color == null || typeLook == null || !typeLook.isOrientationDefined() || material == null
-				|| type == null) {
+		} else if (color == null || typeLook == null || material == null || type == null) {
 			return false;
 		} else {
 			return true;
@@ -156,22 +147,16 @@ public class Block extends Cuboid {
 		this.color = color;
 	}
 
-	public void setMaterial(Integer material) {
-		this.material = material;
-	}
+	public void setMaterial(Integer material) { this.material = material; }
 
 	/**
 	 * Sets the {@link #typeLook}.
 	 * 
 	 * @param typeLook the {@link #typeLook} to set.
 	 */
-	public void setTypeLook(TypeLook typeLook) {
-		this.typeLook = typeLook;
-	}
+	public void setTypeLook(TypeLook typeLook) { this.typeLook = typeLook; }
 
-	public void setType(Integer type) {
-		this.type = type;
-	}
+	public void setType(Integer type) { this.type = type; }
 
 	/*
 	 * (non-Javadoc)

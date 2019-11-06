@@ -4,6 +4,8 @@ import avuilder4j.utils.AvValidations;
 
 public class AvErrors {
 
+	public static final String ARGUMENT_CASE_NOT_RECOGNIZED = "Argument case not recognized.";
+
 	public static final String ROTATION_NOT_EXISTS = "Invalid rotation ID. Rotation ID does not exist.";
 	public static final String ROTATION_NOT_RECOGNIZED = "Rotation ID not recognized.";
 
@@ -30,6 +32,9 @@ public class AvErrors {
 	public static final String LENGTH_NOT_POSITIVE = "Invalid length. Length must be greather than 0.";
 
 	public static final String NOT_SUFFICIENTLY_DEFINED = "Object not sufficiently defined.";
+	public static final String NOT_STATS_REGISTERED_MATERIAL = "No stats registered for material index ";
+	public static final String NOT_STATS_REGISTERED_TYPE = "No stats registered for type index ";
+	public static final String NOT_MUTABLE_OBJECT = "Impossible to change immutable object.";
 
 	public static final String RATIO_NOT_POSITIVE = "Invalid ratio. Ratio must be greather than 0.";
 

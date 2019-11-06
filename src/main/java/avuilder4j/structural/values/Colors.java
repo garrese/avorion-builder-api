@@ -1,4 +1,4 @@
-package avuilder4j.game.values;
+package avuilder4j.structural.values;
 
 public class Colors {
 

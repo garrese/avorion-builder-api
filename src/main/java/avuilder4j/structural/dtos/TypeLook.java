@@ -1,9 +1,6 @@
-package avuilder4j.game;
+package avuilder4j.structural.dtos;
 
 import java.io.Serializable;
-
-import avuilder4j.error.AvErrors;
-import avuilder4j.error.Avuilder4jRuntimeException;
 
 /**
  * Block orientation
@@ -17,12 +14,12 @@ public class TypeLook implements Serializable {
 	/**
 	 * Look component of the piece orientation.
 	 */
-	private Integer look = 0;
+	private int look = 0;
 
 	/**
 	 * Up component of the piece orientation.
 	 */
-	private Integer up = 0;
+	private int up = 0;
 
 	public TypeLook() {}
 
@@ -30,30 +27,15 @@ public class TypeLook implements Serializable {
 	 * @param look the {@link #look}
 	 * @param up   the {@link #up}
 	 */
-	public TypeLook(Integer look, Integer up) {
+	public TypeLook(int look, int up) {
 		setLook(look);
 		setUp(up);
 	}
 
-	public boolean isOrientationDefined() {
-		if (look != null || up != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public void validateOrientation() {
-		if (!isOrientationDefined())
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-	}
-
-	public static TypeLook deepCopy(TypeLook orientation) {
+	public static TypeLook deepCopy(TypeLook typeLook) {
 		TypeLook o = null;
-		if (orientation != null) {
-			o = new TypeLook();
-			o.setLook(orientation.getLook());
-			o.setUp(orientation.getUp());
+		if (typeLook != null) {
+			o = new TypeLook(typeLook.getLook(), typeLook.getUp());
 		}
 		return o;
 	}
@@ -70,7 +52,7 @@ public class TypeLook implements Serializable {
 	 * 
 	 * @param look the {@link #look} to set.
 	 */
-	public void setLook(Integer look) {
+	protected void setLook(Integer look) {
 		if (look < MIN_LOOK || look > MAX_LOOK) {
 			throw new IllegalArgumentException(
 					"Look orientation must be between " + MIN_LOOK + " and " + MAX_LOOK + ".");
@@ -90,7 +72,7 @@ public class TypeLook implements Serializable {
 	 * 
 	 * @param up the {@link #up} to set.
 	 */
-	public void setUp(Integer up) {
+	protected void setUp(Integer up) {
 		if (up < MIN_LOOK || look > MAX_LOOK) {
 			throw new IllegalArgumentException("Up orientation must be between " + MIN_LOOK + " and " + MAX_LOOK + ".");
 		}
