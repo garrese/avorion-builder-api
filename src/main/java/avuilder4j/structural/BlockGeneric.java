@@ -10,6 +10,7 @@ import avuilder4j.utils.AvValidations;
 /**
  * Represents an Avorion full functional block in a structure.
  */
+@SuppressWarnings("rawtypes")
 public abstract class BlockGeneric<T extends CuboidGeneric> extends CuboidGeneric<T> {
 	private static final long serialVersionUID = -1896528590585386376L;
 

@@ -7,60 +7,61 @@ import java.util.Map;
 
 import avuilder4j.spatial.auxs.Lengths;
 
-public abstract class CuboidIndexerGeneric<C extends CuboidGeneric, S extends CuboidStructureGeneric<C>> {
+@SuppressWarnings("rawtypes")
+public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric<B>> {
 
-	private S structure = getStructureInstance();
-	private int indexCount;
+	protected S structure = getStructureInstance();
+	protected int indexCount;
 
 	protected Lengths defaultLengths = new Lengths(2, 2, 2);
 
-	public void indexBlock(C block) {
+	public void indexBlock(B block) {
 		indexCount++;
 		block.setIndex(indexCount);
 		structure.add(block);
 	}
 
-	public C createBlanckCuboid() {
-		C b = getCuboidInstance();
+	public B createBlanckBlock() {
+		B b = getBlockInstance();
 		indexBlock(b);
 		return b;
 	}
 
-	protected abstract C getCuboidInstance();
+	protected abstract B getBlockInstance();
 
 	protected abstract S getStructureInstance();
 
-	public C createCuboid() {
-		C cuboid = createBlanckCuboid();
+	public B createBlock() {
+		B cuboid = createBlanckBlock();
 		cuboid.setLengths(getDefaultLengths());
 		return cuboid;
 	}
 
 	@SuppressWarnings("unchecked")
-	public C createBlock(C parent) {
-		C b = createBlanckCuboid();
+	public B createBlock(B parent) {
+		B b = createBlanckBlock();
 		b.setParent(parent);
 		return b;
 	}
 
-	public void importBlocks(List<C> blocks) {
+	public void importBlocks(List<B> blocks) {
 		Collections.sort(blocks, (o1, o2) -> o1.getIndex().compareTo(o2.getIndex()));
-		for (C block : blocks) {
+		for (B block : blocks) {
 			indexImportedBlock(block);
 		}
 	}
 
-	public void importBlock(C block) {
+	public void importBlock(B block) {
 		indexImportedBlock(block);
 	}
 
-	public boolean remove(C block) {
+	public boolean remove(B block) {
 		return structure.remove(block);
 	}
 
-	public int remove(List<C> blocks) {
+	public int remove(List<B> blocks) {
 		int removed = 0;
-		for (C block : blocks) {
+		for (B block : blocks) {
 			if (this.structure.remove(block))
 				removed++;
 		}
@@ -72,7 +73,7 @@ public abstract class CuboidIndexerGeneric<C extends CuboidGeneric, S extends Cu
 		indexCount = 0;
 	}
 
-	protected void indexImportedBlock(C block) {
+	protected void indexImportedBlock(B block) {
 		if (block != null) {
 			if (block.getIndex() == null || block.getIndex() <= indexCount) {
 				indexBlock(block);
@@ -98,7 +99,7 @@ public abstract class CuboidIndexerGeneric<C extends CuboidGeneric, S extends Cu
 
 	public void getIndexesMap() {
 		Map<Integer, Integer> indexes = new HashMap<>();
-		for (C block : structure) {
+		for (B block : structure) {
 			Integer index = block.getIndex();
 			if (index != null)
 				indexes.put(index, index);

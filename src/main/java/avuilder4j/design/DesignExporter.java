@@ -19,30 +19,32 @@ import org.w3c.dom.Element;
 import avuilder4j.error.Avuilder4jException;
 import avuilder4j.structural.BlockGeneric;
 
+@SuppressWarnings("rawtypes")
 public class DesignExporter {
 
 	protected String exportRoute = "";
 
-	public void export(List<BlockGeneric> blocks, String shipName) throws Avuilder4jException {
-		try {
+	public void export(List<? extends BlockGeneric> blocks, String shipName) throws Avuilder4jException {
 
-			if (shipName == null || shipName.equals("")) {
-				throw new IllegalArgumentException("Ship's name can't be empty or null");
-			}
+		if (shipName == null || shipName.equals("")) {
+			throw new IllegalArgumentException("Ship's name can't be empty or null");
+		}
 
-			ArrayList<BlockGeneric> roots = new ArrayList<BlockGeneric>();
-			for (BlockGeneric block : blocks) {
-				block.validateBlock();
-				if (block.getParent() == null) {
-					if (roots.size() > 0) {
-						throw new Avuilder4jException("Can not be more than one root block. roots= " + roots);
-					}
-					roots.add(block);
+		ArrayList<BlockGeneric> roots = new ArrayList<BlockGeneric>();
+		for (BlockGeneric block : blocks) {
+			block.validateBlock();
+			if (block.getParent() == null) {
+				if (roots.size() > 0) {
+					throw new Avuilder4jException("Can not be more than one root block. roots= " + roots);
 				}
+				roots.add(block);
 			}
-			if (roots.size() == 0) {
-				throw new Avuilder4jException("Must be one root block.");
-			}
+		}
+		if (roots.size() == 0) {
+			throw new Avuilder4jException("Must be one root block.");
+		}
+
+		try {
 
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -129,12 +131,8 @@ public class DesignExporter {
 		element.setAttributeNode(materialIndexAtt);
 	}
 
-	public String getExportRoute() {
-		return exportRoute;
-	}
+	public String getExportRoute() { return exportRoute; }
 
-	public void setExportRoute(String exportRoute) {
-		this.exportRoute = exportRoute;
-	}
+	public void setExportRoute(String exportRoute) { this.exportRoute = exportRoute; }
 
 }

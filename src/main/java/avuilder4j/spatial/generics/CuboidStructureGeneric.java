@@ -11,7 +11,8 @@ import avuilder4j.spatial.enums.Axis;
 import avuilder4j.spatial.enums.Rotation;
 import avuilder4j.utils.AvValidations;
 
-public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T> implements Serializable {
+@SuppressWarnings("rawtypes")
+public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B> implements Serializable {
 	private static final long serialVersionUID = 3084475335938461639L;
 
 	public void escalate(double ratio) {
@@ -21,11 +22,11 @@ public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T
 	public void escalate(double ratioX, double ratioY, double ratioZ) {
 		AvValidations.validateRatios(ratioX, ratioY, ratioZ);
 
-		for (T cuboid : this) {
+		for (B cuboid : this) {
 			cuboid.validateCuboid();
 		}
 
-		for (T cuboid : this) {
+		for (B cuboid : this) {
 			cuboid.getAxisX().escalateRelative(ratioX);
 			cuboid.getAxisY().escalateRelative(ratioY);
 			cuboid.getAxisZ().escalateRelative(ratioZ);
@@ -39,11 +40,11 @@ public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T
 		AvValidations.validateRatios(ratio);
 		AvValidations.validateAxesRepetition(axesIds);
 
-		for (T cuboid : this) {
+		for (B cuboid : this) {
 			cuboid.validateCuboid();
 		}
 
-		for (T cuboid : this) {
+		for (B cuboid : this) {
 			for (Axis axisId : axesIds) {
 				cuboid.getAxis(axisId).escalateRelative(ratio);
 			}
@@ -61,11 +62,11 @@ public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T
 			axesIds = Axis.values();
 		}
 
-		for (T cuboid : this) {
+		for (B cuboid : this) {
 			cuboid.validateCuboid();
 		}
 		double currentVol = 0;
-		for (T cuboid : this) {
+		for (B cuboid : this) {
 			currentVol += cuboid.getVolume();
 		}
 
@@ -87,17 +88,17 @@ public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T
 		escalate(ratio, axesIds);
 	}
 
-	public List<T> getByTags(String tags) {
-		List<T> r = new ArrayList<T>();
-		for (T cuboid : this) {
+	public List<B> getByTags(String tags) {
+		List<B> r = new ArrayList<B>();
+		for (B cuboid : this) {
 			if (cuboid.hasTags(tags))
 				r.add(cuboid);
 		}
 		return r;
 	}
 
-	public T getByTagsUnique(String tags) {
-		for (T cuboid : this) {
+	public B getByTagsUnique(String tags) {
+		for (B cuboid : this) {
 			if (cuboid.hasTags(tags))
 				return cuboid;
 		}
@@ -115,7 +116,7 @@ public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T
 		Axis[] axesIds = Axis.getAxesInvolvedInRotation(rotationId);
 		try {
 			for (int i = 0; i < times; i++) {
-				for (T cuboid : this) {
+				for (B cuboid : this) {
 					AxisEnds axis0 = cuboid.getAxis(axesIds[0]);
 					AxisEnds axis1 = cuboid.getAxis(axesIds[1]);
 					axis0.validateAxisEnds();
@@ -131,5 +132,12 @@ public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T
 			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED, e);
 		}
 	}
+
+	/**
+	 * Gets the {@link #blocks}.
+	 * 
+	 * @return the {@link #blocks}.
+	 */
+	public List<B> getBlocks() { return this; }
 
 }

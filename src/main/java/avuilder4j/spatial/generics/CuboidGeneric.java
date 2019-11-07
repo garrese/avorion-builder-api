@@ -21,6 +21,7 @@ import avuilder4j.utils.AvValidations;
  * <p>
  * The cuboid is defined by one {@link AxisEnds} in each of the three coordinate axis.
  */
+@SuppressWarnings("rawtypes")
 public class CuboidGeneric<T extends CuboidGeneric> implements Serializable {
 	private static final long serialVersionUID = -5598838939653504628L;
 
@@ -668,7 +669,6 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable {
 		return result;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
