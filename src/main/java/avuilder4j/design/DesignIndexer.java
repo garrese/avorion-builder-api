@@ -7,7 +7,7 @@ import java.util.Map;
 
 import avuilder4j.spatial.auxs.Lengths;
 import avuilder4j.structural.Block;
-import avuilder4j.structural.Structure;
+import avuilder4j.structural.StructureStructuralGeneric;
 import avuilder4j.structural.dtos.TypeLook;
 import avuilder4j.structural.values.Colors;
 import avuilder4j.structural.values.Mats;
@@ -22,7 +22,7 @@ import avuilder4j.structural.values.Types;
  */
 public class DesignIndexer {
 
-	private Structure structure = new Structure();
+	private StructureStructuralGeneric structure = new StructureStructuralGeneric();
 	private int indexCount;
 
 	public String defaultColor = Colors.MATERIAL_00_IRON;

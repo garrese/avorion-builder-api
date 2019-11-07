@@ -2,19 +2,21 @@ package avuilder4j.structural;
 
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
-import avuilder4j.spatial.Cuboid;
+import avuilder4j.spatial.CuboidGeneric;
 import avuilder4j.spatial.auxs.Lengths;
+import avuilder4j.structural.dtos.MaterialStructural;
+import avuilder4j.structural.dtos.Type;
 import avuilder4j.structural.dtos.TypeLook;
 import avuilder4j.utils.AvValidations;
 
 /**
  * Represents an Avorion full functional block in a structure.
  */
-public class Block extends Cuboid {
+public class Block extends CuboidGeneric {
 	private static final long serialVersionUID = -1896528590585386376L;
 
 	public static Block deepCopy(Block bb) {
-		Block b = (Block) Cuboid.deepCopy(bb);
+		Block b = (Block) CuboidGeneric.deepCopy(bb);
 		if (bb != null) {
 			b.setParent(bb.getParent());
 			b.setTypeLook(TypeLook.deepCopy(bb.getTypeLook()));
@@ -33,7 +35,7 @@ public class Block extends Cuboid {
 	/**
 	 * Block's material.
 	 */
-	private Integer material;
+	private MaterialStructural material;
 
 	/**
 	 * Block's orientation
@@ -43,7 +45,7 @@ public class Block extends Cuboid {
 	/**
 	 * Block's type.
 	 */
-	private Integer type;
+	private Type type;
 
 	public Block() {}
 
@@ -55,11 +57,11 @@ public class Block extends Cuboid {
 		super(index);
 	}
 
-	public Block(Integer index, Cuboid parent) {
+	public Block(Integer index, CuboidGeneric parent) {
 		super(index, parent);
 	}
 
-	public Block(Integer material, Integer type, TypeLook typeLook) {
+	public Block(MaterialStructural material, Type type, TypeLook typeLook) {
 		super();
 		this.material = material;
 		this.type = type;
@@ -105,7 +107,7 @@ public class Block extends Cuboid {
 	 */
 	public String getColor() { return color; }
 
-	public Integer getMaterial() { return material; }
+	public MaterialStructural getMaterial() { return material; }
 
 	/**
 	 * Gets the {@link #typeLook}.
@@ -114,7 +116,7 @@ public class Block extends Cuboid {
 	 */
 	public TypeLook getTypeLook() { return typeLook; }
 
-	public Integer getType() { return type; }
+	public Type getType() { return type; }
 
 	@Override
 	public int hashCode() {
@@ -147,7 +149,7 @@ public class Block extends Cuboid {
 		this.color = color;
 	}
 
-	public void setMaterial(Integer material) { this.material = material; }
+	public void setMaterial(MaterialStructural material) { this.material = material; }
 
 	/**
 	 * Sets the {@link #typeLook}.
@@ -156,7 +158,7 @@ public class Block extends Cuboid {
 	 */
 	public void setTypeLook(TypeLook typeLook) { this.typeLook = typeLook; }
 
-	public void setType(Integer type) { this.type = type; }
+	public void setType(Type type) { this.type = type; }
 
 	/*
 	 * (non-Javadoc)

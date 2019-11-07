@@ -6,7 +6,7 @@ import avuilder4j.stats.dtos.TypeStats;
 import avuilder4j.stats.values.MaterialStatsCompilation;
 import avuilder4j.stats.values.TypeStatsCompilation;
 import avuilder4j.structural.Block;
-import avuilder4j.structural.Structure;
+import avuilder4j.structural.StructureStructuralGeneric;
 
 public class StatsCalculator {
 
@@ -23,7 +23,7 @@ public class StatsCalculator {
 		return vol;
 	}
 
-	public double getVolume(Structure structure) throws Avuilder4jException {
+	public double getVolume(StructureStructuralGeneric structure) throws Avuilder4jException {
 		double total = 0;
 		for (Block cuboid : structure) {
 			total += getVolume(cuboid);
@@ -39,7 +39,7 @@ public class StatsCalculator {
 		return mass;
 	}
 
-	public double getMass(Structure structure) throws Avuilder4jException {
+	public double getMass(StructureStructuralGeneric structure) throws Avuilder4jException {
 		double totalMass = 0;
 		for (Block block : structure) {
 			totalMass += getMass(block);
