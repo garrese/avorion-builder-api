@@ -3,9 +3,9 @@ package avuilder4j.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import avuilder4j.enums.Axis;
+import avuilder4j.enums.Face;
 import avuilder4j.error.AvErrors;
-import avuilder4j.spatial.enums.Axis;
-import avuilder4j.spatial.enums.Face;
 
 public class AvValidations {
 
