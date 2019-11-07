@@ -1,8 +1,6 @@
 package avuilder4j.structural;
 
-import avuilder4j.spatial.CuboidalStructure;
-
-public class Structure extends CuboidalStructure<Block> {
-	private static final long serialVersionUID = 185965756164498588L;
+public class Structure extends StructureGeneric<Block> {
+	private static final long serialVersionUID = -3678922648149746004L;
 
 }

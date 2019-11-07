@@ -1,4 +1,4 @@
-package avuilder4j.spatial;
+package avuilder4j.spatial.generics;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,11 +6,12 @@ import java.util.List;
 
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
+import avuilder4j.spatial.AxisEnds;
 import avuilder4j.spatial.enums.Axis;
 import avuilder4j.spatial.enums.Rotation;
 import avuilder4j.utils.AvValidations;
 
-public class CuboidalStructure<T extends Cuboid> extends ArrayList<T> implements Serializable {
+public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T> implements Serializable {
 	private static final long serialVersionUID = 3084475335938461639L;
 
 	public void escalate(double ratio) {
@@ -20,11 +21,11 @@ public class CuboidalStructure<T extends Cuboid> extends ArrayList<T> implements
 	public void escalate(double ratioX, double ratioY, double ratioZ) {
 		AvValidations.validateRatios(ratioX, ratioY, ratioZ);
 
-		for (Cuboid cuboid : this) {
+		for (T cuboid : this) {
 			cuboid.validateCuboid();
 		}
 
-		for (Cuboid cuboid : this) {
+		for (T cuboid : this) {
 			cuboid.getAxisX().escalateRelative(ratioX);
 			cuboid.getAxisY().escalateRelative(ratioY);
 			cuboid.getAxisZ().escalateRelative(ratioZ);
@@ -38,11 +39,11 @@ public class CuboidalStructure<T extends Cuboid> extends ArrayList<T> implements
 		AvValidations.validateRatios(ratio);
 		AvValidations.validateAxesRepetition(axesIds);
 
-		for (Cuboid cuboid : this) {
+		for (T cuboid : this) {
 			cuboid.validateCuboid();
 		}
 
-		for (Cuboid cuboid : this) {
+		for (T cuboid : this) {
 			for (Axis axisId : axesIds) {
 				cuboid.getAxis(axisId).escalateRelative(ratio);
 			}
@@ -60,11 +61,11 @@ public class CuboidalStructure<T extends Cuboid> extends ArrayList<T> implements
 			axesIds = Axis.values();
 		}
 
-		for (Cuboid cuboid : this) {
+		for (T cuboid : this) {
 			cuboid.validateCuboid();
 		}
 		double currentVol = 0;
-		for (Cuboid cuboid : this) {
+		for (T cuboid : this) {
 			currentVol += cuboid.getVolume();
 		}
 
@@ -114,7 +115,7 @@ public class CuboidalStructure<T extends Cuboid> extends ArrayList<T> implements
 		Axis[] axesIds = Axis.getAxesInvolvedInRotation(rotationId);
 		try {
 			for (int i = 0; i < times; i++) {
-				for (Cuboid cuboid : this) {
+				for (T cuboid : this) {
 					AxisEnds axis0 = cuboid.getAxis(axesIds[0]);
 					AxisEnds axis1 = cuboid.getAxis(axesIds[1]);
 					axis0.validateAxisEnds();

@@ -5,8 +5,8 @@ import avuilder4j.stats.dtos.MaterialStats;
 import avuilder4j.stats.dtos.TypeStats;
 import avuilder4j.stats.values.MaterialStatsCompilation;
 import avuilder4j.stats.values.TypeStatsCompilation;
-import avuilder4j.structural.Block;
-import avuilder4j.structural.Structure;
+import avuilder4j.structural.BlockGeneric;
+import avuilder4j.structural.StructureGeneric;
 
 public class StatsCalculator {
 
@@ -15,7 +15,7 @@ public class StatsCalculator {
 
 	public StatsCalculator() {}
 
-	public double getVolume(Block block) throws Avuilder4jException {
+	public double getVolume(BlockGeneric block) throws Avuilder4jException {
 		block.validateBlock();
 		TypeStats type = types.getStats(block.getType());
 
@@ -23,15 +23,15 @@ public class StatsCalculator {
 		return vol;
 	}
 
-	public double getVolume(Structure structure) throws Avuilder4jException {
+	public double getVolume(StructureGeneric structure) throws Avuilder4jException {
 		double total = 0;
-		for (Block cuboid : structure) {
+		for (BlockGeneric cuboid : structure) {
 			total += getVolume(cuboid);
 		}
 		return total;
 	}
 
-	public double getMass(Block block) throws Avuilder4jException {
+	public double getMass(BlockGeneric block) throws Avuilder4jException {
 		MaterialStats mat = mats.getStats(block.getMaterial());
 		TypeStats type = types.getStats(block.getType());
 
@@ -39,9 +39,9 @@ public class StatsCalculator {
 		return mass;
 	}
 
-	public double getMass(Structure structure) throws Avuilder4jException {
+	public double getMass(StructureGeneric structure) throws Avuilder4jException {
 		double totalMass = 0;
-		for (Block block : structure) {
+		for (BlockGeneric block : structure) {
 			totalMass += getMass(block);
 		}
 		return totalMass;

@@ -17,21 +17,21 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import avuilder4j.error.Avuilder4jException;
-import avuilder4j.structural.Block;
+import avuilder4j.structural.BlockGeneric;
 
 public class DesignExporter {
 
 	protected String exportRoute = "";
 
-	public void export(List<Block> blocks, String shipName) throws Avuilder4jException {
+	public void export(List<BlockGeneric> blocks, String shipName) throws Avuilder4jException {
 		try {
 
 			if (shipName == null || shipName.equals("")) {
 				throw new IllegalArgumentException("Ship's name can't be empty or null");
 			}
 
-			ArrayList<Block> roots = new ArrayList<Block>();
-			for (Block block : blocks) {
+			ArrayList<BlockGeneric> roots = new ArrayList<BlockGeneric>();
+			for (BlockGeneric block : blocks) {
 				block.validateBlock();
 				if (block.getParent() == null) {
 					if (roots.size() > 0) {
@@ -60,7 +60,7 @@ public class DesignExporter {
 			addAttribute(doc, planE, "convex", "false");
 
 			// ( item > block )*
-			for (Block block : blocks) {
+			for (BlockGeneric block : blocks) {
 
 				// item
 				Element itemE = doc.createElement("item");

@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import avuilder4j.spatial.auxs.Lengths;
-import avuilder4j.structural.Block;
-import avuilder4j.structural.Structure;
+import avuilder4j.structural.BlockGeneric;
+import avuilder4j.structural.StructureGeneric;
 import avuilder4j.structural.dtos.TypeLook;
 import avuilder4j.structural.values.Colors;
 import avuilder4j.structural.values.Mats;
@@ -20,9 +20,9 @@ import avuilder4j.structural.values.Types;
  * Permite adquirir bloques y reindexarlos coherentemente. <br>
  * Al importar un bloque comprueba si éste va
  */
-public class DesignIndexer {
+public abstract class DesignIndexerGeneric<T extends BlockGeneric> {
 
-	private Structure structure = new Structure();
+	private StructureGeneric<T> structure = new StructureGeneric<T>();
 	private int indexCount;
 
 	public String defaultColor = Colors.MATERIAL_00_IRON;
@@ -31,22 +31,24 @@ public class DesignIndexer {
 	public Lengths defaultLengths = new Lengths(2, 2, 2);
 	public TypeLook defaultOrientation = new TypeLook();
 
-	public DesignIndexer() {}
+	public DesignIndexerGeneric() {}
 
-	public void indexBlock(Block block) {
+	public void indexBlock(T block) {
 		indexCount++;
 		block.setIndex(indexCount);
 		structure.add(block);
 	}
 
-	public Block createBlockBlank() {
-		Block b = new Block();
-		indexBlock(b);
-		return b;
-	}
+	public abstract T createBlockBlank();
+//	public T createBlockBlank() {
+//		T b = T;
+//		indexBlock(b);
+//		return b;
+//	}
 
-	public Block createBlock() {
-		Block b = createBlockBlank();
+	public T createBlock() {
+		T b = createBlockBlank();
+		indexBlock(b);
 		b.setColor(defaultColor);
 		b.setMaterial(defaultMaterial);
 		b.setType(defaultType);
@@ -55,31 +57,32 @@ public class DesignIndexer {
 		return b;
 	}
 
-	public Block createBlock(Block parent) {
-		Block b = createBlockBlank();
+	public T createBlock(T parent) {
+		T b = createBlockBlank();
+		indexBlock(b);
 		b.setParent(parent);
 		return b;
 	}
 
-	public void importBlocks(List<Block> blocks) {
+	public void importBlocks(List<BlockGeneric> blocks) {
 		Collections.sort(blocks, (o1, o2) -> o1.getIndex().compareTo(o2.getIndex()));
 		System.out.println("blocks sort: " + blocks);
-		for (Block block : blocks) {
+		for (BlockGeneric block : blocks) {
 			indexImportedBlock(block);
 		}
 	}
 
-	public void importBlock(Block block) {
+	public void importBlock(BlockGeneric block) {
 		indexImportedBlock(block);
 	}
 
-	public boolean remove(Block block) {
+	public boolean remove(BlockGeneric block) {
 		return structure.remove(block);
 	}
 
-	public int remove(List<Block> blocks) {
+	public int remove(List<BlockGeneric> blocks) {
 		int removed = 0;
-		for (Block block : blocks) {
+		for (BlockGeneric block : blocks) {
 			if (this.structure.remove(block))
 				removed++;
 		}
@@ -91,7 +94,7 @@ public class DesignIndexer {
 		indexCount = 0;
 	}
 
-	protected void indexImportedBlock(Block block) {
+	protected void indexImportedBlock(BlockGeneric block) {
 		if (block != null) {
 			if (block.getIndex() == null || block.getIndex() <= indexCount) {
 				indexBlock(block);
@@ -102,7 +105,7 @@ public class DesignIndexer {
 		}
 	}
 
-	public List<Block> getStructure() { return structure; }
+	public List<BlockGeneric> getStructure() { return structure; }
 
 	public int getIndexCount() { return indexCount; }
 
@@ -117,7 +120,7 @@ public class DesignIndexer {
 
 	public void getIndexesMap() {
 		Map<Integer, Integer> indexes = new HashMap<>();
-		for (Block block : structure) {
+		for (BlockGeneric block : structure) {
 			Integer index = block.getIndex();
 			if (index != null)
 				indexes.put(index, index);
