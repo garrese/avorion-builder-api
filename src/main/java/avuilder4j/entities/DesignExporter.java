@@ -16,35 +16,26 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import avuilder4j.entities.base.BlockInterface;
 import avuilder4j.error.Avuilder4jException;
-import avuilder4j.generics.BlockGeneric;
+import avuilder4j.error.Avuilder4jRuntimeException;
+import avuilder4j.utils.AvValidations;
 
 @SuppressWarnings("rawtypes")
 public class DesignExporter {
 
+	public static final int ROOT_PARENT = -1;
+
 	protected String exportRoute = "";
 
-	public void export(List<? extends BlockGeneric> blocks, String shipName) throws Avuilder4jException {
+	public void export(List<? extends BlockInterface> blocks, String shipName) throws Avuilder4jException {
 
 		if (shipName == null || shipName.equals("")) {
 			throw new IllegalArgumentException("Ship's name can't be empty or null");
 		}
 
-		ArrayList<BlockGeneric> roots = new ArrayList<BlockGeneric>();
-		for (BlockGeneric block : blocks) {
-			block.validateBlock();
-			if (block.getParent() == null) {
-				if (roots.size() > 0) {
-					throw new Avuilder4jException("Can not be more than one root block. roots= " + roots);
-				}
-				roots.add(block);
-			}
-		}
-		if (roots.size() == 0) {
-			throw new Avuilder4jException("Must be one root block.");
-		}
-
 		try {
+			validateBlockList(blocks);
 
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -62,31 +53,30 @@ public class DesignExporter {
 			addAttribute(doc, planE, "convex", "false");
 
 			// ( item > block )*
-			for (BlockGeneric block : blocks) {
+			for (BlockInterface block : blocks) {
 
 				// item
 				Element itemE = doc.createElement("item");
 				planE.appendChild(itemE);
 
-				String parentIndex = "-1";
-				if (block.getParent() != null) {
-					parentIndex = String.valueOf(block.getParent().getIndex());
+				int parentIndex = ROOT_PARENT;
+				if (block.getParentIndex() != null) {
+					parentIndex = block.getParentIndex();
 				}
-				addAttribute(doc, itemE, "parent", parentIndex);
+				addAttribute(doc, itemE, "parent", String.valueOf(parentIndex));
 
-				String blockIndex = String.valueOf(block.getIndex());
-				addAttribute(doc, itemE, "index", blockIndex);
+				addAttribute(doc, itemE, "index", String.valueOf(block.getIndex()));
 
 				// block
 				Element blockE = doc.createElement("block");
 				itemE.appendChild(blockE);
 
-				String lx = String.valueOf(block.getAxisX().getLowerEnd());
-				String ly = String.valueOf(block.getAxisY().getLowerEnd());
-				String lz = String.valueOf(block.getAxisZ().getLowerEnd());
-				String ux = String.valueOf(block.getAxisX().getUpperEnd());
-				String uy = String.valueOf(block.getAxisY().getUpperEnd());
-				String uz = String.valueOf(block.getAxisZ().getUpperEnd());
+				String lx = String.valueOf(block.getLX());
+				String ly = String.valueOf(block.getLY());
+				String lz = String.valueOf(block.getLZ());
+				String ux = String.valueOf(block.getUX());
+				String uy = String.valueOf(block.getUY());
+				String uz = String.valueOf(block.getUZ());
 				addAttribute(doc, blockE, "lx", lx);
 				addAttribute(doc, blockE, "ly", ly);
 				addAttribute(doc, blockE, "lz", lz);
@@ -94,20 +84,15 @@ public class DesignExporter {
 				addAttribute(doc, blockE, "uy", uy);
 				addAttribute(doc, blockE, "uz", uz);
 
-				String typeIndex = String.valueOf(block.getType());
-				addAttribute(doc, blockE, "index", typeIndex);
+				addAttribute(doc, blockE, "index", String.valueOf(block.getType()));
 
-				String materialIndex = String.valueOf(block.getMaterial());
-				addAttribute(doc, blockE, "material", materialIndex);
+				addAttribute(doc, blockE, "material", String.valueOf(block.getMaterial()));
 
-				String look = String.valueOf(block.getTypeLook().getLook());
-				addAttribute(doc, blockE, "look", look);
+				addAttribute(doc, blockE, "look", String.valueOf(block.getLook()));
 
-				String up = String.valueOf(block.getTypeLook().getUp());
-				addAttribute(doc, blockE, "up", up);
+				addAttribute(doc, blockE, "up", String.valueOf(block.getUp()));
 
-				String color = block.getColor();
-				addAttribute(doc, blockE, "color", color.toLowerCase());
+				addAttribute(doc, blockE, "color", block.getColor().toLowerCase());
 
 			}
 
@@ -121,7 +106,7 @@ public class DesignExporter {
 			transformer.transform(source, result);
 
 		} catch (Exception e) {
-			throw new Avuilder4jException("Error exporting ship.", e);
+			throw new Avuilder4jException("Error exporting ship design.", e);
 		}
 	}
 
@@ -129,6 +114,37 @@ public class DesignExporter {
 		Attr materialIndexAtt = doc.createAttribute(attributeName);
 		materialIndexAtt.setValue(attributeValue);
 		element.setAttributeNode(materialIndexAtt);
+	}
+
+	public static void validateBlockList(List<? extends BlockInterface> blocks) throws Avuilder4jException {
+
+		ArrayList<BlockInterface> roots = new ArrayList<BlockInterface>();
+		for (BlockInterface block : blocks) {
+			validateBlock(block);
+			if (block.getParentIndex() == null || block.getParentIndex().equals(-1)) {
+				if (roots.size() > 0) {
+					throw new Avuilder4jRuntimeException("Can not be more than one root block. roots= " + roots);
+				}
+				roots.add(block);
+			}
+		}
+		if (roots.size() == 0) {
+			throw new Avuilder4jRuntimeException("Must be one root block.");
+		}
+	}
+
+	public static void validateBlock(BlockInterface b) {
+		AvValidations.indexes(false, b.getIndex());
+		if (!b.getParentIndex().equals(-1))
+			AvValidations.indexes(true, b.getParentIndex());
+
+		AvValidations.notNull(b.getMaterial(), "Material");
+		AvValidations.notNull(b.getType(), "Type");
+		AvValidations.orientation(false, b.getLook(), b.getUp());
+		AvValidations.colors(false, b.getColor());
+		AvValidations.ends(false, b.getLX(), b.getUX());
+		AvValidations.ends(false, b.getLY(), b.getUY());
+		AvValidations.ends(false, b.getLZ(), b.getUZ());
 	}
 
 	public String getExportRoute() { return exportRoute; }

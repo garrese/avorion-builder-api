@@ -1,6 +1,6 @@
 package avuilder4j.entities.sub;
 
-import avuilder4j.generics.CuboidIndexerGeneric;
+import avuilder4j.entities.base.CuboidIndexerGeneric;
 
 public class CuboidIndexer extends CuboidIndexerGeneric<Cuboid, CuboidStructure> {
 

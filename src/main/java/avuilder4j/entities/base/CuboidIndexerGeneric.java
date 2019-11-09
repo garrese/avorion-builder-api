@@ -1,4 +1,4 @@
-package avuilder4j.generics;
+package avuilder4j.entities.base;
 
 import java.util.Collections;
 import java.util.HashMap;

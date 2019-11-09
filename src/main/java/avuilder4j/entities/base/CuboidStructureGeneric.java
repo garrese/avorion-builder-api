@@ -1,4 +1,4 @@
-package avuilder4j.generics;
+package avuilder4j.entities.base;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 	}
 
 	public void escalate(double ratioX, double ratioY, double ratioZ) {
-		AvValidations.validateRatios(ratioX, ratioY, ratioZ);
+		AvValidations.ratios(ratioX, ratioY, ratioZ);
 
 		for (B cuboid : this) {
 			cuboid.validateCuboid();
@@ -37,7 +37,7 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 		if (axesIds == null || axesIds.length == 0) {
 			axesIds = Axis.values();
 		}
-		AvValidations.validateRatios(ratio);
+		AvValidations.ratios(ratio);
 		AvValidations.validateAxesRepetition(axesIds);
 
 		for (B cuboid : this) {
@@ -56,7 +56,7 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 	}
 
 	public void escalateByVolume(double finalVolume, Axis... axesIds) {
-		AvValidations.validateVolumes(finalVolume);
+		AvValidations.volumes(finalVolume);
 		AvValidations.validateAxesRepetition(axesIds);
 		if (axesIds == null || axesIds.length == 0) {
 			axesIds = Axis.values();

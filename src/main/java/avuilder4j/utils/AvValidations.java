@@ -3,6 +3,7 @@ package avuilder4j.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import avuilder4j.dtos.Orientation;
 import avuilder4j.enums.Axis;
 import avuilder4j.enums.Face;
 import avuilder4j.error.AvErrors;
@@ -13,31 +14,82 @@ public class AvValidations {
 
 	public static final int MAX_FIXED_FACES = 2;
 
-	public static void validateVolumes(double... volume) {
+	public static void volumes(double... volume) {
 		for (Double vol : volume) {
 			if (vol <= 0)
 				throw new IllegalArgumentException(AvErrors.VOLUME_NOT_POSITIVE);
 		}
 	}
 
-	public static void validateLengths(Double... length) {
+	public static void lengths(Double... length) {
 		for (Double len : length) {
 			if (len != null && len <= 0)
 				throw new IllegalArgumentException(AvErrors.LENGTH_NOT_POSITIVE);
 		}
 	}
 
-	public static void validateRatios(double... ratio) {
+	public static void ratios(double... ratio) {
 		for (Double rat : ratio) {
 			if (rat <= 0)
 				throw new IllegalArgumentException(AvErrors.RATIO_NOT_POSITIVE);
 		}
 	}
 
-	public static void validateColors(String... colors) {
+	public static void orientation(boolean nullable, Integer... orientationValues) {
+		for (Integer orientation : orientationValues) {
+			if (orientation == null) {
+				if (!nullable)
+					throw new IllegalArgumentException(AvErrors.ORIENTATION_NOT_NULLABLE);
+			} else if (orientation < 0 || orientation > 6) {
+				throw new IllegalArgumentException(AvErrors.ORIENTATION_NOT_IN_RANGE);
+			}
+		}
+	}
+
+	public static void orientation(boolean nullable, Orientation... orientationValues) {
+		for (Orientation orientation : orientationValues) {
+			if (orientation == null) {
+				if (!nullable)
+					throw new IllegalArgumentException(AvErrors.ORIENTATION_NOT_NULLABLE);
+			} else {
+				orientation(nullable, orientation.getLook(), orientation.getUp());
+			}
+		}
+	}
+
+	public static void notNull(Object o, String fieldName) {
+		if (o == null)
+			throw new IllegalArgumentException(fieldName + AvErrors.NOT_NULLABLE_APPEND);
+	}
+
+	public static void ends(boolean nullable, Double lower, Double upper) {
+		if (lower == null || upper == null) {
+			if (!nullable)
+				throw new IllegalArgumentException(AvErrors.END_NOT_NULLABLES);
+		} else if (upper <= lower) {
+			throw new IllegalArgumentException(AvErrors.END_NOT_UPPER);
+		}
+	}
+
+	public static void colors(boolean nullable, String... colors) {
 		for (String color : colors) {
-			if (!color.matches(COLOR_REGEX))
+			if (color == null) {
+				if (!nullable)
+					throw new IllegalArgumentException(AvErrors.COLOR_NOT_NULLABLE);
+			} else if (!color.matches(COLOR_REGEX)) {
 				throw new IllegalArgumentException(AvErrors.COLOR_INVALID_FORMAT);
+			}
+		}
+	}
+
+	public static void indexes(boolean nullable, Integer... indexes) {
+		for (Integer index : indexes) {
+			if (index == null) {
+				if (!nullable)
+					throw new IllegalArgumentException(AvErrors.INDEX_NOT_NULLABLE);
+			} else if (index < 0) {
+				throw new IllegalArgumentException(AvErrors.INDEX_NEGATIVE);
+			}
 		}
 	}
 

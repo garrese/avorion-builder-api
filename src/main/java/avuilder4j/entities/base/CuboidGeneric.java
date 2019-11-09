@@ -1,4 +1,4 @@
-package avuilder4j.generics;
+package avuilder4j.entities.base;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -117,7 +117,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable {
 			fixedFaces = new Face[0];
 		}
 		validateCuboid();
-		AvValidations.validateRatios(ratio);
+		AvValidations.ratios(ratio);
 		AvValidations.validateFixedFacesMaxNumber(fixedFaces);
 		AvValidations.validateFixedFacesAxes(fixedFaces);
 		AvValidations.validateAxesRepetition(axes);
@@ -558,7 +558,10 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable {
 	 * 
 	 * @param index the {@link #index} to set.
 	 */
-	public void setIndex(Integer index) { this.index = index; }
+	public void setIndex(Integer index) {
+		AvValidations.indexes(true, index);
+		this.index = index;
+	}
 
 	public void setLengths(Lengths lengths) {
 		setLengths(lengths, (Face[]) null);

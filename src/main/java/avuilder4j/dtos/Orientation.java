@@ -2,10 +2,12 @@ package avuilder4j.dtos;
 
 import java.io.Serializable;
 
+import avuilder4j.utils.AvValidations;
+
 /**
  * Block orientation
  */
-public class TypeLook implements Serializable {
+public class Orientation implements Serializable {
 	private static final long serialVersionUID = -7559284143961816577L;
 
 	public static final int MAX_LOOK = 5;
@@ -21,21 +23,21 @@ public class TypeLook implements Serializable {
 	 */
 	private int up = 0;
 
-	public TypeLook() {}
+	public Orientation() {}
 
 	/**
 	 * @param look the {@link #look}
 	 * @param up   the {@link #up}
 	 */
-	public TypeLook(int look, int up) {
+	public Orientation(int look, int up) {
 		setLook(look);
 		setUp(up);
 	}
 
-	public static TypeLook deepCopy(TypeLook typeLook) {
-		TypeLook o = null;
+	public static Orientation deepCopy(Orientation typeLook) {
+		Orientation o = null;
 		if (typeLook != null) {
-			o = new TypeLook(typeLook.getLook(), typeLook.getUp());
+			o = new Orientation(typeLook.getLook(), typeLook.getUp());
 		}
 		return o;
 	}
@@ -53,10 +55,7 @@ public class TypeLook implements Serializable {
 	 * @param look the {@link #look} to set.
 	 */
 	protected void setLook(Integer look) {
-		if (look < MIN_LOOK || look > MAX_LOOK) {
-			throw new IllegalArgumentException(
-					"Look orientation must be between " + MIN_LOOK + " and " + MAX_LOOK + ".");
-		}
+		AvValidations.orientation(true, look);
 		this.look = look;
 	}
 
@@ -73,9 +72,7 @@ public class TypeLook implements Serializable {
 	 * @param up the {@link #up} to set.
 	 */
 	protected void setUp(Integer up) {
-		if (up < MIN_LOOK || look > MAX_LOOK) {
-			throw new IllegalArgumentException("Up orientation must be between " + MIN_LOOK + " and " + MAX_LOOK + ".");
-		}
+		AvValidations.orientation(true, up);
 		this.up = up;
 	}
 

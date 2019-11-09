@@ -1,4 +1,4 @@
-package avuilder4j.generics;
+package avuilder4j.entities.base;
 
 @SuppressWarnings("rawtypes")
 public class StructureGeneric<T extends BlockGeneric> extends CuboidStructureGeneric<T> {

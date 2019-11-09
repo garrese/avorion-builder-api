@@ -1,9 +1,9 @@
-package avuilder4j.generics;
+package avuilder4j.entities.base;
 
-import avuilder4j.dtos.TypeLook;
+import avuilder4j.dtos.Orientation;
 import avuilder4j.values.Colors;
-import avuilder4j.values.Mats;
-import avuilder4j.values.Types;
+import avuilder4j.values.loaders.Mats;
+import avuilder4j.values.loaders.Types;
 
 @SuppressWarnings("rawtypes")
 public abstract class BlockIndexerGeneric<B extends BlockGeneric, S extends StructureGeneric<B>>
@@ -12,7 +12,7 @@ public abstract class BlockIndexerGeneric<B extends BlockGeneric, S extends Stru
 	protected String defaultColor = Colors.MATERIAL_00_IRON;
 	protected Integer defaultMaterial = Mats.IRON;
 	protected Integer defaultType = Types.BLANK_HULL;
-	protected TypeLook defaultOrientation = new TypeLook();
+	protected Orientation defaultOrientation = new Orientation();
 
 	@Override
 	public B createBlock() {
@@ -20,7 +20,7 @@ public abstract class BlockIndexerGeneric<B extends BlockGeneric, S extends Stru
 		block.setColor(defaultColor);
 		block.setMaterial(defaultMaterial);
 		block.setType(defaultType);
-		block.setTypeLook(defaultOrientation);
+		block.setOrientation(defaultOrientation);
 		return block;
 	}
 
@@ -71,13 +71,15 @@ public abstract class BlockIndexerGeneric<B extends BlockGeneric, S extends Stru
 	 * 
 	 * @return the {@link #defaultOrientation}.
 	 */
-	public TypeLook getDefaultOrientation() { return defaultOrientation; }
+	public Orientation getDefaultOrientation() { return defaultOrientation; }
 
 	/**
 	 * Sets the {@link #defaultOrientation}.
 	 * 
 	 * @param defaultOrientation the {@link #defaultOrientation} to set.
 	 */
-	public void setDefaultOrientation(TypeLook defaultOrientation) { this.defaultOrientation = defaultOrientation; }
+	public void setDefaultOrientation(Orientation defaultOrientation) {
+		this.defaultOrientation = defaultOrientation;
+	}
 
 }

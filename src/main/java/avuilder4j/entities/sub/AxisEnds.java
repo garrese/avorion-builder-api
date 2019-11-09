@@ -92,14 +92,14 @@ public class AxisEnds implements Serializable {
 	}
 
 	public void escalateRelative(double ratio) {
-		AvValidations.validateRatios(ratio);
+		AvValidations.ratios(ratio);
 		validateAxisEnds();
 		upperEnd *= ratio;
 		lowerEnd *= ratio;
 	}
 
 	public void escalateStatic(double ratio, End fixedEnd) {
-		AvValidations.validateRatios(ratio);
+		AvValidations.ratios(ratio);
 		validateAxisEnds();
 		setLength(getLength() * ratio, fixedEnd);
 	}
@@ -192,7 +192,7 @@ public class AxisEnds implements Serializable {
 	}
 
 	public void setByLowerEndAndLength(double lowerEnd, double length) {
-		AvValidations.validateLengths(length);
+		AvValidations.lengths(length);
 
 		upperEnd = null;
 		setLowerEnd(lowerEnd);
@@ -200,7 +200,7 @@ public class AxisEnds implements Serializable {
 	}
 
 	public void setByUpperEndAndLength(double upperEnd, double length) {
-		AvValidations.validateLengths(length);
+		AvValidations.lengths(length);
 
 		lowerEnd = null;
 		setUpperEnd(upperEnd);
@@ -208,7 +208,7 @@ public class AxisEnds implements Serializable {
 	}
 
 	public void setByEndAndLength(End end, double value, double length) {
-		AvValidations.validateLengths(length);
+		AvValidations.lengths(length);
 
 		switch (end) {
 		case UPPER:
@@ -242,7 +242,7 @@ public class AxisEnds implements Serializable {
 			upperEnd = null;
 			lowerEnd = null;
 		} else {
-			AvValidations.validateLengths(length);
+			AvValidations.lengths(length);
 
 			if (fixedEnd == null) {
 				double center = 0;
@@ -279,7 +279,7 @@ public class AxisEnds implements Serializable {
 	 */
 	public void setLowerEnd(Double lP) {
 		if (upperEnd != null && lP != null && upperEnd <= lP)
-			throw new IllegalArgumentException("Lower point must be less than upper point.");
+			throw new IllegalArgumentException(AvErrors.END_NOT_LOWER);
 		this.lowerEnd = lP;
 	}
 
@@ -291,7 +291,7 @@ public class AxisEnds implements Serializable {
 	 */
 	public void setUpperEnd(Double uP) {
 		if (uP != null && lowerEnd != null && uP <= lowerEnd)
-			throw new IllegalArgumentException("Upper point must be higher than lower point.");
+			throw new IllegalArgumentException(AvErrors.END_NOT_UPPER);
 		this.upperEnd = uP;
 	}
 

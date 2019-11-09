@@ -1,14 +1,17 @@
 package avuilder4j.dtos;
 
+import avuilder4j.dtos.base.Closable;
+import avuilder4j.dtos.base.Indexable;
+
 /**
  * Immutable Avorion material reference.
  */
-public class MaterialStats {
+public class MaterialStats extends Closable implements Indexable {
 
 	/**
 	 * Material's index in game.
 	 */
-	protected int index;
+	protected Integer index;
 	/**
 	 * Material's name.
 	 */
@@ -29,6 +32,12 @@ public class MaterialStats {
 	 * Material's material cost in ore/m^3.
 	 */
 	protected double baseMaterialCost;
+
+	public MaterialStats() {}
+
+	public MaterialStats(int index) {
+		this.index = index;
+	}
 
 	/**
 	 * Material reference constructor.
@@ -56,7 +65,8 @@ public class MaterialStats {
 	 * 
 	 * @return the {@link #index}.
 	 */
-	public int getIndex() { return index; }
+	@Override
+	public Integer getIndex() { return index; }
 
 	/**
 	 * Gets the {@link #baseDensity}.
@@ -86,56 +96,64 @@ public class MaterialStats {
 	 */
 	public double getBaseMaterialCost() { return baseMaterialCost; }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(baseCreditCost);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(baseDensity);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(baseDurability);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(baseMaterialCost);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + index;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+	/**
+	 * Sets the {@link #index}.
+	 * 
+	 * @param index the {@link #index} to set.
+	 */
+	public void setIndex(int index) {
+		checkClosed();
+		this.index = index;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MaterialStats other = (MaterialStats) obj;
-		if (Double.doubleToLongBits(baseCreditCost) != Double.doubleToLongBits(other.baseCreditCost))
-			return false;
-		if (Double.doubleToLongBits(baseDensity) != Double.doubleToLongBits(other.baseDensity))
-			return false;
-		if (Double.doubleToLongBits(baseDurability) != Double.doubleToLongBits(other.baseDurability))
-			return false;
-		if (Double.doubleToLongBits(baseMaterialCost) != Double.doubleToLongBits(other.baseMaterialCost))
-			return false;
-		if (index != other.index)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+	/**
+	 * Sets the {@link #name}.
+	 * 
+	 * @param name the {@link #name} to set.
+	 */
+	public void setName(String name) {
+		checkClosed();
+		this.name = name;
 	}
 
-	@Override
-	public String toString() {
-		return "MaterialStats [index=" + index + ", name=" + name + ", baseDensity=" + baseDensity + ", baseDurability="
-				+ baseDurability + ", baseCreditCost=" + baseCreditCost + ", baseMaterialCost=" + baseMaterialCost
-				+ "]";
+	/**
+	 * Sets the {@link #baseDensity}.
+	 * 
+	 * @param baseDensity the {@link #baseDensity} to set.
+	 */
+	public void setBaseDensity(double baseDensity) {
+		checkClosed();
+		this.baseDensity = baseDensity;
+	}
+
+	/**
+	 * Sets the {@link #baseDurability}.
+	 * 
+	 * @param baseDurability the {@link #baseDurability} to set.
+	 */
+	public void setBaseDurability(double baseDurability) {
+		checkClosed();
+		this.baseDurability = baseDurability;
+	}
+
+	/**
+	 * Sets the {@link #baseCreditCost}.
+	 * 
+	 * @param baseCreditCost the {@link #baseCreditCost} to set.
+	 */
+	public void setBaseCreditCost(double baseCreditCost) {
+		checkClosed();
+		this.baseCreditCost = baseCreditCost;
+	}
+
+	/**
+	 * Sets the {@link #baseMaterialCost}.
+	 * 
+	 * @param baseMaterialCost the {@link #baseMaterialCost} to set.
+	 */
+	public void setBaseMaterialCost(double baseMaterialCost) {
+		checkClosed();
+		this.baseMaterialCost = baseMaterialCost;
 	}
 
 }

@@ -1,7 +1,7 @@
-package avuilder4j.generics;
+package avuilder4j.entities.base;
 
 import avuilder4j.dtos.Lengths;
-import avuilder4j.dtos.TypeLook;
+import avuilder4j.dtos.Orientation;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.utils.AvValidations;
@@ -10,7 +10,7 @@ import avuilder4j.utils.AvValidations;
  * Represents an Avorion full functional block in a structure.
  */
 @SuppressWarnings("rawtypes")
-public abstract class BlockGeneric<T extends CuboidGeneric> extends CuboidGeneric<T> {
+public class BlockGeneric<T extends BlockGeneric> extends CuboidGeneric<T> implements BlockInterface {
 	private static final long serialVersionUID = -1896528590585386376L;
 
 //	public static Block deepCopy(Block bb) {
@@ -38,7 +38,7 @@ public abstract class BlockGeneric<T extends CuboidGeneric> extends CuboidGeneri
 	/**
 	 * Block's orientation
 	 */
-	private TypeLook typeLook = new TypeLook();
+	private Orientation orientation = new Orientation();
 
 	/**
 	 * Block's type.
@@ -59,11 +59,11 @@ public abstract class BlockGeneric<T extends CuboidGeneric> extends CuboidGeneri
 		super(index, parent);
 	}
 
-	public BlockGeneric(Integer material, Integer type, TypeLook typeLook) {
+	public BlockGeneric(Integer material, Integer type, Orientation typeLook) {
 		super();
 		this.material = material;
 		this.type = type;
-		this.typeLook = typeLook;
+		this.orientation = typeLook;
 	}
 
 	@Override
@@ -85,10 +85,10 @@ public abstract class BlockGeneric<T extends CuboidGeneric> extends CuboidGeneri
 				return false;
 		} else if (!material.equals(other.material))
 			return false;
-		if (typeLook == null) {
-			if (other.typeLook != null)
+		if (orientation == null) {
+			if (other.orientation != null)
 				return false;
-		} else if (!typeLook.equals(other.typeLook))
+		} else if (!orientation.equals(other.orientation))
 			return false;
 		if (type == null) {
 			if (other.type != null)
@@ -103,17 +103,20 @@ public abstract class BlockGeneric<T extends CuboidGeneric> extends CuboidGeneri
 	 * 
 	 * @return the {@link #color}.
 	 */
+	@Override
 	public String getColor() { return color; }
 
+	@Override
 	public Integer getMaterial() { return material; }
 
 	/**
-	 * Gets the {@link #typeLook}.
+	 * Gets the {@link #orientation}.
 	 * 
-	 * @return the {@link #typeLook}.
+	 * @return the {@link #orientation}.
 	 */
-	public TypeLook getTypeLook() { return typeLook; }
+	public Orientation getOrientation() { return orientation; }
 
+	@Override
 	public Integer getType() { return type; }
 
 	@Override
@@ -122,7 +125,7 @@ public abstract class BlockGeneric<T extends CuboidGeneric> extends CuboidGeneri
 		int result = super.hashCode();
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result + ((material == null) ? 0 : material.hashCode());
-		result = prime * result + ((typeLook == null) ? 0 : typeLook.hashCode());
+		result = prime * result + ((orientation == null) ? 0 : orientation.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -130,7 +133,7 @@ public abstract class BlockGeneric<T extends CuboidGeneric> extends CuboidGeneri
 	public boolean isBlockDefined() {
 		if (!isCuboidDefined()) {
 			return false;
-		} else if (color == null || typeLook == null || material == null || type == null) {
+		} else if (color == null || orientation == null || material == null || type == null) {
 			return false;
 		} else {
 			return true;
@@ -143,18 +146,18 @@ public abstract class BlockGeneric<T extends CuboidGeneric> extends CuboidGeneri
 	 * @param color the {@link #color} to set.
 	 */
 	public void setColor(String color) {
-		AvValidations.validateColors(color);
+		AvValidations.colors(true, color);
 		this.color = color;
 	}
 
 	public void setMaterial(Integer material) { this.material = material; }
 
 	/**
-	 * Sets the {@link #typeLook}.
+	 * Sets the {@link #orientation}.
 	 * 
-	 * @param typeLook the {@link #typeLook} to set.
+	 * @param orientation the {@link #orientation} to set.
 	 */
-	public void setTypeLook(TypeLook typeLook) { this.typeLook = typeLook; }
+	public void setOrientation(Orientation orientation) { this.orientation = orientation; }
 
 	public void setType(Integer type) { this.type = type; }
 
@@ -187,7 +190,7 @@ public abstract class BlockGeneric<T extends CuboidGeneric> extends CuboidGeneri
 				+ ", axisX=" + getAxisX()
 				+ ", axisY=" + getAxisY() 
 				+ ", axisZ=" + getAxisZ()
-				+ ", typeLook=" + typeLook
+				+ ", orientation=" + orientation
 				+ "]";
 		//@formatter:on
 
@@ -196,6 +199,78 @@ public abstract class BlockGeneric<T extends CuboidGeneric> extends CuboidGeneri
 	public void validateBlock() {
 		if (!isBlockDefined())
 			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
+	}
+
+	@Override
+	public Integer getParentIndex() {
+		if (getParent() != null)
+			return getParent().getIndex();
+		else
+			return null;
+	}
+
+	@Override
+	public Double getLX() {
+		if (getAxisX() != null)
+			return getAxisX().getLowerEnd();
+		else
+			return null;
+	}
+
+	@Override
+	public Double getLY() {
+		if (getAxisY() != null)
+			return getAxisY().getLowerEnd();
+		else
+			return null;
+	}
+
+	@Override
+	public Double getLZ() {
+		if (getAxisZ() != null)
+			return getAxisZ().getLowerEnd();
+		else
+			return null;
+	}
+
+	@Override
+	public Double getUX() {
+		if (getAxisX() != null)
+			return getAxisX().getUpperEnd();
+		else
+			return null;
+	}
+
+	@Override
+	public Double getUY() {
+		if (getAxisY() != null)
+			return getAxisY().getUpperEnd();
+		else
+			return null;
+	}
+
+	@Override
+	public Double getUZ() {
+		if (getAxisZ() != null)
+			return getAxisZ().getUpperEnd();
+		else
+			return null;
+	}
+
+	@Override
+	public Integer getLook() {
+		if (getOrientation() != null)
+			return getOrientation().getLook();
+		else
+			return null;
+	}
+
+	@Override
+	public Integer getUp() {
+		if (getOrientation() != null)
+			return getOrientation().getUp();
+		else
+			return null;
 	}
 
 }
