@@ -4,7 +4,7 @@ import avuilder4j.dtos.TypeStats;
 import avuilder4j.dtos.TypeStatsFilled;
 import avuilder4j.dtos.TypeStatsShaped;
 
-public class Types extends Loader<TypeStats> {
+public class Types extends EntityMap<TypeStats> {
 
 	public static final int HULL = 1;
 	public static final int BLANK_HULL = 2;
