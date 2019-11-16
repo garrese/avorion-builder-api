@@ -147,13 +147,13 @@ public class Types extends Loader<TypeStats> {
 		addFilledVariant(STONE_TWISTED_CORNER_2, Shapes.TWISTED_CORNER_2, t);
 
 		t = getDefaultStats(CARGO_BAY);
-		t.setDensityMod(10.0 / 3.0);
+		t.setDensityMod(1.0 / 3.0);
 		t.setCreditCostMod(2.5);
 		t.setMaterialCostMod(2.5);
 		add(t);
 
 		t = getDefaultStats(CREW_QUARTERS);
-		t.setDensityMod(20.0 / 3.0);
+		t.setDensityMod(2.0 / 3.0);
 		t.setCreditCostMod(2.25);
 		t.setMaterialCostMod(2.25);
 		add(t);
@@ -301,7 +301,7 @@ public class Types extends Loader<TypeStats> {
 		t.setCreditCostMod(19.867564493116);
 		t.setMaterialCostMod(5.0);
 		t.setMechanics(2.0);
-		t.setProcessingMod(10.0);
+		t.setProcessingMod(5.0);
 		add(t);
 
 		t = getDefaultStats(HYPERSPACE_CORE);
