@@ -2,7 +2,7 @@ package avuilder4j.values.loaders;
 
 import avuilder4j.dtos.Shape;
 
-public class Shapes extends Loader<Shape> {
+public class Shapes extends EntityMap<Shape> {
 
 	public static final int FILLED = 0;
 	public static final int EDGE = 1;

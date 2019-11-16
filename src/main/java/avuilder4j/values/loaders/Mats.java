@@ -4,7 +4,7 @@ import avuilder4j.dtos.MaterialStats;
 import avuilder4j.error.AvErrors;
 import avuilder4j.utils.Formulae;
 
-public class Mats extends Loader<MaterialStats> {
+public class Mats extends EntityMap<MaterialStats> {
 
 	public static final int AVORION = 6;
 	public static final int IRON = 0;
