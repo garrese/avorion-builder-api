@@ -84,9 +84,9 @@ public class DesignExporter {
 				addAttribute(doc, blockE, "uy", uy);
 				addAttribute(doc, blockE, "uz", uz);
 
-				addAttribute(doc, blockE, "index", String.valueOf(block.getType()));
+				addAttribute(doc, blockE, "index", String.valueOf(block.getTypeIndex()));
 
-				addAttribute(doc, blockE, "material", String.valueOf(block.getMaterial()));
+				addAttribute(doc, blockE, "material", String.valueOf(block.getMaterialIndex()));
 
 				addAttribute(doc, blockE, "look", String.valueOf(block.getLook()));
 
@@ -138,8 +138,8 @@ public class DesignExporter {
 		if (!b.getParentIndex().equals(-1))
 			AvValidations.indexes(true, b.getParentIndex());
 
-		AvValidations.notNull(b.getMaterial(), "Material");
-		AvValidations.notNull(b.getType(), "Type");
+		AvValidations.notNull(b.getMaterialIndex(), "Material");
+		AvValidations.notNull(b.getTypeIndex(), "Type");
 		AvValidations.orientation(false, b.getLook(), b.getUp());
 		AvValidations.colors(false, b.getColor());
 		AvValidations.ends(false, b.getLX(), b.getUX());

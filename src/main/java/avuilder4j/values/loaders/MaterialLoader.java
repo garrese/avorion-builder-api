@@ -1,7 +1,7 @@
 package avuilder4j.values.loaders;
 
-import avuilder4j.dtos.Material;
+import avuilder4j.dtos.map.Material;
 
-public abstract class MaterialLoader implements Loader<Material> {
+public interface MaterialLoader extends Loader<Material> {
 
 }

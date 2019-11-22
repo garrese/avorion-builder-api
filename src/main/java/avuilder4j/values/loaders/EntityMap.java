@@ -3,40 +3,40 @@ package avuilder4j.values.loaders;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import avuilder4j.dtos.base.Indexable;
+import avuilder4j.dtos.map.Indexable;
+import avuilder4j.dtos.map.MapIndexAbstract;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
 
 public class EntityMap<E extends Indexable> {
-	protected Map<Integer, E> map = new LinkedHashMap<Integer, E>();
+	protected Map<MapIndexAbstract, E> map = new LinkedHashMap<>();
 
-	public E get(Integer index) throws Avuilder4jRuntimeException {
-		if (!map.containsKey(index)) {
+	public E get(MapIndexAbstract mapIndex) throws Avuilder4jRuntimeException {
+		if (!map.containsKey(mapIndex)) {
 			throw new Avuilder4jRuntimeException(AvErrors.INDEX_NOT_INDEXED);
 		}
-		return map.get(index);
+		return map.get(mapIndex);
 	}
 
-	public void add(E e) {
-		map.put(e.getIndex(), e);
+	public void add(E element) {
+		map.put(element.getMapIndex(), element);
 	}
 
-	/**
-	 * Gets the {@link #map}.
-	 * 
-	 * @return the {@link #map}.
-	 */
-	public Map<Integer, E> getMap() {
-		return map;
-	}
+	public Map<MapIndexAbstract, E> getMap() { return map; }
 
-	/**
-	 * Sets the {@link #map}.
-	 * 
-	 * @param map the {@link #map} to set.
-	 */
-	protected void setMap(Map<Integer, E> map) {
-		this.map = map;
+	protected void setMap(Map<MapIndexAbstract, E> map) { this.map = map; }
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("EntityMap [\n");
+		for (E e : map.values()) {
+			builder.append("\t");
+			builder.append(e);
+			builder.append("\n");
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

@@ -107,7 +107,7 @@ public class BlockGeneric<T extends BlockGeneric> extends CuboidGeneric<T> imple
 	public String getColor() { return color; }
 
 	@Override
-	public Integer getMaterial() { return material; }
+	public Integer getMaterialIndex() { return material; }
 
 	/**
 	 * Gets the {@link #orientation}.
@@ -117,7 +117,7 @@ public class BlockGeneric<T extends BlockGeneric> extends CuboidGeneric<T> imple
 	public Orientation getOrientation() { return orientation; }
 
 	@Override
-	public Integer getType() { return type; }
+	public Integer getTypeIndex() { return type; }
 
 	@Override
 	public int hashCode() {

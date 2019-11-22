@@ -1,14 +1,11 @@
 package avuilder4j.entities;
 
-import avuilder4j.dtos.MaterialStats;
-import avuilder4j.dtos.Shape;
-import avuilder4j.dtos.TypeStats;
 import avuilder4j.entities.base.BlockGeneric;
 import avuilder4j.entities.base.StructureGeneric;
 import avuilder4j.error.Avuilder4jException;
-import avuilder4j.values.loaders.Mats;
-import avuilder4j.values.loaders.Shapes;
-import avuilder4j.values.loaders.Types;
+import avuilder4j.values.Mats;
+import avuilder4j.values.Shapes;
+import avuilder4j.values.Types;
 
 @SuppressWarnings("rawtypes")
 public class StatsCalculator {
@@ -24,12 +21,13 @@ public class StatsCalculator {
 	}
 
 	public double getVolume(BlockGeneric block) {
-		block.validateBlock();
-		TypeStats type = types.get(block.getType());
-		Shape shape = shapes.get(type.getShape());
-
-		double vol = block.getVolume() * type.getVolumeMod() * shape.getVolumeMod();
-		return vol;
+//		block.validateBlock();
+//		TypeStats type = types.get(block.getType());
+//		Shape shape = shapes.get(type.getShape());
+//
+//		double vol = block.getVolume() * type.getVolumeMod() * shape.getVolumeMod();
+//		return vol;
+		return 0;
 	}
 
 	public double getVolume(StructureGeneric<? extends BlockGeneric> structure) {
@@ -41,11 +39,13 @@ public class StatsCalculator {
 	}
 
 	public double getMass(BlockGeneric block) {
-		MaterialStats mat = mats.get(block.getMaterial());
-		TypeStats type = types.get(block.getType());
+//		MaterialStats mat = mats.get(block.getMaterial());
+//		TypeStats type = types.get(block.getType());
+//
+//		double mass = getVolume(block) * mat.getBaseDensity() * type.getDensityMod();
+//		return mass;
 
-		double mass = getVolume(block) * mat.getBaseDensity() * type.getDensityMod();
-		return mass;
+		return 0;
 	}
 
 	public double getMass(StructureGeneric<? extends BlockGeneric> structure) throws Avuilder4jException {

@@ -18,9 +18,9 @@ public interface BlockInterface {
 
 	public Double getUZ();
 
-	public Integer getMaterial();
+	public Integer getMaterialIndex();
 
-	public Integer getType();
+	public Integer getTypeIndex();
 
 	public Integer getLook();
 

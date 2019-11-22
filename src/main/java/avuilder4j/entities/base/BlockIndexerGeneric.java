@@ -2,8 +2,8 @@ package avuilder4j.entities.base;
 
 import avuilder4j.dtos.Orientation;
 import avuilder4j.values.Colors;
-import avuilder4j.values.loaders.Mats;
-import avuilder4j.values.loaders.Types;
+import avuilder4j.values.Mats;
+import avuilder4j.values.Types;
 
 @SuppressWarnings("rawtypes")
 public abstract class BlockIndexerGeneric<B extends BlockGeneric, S extends StructureGeneric<B>>
