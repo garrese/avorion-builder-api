@@ -1,7 +1,6 @@
 package avuilder4j.error;
 
-import avuilder4j.dtos.Orientation;
-import avuilder4j.utils.AvValidations;
+import avuilder4j.design.sub.Orientation;
 
 public class AvErrors {
 
