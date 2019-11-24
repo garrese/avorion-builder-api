@@ -7,6 +7,7 @@ import java.util.List;
 import avuilder4j.design.enums.Axis;
 import avuilder4j.design.enums.Rotation;
 import avuilder4j.design.sub.AxisEnds;
+import avuilder4j.design.sub.DataReport;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
@@ -14,6 +15,8 @@ import avuilder4j.error.Avuilder4jRuntimeException;
 @SuppressWarnings("rawtypes")
 public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B> implements Serializable {
 	private static final long serialVersionUID = 3084475335938461639L;
+
+	protected Tags tags = new Tags();
 
 	public void escalate(double ratio) {
 		escalate(ratio, (Axis[]) null);
@@ -51,11 +54,11 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 		}
 	}
 
-	public void escalateByVolume(double finalVolume) {
-		escalateByVolume(finalVolume, (Axis[]) null);
+	public void escalateByVolumeCuboid(double finalVolume) {
+		escalateByVolumeCuboid(finalVolume, (Axis[]) null);
 	}
 
-	public void escalateByVolume(double finalVolume, Axis... axesIds) {
+	public void escalateByVolumeCuboid(double finalVolume, Axis... axesIds) {
 		AvValidations.volumes(finalVolume);
 		AvValidations.validateAxesRepetition(axesIds);
 		if (axesIds == null || axesIds.length == 0) {
@@ -67,7 +70,7 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 		}
 		double currentVol = 0;
 		for (B cuboid : this) {
-			currentVol += cuboid.getCuboidVolume();
+			currentVol += cuboid.getVolumeCuboid();
 		}
 
 		double ratio;
@@ -133,11 +136,26 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 		}
 	}
 
-	/**
-	 * Gets the {@link #blocks}.
-	 * 
-	 * @return the {@link #blocks}.
-	 */
 	public List<B> getBlocks() { return this; }
+
+	public DataReport getVolumeCuboid(List<? extends CuboidGeneric> blocks) {
+		DataReport r = new DataReport(tags + " totalCuboidVolume");
+		for (CuboidGeneric b : blocks) {
+			r.addToResult(b.getVolumeCuboid());
+		}
+		return r;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("CuboidStructureGeneric [tags=");
+		builder.append(tags);
+		for (CuboidGeneric cuboid : this) {
+			builder.append("\n\t").append(cuboid);
+		}
+		builder.append("\n").append("]");
+		return builder.toString();
+	}
 
 }

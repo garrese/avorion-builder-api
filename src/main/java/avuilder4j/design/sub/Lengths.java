@@ -93,7 +93,15 @@ public class Lengths implements Serializable {
 
 	@Override
 	public String toString() {
-		return "[lengthX=" + lengthX + ", lengthY=" + lengthY + ", lengthZ=" + lengthZ + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("Lengths [x=");
+		builder.append(lengthX);
+		builder.append(", y=");
+		builder.append(lengthY);
+		builder.append(", z=");
+		builder.append(lengthZ);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

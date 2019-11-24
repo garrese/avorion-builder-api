@@ -1,4 +1,4 @@
-package avuilder4j.data;
+package avuilder4j.data.loaders.dtos;
 
 public class TypeModelByMaterial {
 

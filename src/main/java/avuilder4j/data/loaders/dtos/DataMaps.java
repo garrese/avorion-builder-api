@@ -1,8 +1,8 @@
-package avuilder4j.data;
+package avuilder4j.data.loaders.dtos;
 
 import java.util.Map;
 
-public class DataMap {
+public class DataMaps {
 
 	protected Map<Integer, Material> materialMap;
 	protected Map<Integer, Shape> shapeMap;

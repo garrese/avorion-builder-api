@@ -2,6 +2,7 @@ package avuilder4j.error;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import avuilder4j.design.enums.Axis;
 import avuilder4j.design.enums.Face;
@@ -12,6 +13,15 @@ public class AvValidations {
 	public static final String COLOR_REGEX = "[0-9|a-fA-F]{8}";
 
 	public static final int MAX_FIXED_FACES = 2;
+
+	public static <K> void keyInMap(K key, Map<K, ?> map) {
+		if (!map.containsKey(key))
+			throw new Avuilder4jRuntimeException(AvErrors.INDEX_NOT_IN_MAP);
+	}
+
+	public static void mapNotNull(Object map, String mapName) {
+		notNullMsg(map, AvErrors.MAP_NOT_FOUND + mapName);
+	}
 
 	public static void volumes(double... volume) {
 		for (Double vol : volume) {
@@ -59,6 +69,11 @@ public class AvValidations {
 	public static void notNull(Object o, String fieldName) {
 		if (o == null)
 			throw new IllegalArgumentException(fieldName + AvErrors.NOT_NULLABLE_APPEND);
+	}
+
+	public static void notNullMsg(Object o, String msg) {
+		if (o == null)
+			throw new IllegalArgumentException(msg);
 	}
 
 	public static void ends(boolean nullable, Double lower, Double upper) {

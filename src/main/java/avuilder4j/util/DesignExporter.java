@@ -17,9 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import avuilder4j.design.base.BlockPlanInterface;
-import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jException;
-import avuilder4j.error.Avuilder4jRuntimeException;
 
 @SuppressWarnings("rawtypes")
 public class DesignExporter {
@@ -35,7 +33,7 @@ public class DesignExporter {
 		}
 
 		try {
-			validateBlockList(blocks);
+			validateBlockPlanList(blocks);
 
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -116,35 +114,21 @@ public class DesignExporter {
 		element.setAttributeNode(materialIndexAtt);
 	}
 
-	public static void validateBlockList(List<? extends BlockPlanInterface> blocks) throws Avuilder4jException {
+	public static void validateBlockPlanList(List<? extends BlockPlanInterface> blocks) throws Avuilder4jException {
 
 		ArrayList<BlockPlanInterface> roots = new ArrayList<BlockPlanInterface>();
 		for (BlockPlanInterface block : blocks) {
-			validateBlock(block);
+			block.validateBlockPlan();
 			if (block.getParentIndex() == null || block.getParentIndex().equals(-1)) {
 				if (roots.size() > 0) {
-					throw new Avuilder4jRuntimeException("Can not be more than one root block. roots= " + roots);
+					throw new Avuilder4jException("Can not be more than one root block. roots= " + roots);
 				}
 				roots.add(block);
 			}
 		}
 		if (roots.size() == 0) {
-			throw new Avuilder4jRuntimeException("Must be one root block.");
+			throw new Avuilder4jException("Must be one root block.");
 		}
-	}
-
-	public static void validateBlock(BlockPlanInterface b) {
-		AvValidations.indexes(false, b.getIndex());
-		if (!b.getParentIndex().equals(-1))
-			AvValidations.indexes(true, b.getParentIndex());
-
-		AvValidations.notNull(b.getMaterialIndex(), "Material");
-		AvValidations.notNull(b.getTypeIndex(), "Type");
-		AvValidations.orientation(false, b.getLook(), b.getUp());
-		AvValidations.colors(false, b.getColor());
-		AvValidations.ends(false, b.getLX(), b.getUX());
-		AvValidations.ends(false, b.getLY(), b.getUY());
-		AvValidations.ends(false, b.getLZ(), b.getUZ());
 	}
 
 	public String getExportRoute() { return exportRoute; }

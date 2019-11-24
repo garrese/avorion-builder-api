@@ -3,16 +3,21 @@ package avuilder4j.data.loaders.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import avuilder4j.data.DataMap;
+import avuilder4j.data.loaders.dtos.DataMaps;
+import avuilder4j.data.loaders.dtos.Material;
+import avuilder4j.data.loaders.dtos.Shape;
+import avuilder4j.data.loaders.dtos.Type;
+import avuilder4j.data.loaders.dtos.TypeModel;
+import avuilder4j.data.loaders.dtos.TypeModelByMaterial;
 import avuilder4j.error.Avuilder4jException;
 
 public abstract class DataLoader {
 
-	protected MaterialLoader materialLoader;
-	protected ShapeLoader shapeLoader;
-	protected TypeLoader typeLoader;
-	protected TypeModelLoader typeModelLoader;
-	protected TypeModelByMaterialLoader typeModelByMaterialLoader;
+	protected Loader<Integer, Material> materialLoader;
+	protected Loader<Integer, Shape> shapeLoader;
+	protected Loader<Integer, Type> typeLoader;
+	protected Loader<Integer, TypeModel> typeModelLoader;
+	protected Loader<TypeModelByMaterial.MapIndex, TypeModelByMaterial> typeModelByMaterialLoader;
 
 	public DataLoader() {
 		instantiateLoaders();
@@ -20,25 +25,30 @@ public abstract class DataLoader {
 
 	public abstract void instantiateLoaders();
 
-	public MaterialLoader getMaterialLoader() { return materialLoader; }
+	public Loader<Integer, Material> getMaterialLoader() { return materialLoader; }
 
-	public void setMaterialLoader(MaterialLoader materialLoader) { this.materialLoader = materialLoader; }
+	public void setMaterialLoader(Loader<Integer, Material> materialLoader) { this.materialLoader = materialLoader; }
 
-	public ShapeLoader getShapeLoader() { return shapeLoader; }
+	public Loader<Integer, Shape> getShapeLoader() { return shapeLoader; }
 
-	public void setShapeLoader(ShapeLoader shapeLoader) { this.shapeLoader = shapeLoader; }
+	public void setShapeLoader(Loader<Integer, Shape> shapeLoader) { this.shapeLoader = shapeLoader; }
 
-	public TypeLoader getTypeLoader() { return typeLoader; }
+	public Loader<Integer, Type> getTypeLoader() { return typeLoader; }
 
-	public void setTypeLoader(TypeLoader typeLoader) { this.typeLoader = typeLoader; }
+	public void setTypeLoader(Loader<Integer, Type> typeLoader) { this.typeLoader = typeLoader; }
 
-	public TypeModelLoader getTypeModelLoader() { return typeModelLoader; }
+	public Loader<Integer, TypeModel> getTypeModelLoader() { return typeModelLoader; }
 
-	public void setTypeModelLoader(TypeModelLoader typeModelLoader) { this.typeModelLoader = typeModelLoader; }
+	public void setTypeModelLoader(Loader<Integer, TypeModel> typeModelLoader) {
+		this.typeModelLoader = typeModelLoader;
+	}
 
-	public TypeModelByMaterialLoader getTypeModelByMaterialLoader() { return typeModelByMaterialLoader; }
+	public Loader<TypeModelByMaterial.MapIndex, TypeModelByMaterial> getTypeModelByMaterialLoader() {
+		return typeModelByMaterialLoader;
+	}
 
-	public void setTypeModelByMaterialLoader(TypeModelByMaterialLoader typeModelByMaterialLoader) {
+	public void setTypeModelByMaterialLoader(
+			Loader<TypeModelByMaterial.MapIndex, TypeModelByMaterial> typeModelByMaterialLoader) {
 		this.typeModelByMaterialLoader = typeModelByMaterialLoader;
 	}
 
@@ -53,8 +63,8 @@ public abstract class DataLoader {
 		return loaders;
 	}
 
-	public DataMap loadAll() throws Avuilder4jException {
-		DataMap map = new DataMap();
+	public DataMaps loadAll() throws Avuilder4jException {
+		DataMaps map = new DataMaps();
 		map.setMaterialMap(materialLoader.loadAll());
 		map.setShapeMap(shapeLoader.loadAll());
 		map.setTypeMap(typeLoader.loadAll());

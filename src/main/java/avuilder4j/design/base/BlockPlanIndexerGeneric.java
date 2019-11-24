@@ -6,7 +6,7 @@ import avuilder4j.util.values.Mats;
 import avuilder4j.util.values.Types;
 
 @SuppressWarnings("rawtypes")
-public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S extends StructurePlanGeneric<B>>
+public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S extends BlockPlanStructureGeneric<B>>
 		extends CuboidIndexerGeneric<B, S> {
 
 	protected String defaultColor = Colors.MATERIAL_00_IRON;

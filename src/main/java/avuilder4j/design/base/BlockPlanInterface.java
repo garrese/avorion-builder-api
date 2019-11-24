@@ -1,5 +1,7 @@
 package avuilder4j.design.base;
 
+import avuilder4j.error.Avuilder4jException;
+
 public interface BlockPlanInterface {
 
 	public Integer getIndex();
@@ -27,5 +29,9 @@ public interface BlockPlanInterface {
 	public Integer getUp();
 
 	public String getColor();
+
+	public void validateBlockPlan() throws Avuilder4jException;
+
+	public boolean isBlockPlanDefined();
 
 }

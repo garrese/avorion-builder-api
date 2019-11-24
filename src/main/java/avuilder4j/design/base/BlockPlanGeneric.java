@@ -2,9 +2,7 @@ package avuilder4j.design.base;
 
 import avuilder4j.design.sub.Lengths;
 import avuilder4j.design.sub.Orientation;
-import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
-import avuilder4j.error.Avuilder4jRuntimeException;
 
 /**
  * Represents an Avorion full functional block in a structure.
@@ -28,22 +26,22 @@ public class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<
 	/**
 	 * Block's color in 8 digit color hex format.
 	 */
-	private String color;
+	protected String color;
 
 	/**
 	 * Block's material.
 	 */
-	private Integer material;
+	protected Integer material;
 
 	/**
 	 * Block's orientation
 	 */
-	private Orientation orientation = new Orientation();
+	protected Orientation orientation = new Orientation();
 
 	/**
 	 * Block's type.
 	 */
-	private Integer type;
+	protected Integer type;
 
 	public BlockPlanGeneric() {}
 
@@ -130,7 +128,8 @@ public class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<
 		return result;
 	}
 
-	public boolean isBlockDefined() {
+	@Override
+	public boolean isBlockPlanDefined() {
 		if (!isCuboidDefined()) {
 			return false;
 		} else if (color == null || orientation == null || material == null || type == null) {
@@ -177,7 +176,7 @@ public class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<
 			parentSring = "[id=" + parent.getIndex() + "]";
 
 		//@formatter:off
-		return "Block ["
+		return "BlockPlan ["
 				+ "tags=\"" + tags + "\""
 				+ ", index=" + index 
 				+ ", parent=" + parentSring
@@ -185,7 +184,7 @@ public class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<
 				+ ", type=" + type 
 				+ ", color=" + color
 				+ ", lengths=" + getLengths()
-				+ ", volume=" + getCuboidVolume()
+				+ ", volumeCuboid=" + getVolumeCuboid()
 				+ ", center=" + getCenter()
 				+ ", axisX=" + getAxisX()
 				+ ", axisY=" + getAxisY() 
@@ -196,9 +195,19 @@ public class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<
 
 	}
 
-	public void validateBlock() {
-		if (!isBlockDefined())
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
+	@Override
+	public void validateBlockPlan() {
+		validateCuboid();
+		AvValidations.indexes(false, getIndex());
+		if (!getParentIndex().equals(-1))
+			AvValidations.indexes(true, getParentIndex());
+		AvValidations.notNull(getMaterialIndex(), "Material");
+		AvValidations.notNull(getTypeIndex(), "Type");
+		AvValidations.orientation(false, getLook(), getUp());
+		AvValidations.colors(false, getColor());
+		AvValidations.ends(false, getLX(), getUX());
+		AvValidations.ends(false, getLY(), getUY());
+		AvValidations.ends(false, getLZ(), getUZ());
 	}
 
 	@Override

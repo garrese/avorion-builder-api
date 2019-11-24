@@ -10,7 +10,6 @@ public class SqliteDataLoader extends DataLoader {
 		setMaterialLoader(new SqliteLoaderMaterial());
 		setShapeLoader(new SqliteLoaderShape());
 		setTypeLoader(new SqliteLoaderType());
-		setTypeLoader(new SqliteLoaderType());
 		setTypeModelLoader(new SqliteLoaderTypeModel());
 		setTypeModelByMaterialLoader(new SqliteLoaderTypeModelByMaterial());
 	}

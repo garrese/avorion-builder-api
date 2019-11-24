@@ -22,7 +22,7 @@ import avuilder4j.error.Avuilder4jRuntimeException;
  * The cuboid is defined by one {@link AxisEnds} in each of the three coordinate axis.
  */
 @SuppressWarnings("rawtypes")
-public class CuboidGeneric<T extends CuboidGeneric> implements Serializable {
+public class CuboidGeneric<T extends CuboidGeneric> extends Tags implements Serializable {
 	private static final long serialVersionUID = -5598838939653504628L;
 
 	/**
@@ -49,8 +49,6 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable {
 	 * Cuboid's parent index in a structure.
 	 */
 	protected T parent;
-
-	protected String tags;
 
 //	public static Cuboid deepCopy(Cuboid cuboid) {
 //		Cuboid c = null;
@@ -158,13 +156,13 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable {
 		switch (axesIds.length) {
 		case 0:
 		case 3:
-			ratio = Math.cbrt(finalVolume / getCuboidVolume());
+			ratio = Math.cbrt(finalVolume / getVolumeCuboid());
 			break;
 		case 2:
-			ratio = Math.sqrt(finalVolume / getCuboidVolume());
+			ratio = Math.sqrt(finalVolume / getVolumeCuboid());
 			break;
 		case 1:
-			ratio = finalVolume / getCuboidVolume();
+			ratio = finalVolume / getVolumeCuboid();
 			break;
 		default:
 			throw new Avuilder4jRuntimeException(AvErrors.AXIS_AMOUNT);
@@ -362,43 +360,12 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable {
 	 */
 	public T getParent() { return parent; }
 
-	/**
-	 * Gets the {@link #tags}.
-	 * 
-	 * @return the {@link #tags}.
-	 */
-	public String getTags() { return tags; }
-
-	public Double getCuboidVolume() {
+	public Double getVolumeCuboid() {
 		if (isCuboidDefined()) {
 			return axisX.getLength() * axisY.getLength() * axisZ.getLength();
 		} else {
 			return null;
 		}
-	}
-
-	public boolean hasTags(String tags) {
-		boolean noThisTags = this.tags == null || this.tags.trim().isEmpty();
-		boolean noArgTags = tags == null || tags.trim().isEmpty();
-		if (noThisTags || noArgTags) {
-			return false;
-		}
-
-		String[] argTagsArray = tags.trim().split(" ");
-		String[] thisTagsArray = this.tags.trim().split(" ");
-		for (String argTag : argTagsArray) {
-			boolean hasTag = false;
-			for (String thisTag : thisTagsArray) {
-				if (argTag.equals(thisTag)) {
-					hasTag = true;
-					break;
-				}
-			}
-			if (!hasTag) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	public boolean isCuboidDefined() {
@@ -619,17 +586,6 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable {
 	 */
 	public void setParent(T parent) { this.parent = parent; }
 
-	/**
-	 * Sets the {@link #tags}.
-	 * 
-	 * @param tags the {@link #tags} to set.
-	 */
-	public void setTags(String tags) { this.tags = tags; }
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 
@@ -645,7 +601,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable {
 				+ ", index=" + index 
 				+ ", parent=" + parentSring
 				+ ", lengths=" + getLengths()
-				+ ", cuboidVolume=" + getCuboidVolume()
+				+ ", volumeCuboid=" + getVolumeCuboid()
 				+ ", center=" + getCenter()
 				+ ", axisX=" + getAxisX()
 				+ ", axisY=" + getAxisY() 

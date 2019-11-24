@@ -4,11 +4,10 @@ import java.sql.ResultSet;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 
-import avuilder4j.data.Shape;
-import avuilder4j.data.loaders.base.ShapeLoader;
+import avuilder4j.data.loaders.dtos.Shape;
 import avuilder4j.error.Avuilder4jException;
 
-public class SqliteLoaderShape extends SqliteLoader<Integer, Shape> implements ShapeLoader {
+public class SqliteLoaderShape extends SqliteLoader<Integer, Shape> {
 
 	public static final String TABLE_NAME = "Shape";
 

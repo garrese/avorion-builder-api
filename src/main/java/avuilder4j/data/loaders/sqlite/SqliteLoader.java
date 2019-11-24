@@ -9,9 +9,10 @@ import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import avuilder4j.data.loaders.base.Loader;
 import avuilder4j.error.Avuilder4jException;
 
-public abstract class SqliteLoader<K, V> {
+public abstract class SqliteLoader<K, V> implements Loader<K, V> {
 
 	protected String dbFilePath = "db/avorion-db.sqlite3";
 

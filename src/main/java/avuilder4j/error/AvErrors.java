@@ -26,7 +26,7 @@ public class AvErrors {
 	public static final String FACE_NOT_RECOGNIZED = "Face ID not recognized.";
 	public static final String FACE_REPEATED = "Invalid faces. Some face is repeated.";
 	public static final String INDEX_NEGATIVE = "Index values must be greather than 0.";
-	public static final String INDEX_NOT_INDEXED = "Index value not indexed.";
+	public static final String INDEX_NOT_IN_MAP = "Index value not found in the map.";
 	public static final String INDEX_NOT_NULLABLE = "Index values are not nullable.";
 	public static final String LENGTH_NOT_POSITIVE = "Invalid length. Length must be greather than 0.";
 	public static final String NOT_MUTABLE_OBJECT = "Impossible to change immutable object.";
@@ -34,6 +34,7 @@ public class AvErrors {
 	public static final String NOT_STATS_REGISTERED_MATERIAL = "No stats registered for material index ";
 	public static final String NOT_STATS_REGISTERED_TYPE = "No stats registered for type index ";
 	public static final String NOT_SUFFICIENTLY_DEFINED = "Object not sufficiently defined.";
+	public static final String MAP_NOT_FOUND = "Map not found: ";
 	public static final String OBJET_CLOSED = "Unable to modify closed objects.";
 	public static final String ORIENTATION_NOT_IN_RANGE = "Orientation values must be between " + Orientation.MIN_LOOK
 			+ " and " + Orientation.MAX_LOOK + ".";
