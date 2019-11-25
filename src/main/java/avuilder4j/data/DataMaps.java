@@ -1,4 +1,4 @@
-package avuilder4j.data.loaders.dtos;
+package avuilder4j.data;
 
 import java.util.Map;
 

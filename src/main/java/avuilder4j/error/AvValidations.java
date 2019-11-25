@@ -16,11 +16,7 @@ public class AvValidations {
 
 	public static <K> void keyInMap(K key, Map<K, ?> map) {
 		if (!map.containsKey(key))
-			throw new Avuilder4jRuntimeException(AvErrors.INDEX_NOT_IN_MAP);
-	}
-
-	public static void mapNotNull(Object map, String mapName) {
-		notNullMsg(map, AvErrors.MAP_NOT_FOUND + mapName);
+			throw new NullPointerException();
 	}
 
 	public static void volumes(double... volume) {

@@ -1,13 +1,15 @@
 package avuilder4j.design.base;
 
-import avuilder4j.data.loaders.dtos.DataMaps;
-import avuilder4j.data.loaders.dtos.Material;
-import avuilder4j.data.loaders.dtos.Shape;
-import avuilder4j.data.loaders.dtos.Type;
-import avuilder4j.data.loaders.dtos.TypeModel;
-import avuilder4j.data.loaders.dtos.TypeModelByMaterial;
-import avuilder4j.data.loaders.dtos.TypeModelByMaterial.MapIndex;
+import avuilder4j.data.DataMaps;
+import avuilder4j.data.Material;
+import avuilder4j.data.Shape;
+import avuilder4j.data.Type;
+import avuilder4j.data.TypeModel;
+import avuilder4j.data.TypeModelByMaterial;
+import avuilder4j.data.TypeModelByMaterial.MapIndex;
+import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
+import avuilder4j.error.Avuilder4jRuntimeException;
 
 @SuppressWarnings("rawtypes")
 public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends BlockPlanGeneric<T> {
@@ -25,37 +27,44 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 		this.dataMaps = generalDataMap;
 	}
 
-	public Double getVolumeBlock() {
-		Double v = null;
-		if (shape != null && getVolumeCuboid() != null && shape.getVolumeMod() != null) {
-			v = getVolumeCuboid() * shape.getVolumeMod();
+	public Double getHealth() {
+		try {
+			return getVolumeBlock() * material.getDurability() * typeModel.getDurabilityMod();
+		} catch (NullPointerException e) {
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 		}
-		return v;
+	}
+
+	public Double getVolumeBlock() {
+		try {
+			return getVolumeCuboid() * shape.getVolumeMod();
+		} catch (NullPointerException e) {
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
+		}
 	}
 
 	public Double getVolumeStat() {
-		Double v = null;
-		if (getVolumeBlock() != null && typeModel != null && typeModel.getVolumeStatMod() != null) {
-			v = getVolumeBlock() * typeModel.getVolumeStatMod();
+		try {
+			return getVolumeBlock() * typeModel.getVolumeStatMod();
+		} catch (NullPointerException e) {
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 		}
-		return v;
 	}
 
 	public Double getDensity() {
-		Double d = null;
-		if (material != null && material.getDensity() != null && typeModel != null
-				&& typeModel.getDensityMod() != null) {
-			d = material.getDensity() * typeModel.getDensityMod();
+		try {
+			return material.getDensity() * typeModel.getDensityMod();
+		} catch (NullPointerException e) {
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 		}
-		return d;
 	}
 
 	public Double getMass() {
-		Double m = null;
-		if (getDensity() != null && getVolumeBlock() != null) {
-			m = getDensity() * getVolumeBlock();
+		try {
+			return getDensity() * getVolumeBlock();
+		} catch (NullPointerException e) {
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 		}
-		return m;
 	}
 
 	@Override
@@ -82,26 +91,32 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 			return null;
 	}
 
-	public Material getMaterial() { return material; }
+	public Material getMaterial() {
+		return material;
+	}
 
-	public Shape getShape() { return shape; }
+	public Shape getShape() {
+		return shape;
+	}
 
-	public Type getType() { return type; }
+	public Type getType() {
+		return type;
+	}
 
-	public TypeModel getTypeModel() { return typeModel; }
+	public TypeModel getTypeModel() {
+		return typeModel;
+	}
 
-	public TypeModelByMaterial getTypeModelByMaterial() { return typeModelByMaterial; }
+	public TypeModelByMaterial getTypeModelByMaterial() {
+		return typeModelByMaterial;
+	}
 
 	@Override
 	public void setMaterial(Integer materialIndex) {
 		Material material = null;
 		if (materialIndex != null) {
-			AvValidations.mapNotNull(dataMaps, "Data Maps");
-			AvValidations.mapNotNull(dataMaps.getMaterialMap(), "Materials");
 			AvValidations.keyInMap(materialIndex, dataMaps.getMaterialMap());
-
 			material = dataMaps.getMaterialMap().get(materialIndex);
-
 		}
 		setMaterial(material);
 	}
@@ -115,10 +130,7 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 	public void setType(Integer typeIndex) {
 		Type type = null;
 		if (typeIndex != null) {
-			AvValidations.mapNotNull(dataMaps, "Data Maps");
-			AvValidations.mapNotNull(dataMaps.getTypeMap(), "Types");
 			AvValidations.keyInMap(typeIndex, dataMaps.getTypeMap());
-
 			type = dataMaps.getTypeMap().get(typeIndex);
 		}
 		setType(type);
@@ -132,16 +144,14 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 		refreshShape();
 	}
 
-	public DataMaps getDataMaps() { return dataMaps; }
+	public DataMaps getDataMaps() {
+		return dataMaps;
+	}
 
 	protected void refreshShape() {
 		if (type != null) {
-			AvValidations.mapNotNull(dataMaps, "Data Maps");
-			AvValidations.mapNotNull(dataMaps.getShapeMap(), "Shapes");
 			AvValidations.keyInMap(type.getShapeIndex(), dataMaps.getShapeMap());
-
 			shape = dataMaps.getShapeMap().get(type.getShapeIndex());
-
 		} else {
 			shape = null;
 		}
@@ -149,12 +159,12 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 
 	protected void refreshTypeModel() {
 		if (type != null) {
-			AvValidations.mapNotNull(dataMaps, "Data Maps");
-			AvValidations.mapNotNull(dataMaps.getTypeModelMap(), "TypeModels");
-			AvValidations.keyInMap(type.getTypeModelIndex(), dataMaps.getTypeModelMap());
-
-			typeModel = dataMaps.getTypeModelMap().get(type.getTypeModelIndex());
-
+			try {
+				AvValidations.keyInMap(type.getTypeModelIndex(), dataMaps.getTypeModelMap());
+				typeModel = dataMaps.getTypeModelMap().get(type.getTypeModelIndex());
+			} catch (NullPointerException e) {
+				throw new Avuilder4jRuntimeException(AvErrors.INDEX_NOT_IN_MAPS, e);
+			}
 		} else {
 			typeModel = null;
 		}
@@ -163,19 +173,21 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 
 	protected void refreshTypeModelByMaterial() {
 		if (typeModel != null && material != null) {
-			AvValidations.mapNotNull(dataMaps, "Data Maps");
-			AvValidations.mapNotNull(dataMaps.getTypeMap(), "TypeModelByMaterials");
-			TypeModelByMaterial.MapIndex idx = new MapIndex(typeModel.getIndex(), material.getIndex());
-
-			AvValidations.keyInMap(idx, dataMaps.getTypeModelByMaterialMap());
-			typeModelByMaterial = dataMaps.getTypeModelByMaterialMap().get(idx);
-
+			try {
+				TypeModelByMaterial.MapIndex idx = new MapIndex(typeModel.getIndex(), material.getIndex());
+				AvValidations.keyInMap(idx, dataMaps.getTypeModelByMaterialMap());
+				typeModelByMaterial = dataMaps.getTypeModelByMaterialMap().get(idx);
+			} catch (NullPointerException e) {
+				throw new Avuilder4jRuntimeException(AvErrors.INDEX_NOT_IN_MAPS, e);
+			}
 		} else {
-			typeModelByMaterial = null;
+			typeModel = null;
 		}
 	}
 
-	public void setDataMaps(DataMaps dataMap) { this.dataMaps = dataMap; }
+	public void setDataMaps(DataMaps dataMap) {
+		this.dataMaps = dataMap;
+	}
 
 	public String getTypeName() {
 		String typeName;
@@ -206,23 +218,13 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 			materialName = "null";
 		}
 
-		//@formatter:off
-		return "Block ["
-				+ "tags=\"" + tagsAdministrator.getTags() + "\""
-				+ ", index=" + getIndex() 
-				+ ", parent=" + parentSring
-				+ ", material=" + materialName
-				+ ", type=" + getTypeName()
-				+ ", color=" + getColor()
-				+ ", lengths=" + getLengths()
-				+ ", volumeCuboid=" + getVolumeCuboid()
-				+ ", center=" + getCenter()
-				+ ", axisX=" + getAxisX()
-				+ ", axisY=" + getAxisY() 
-				+ ", axisZ=" + getAxisZ()
-				+ ", orientation=" + getOrientation()
-				+ "]";
-		//@formatter:on
+		// @formatter:off
+		return "Block [" + "tags=\"" + tagsAdministrator.getTags() + "\"" + ", index=" + getIndex() + ", parent="
+				+ parentSring + ", material=" + materialName + ", type=" + getTypeName() + ", color=" + getColor()
+				+ ", lengths=" + getLengths() + ", volumeCuboid=" + getVolumeCuboid() + ", center=" + getCenter()
+				+ ", axisX=" + getAxisX() + ", axisY=" + getAxisY() + ", axisZ=" + getAxisZ() + ", orientation="
+				+ getOrientation() + "]";
+		// @formatter:on
 
 	}
 

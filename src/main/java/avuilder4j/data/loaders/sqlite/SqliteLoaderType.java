@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 
-import avuilder4j.data.loaders.dtos.Type;
+import avuilder4j.data.Type;
 import avuilder4j.error.Avuilder4jException;
 
 public class SqliteLoaderType extends SqliteLoader<Integer, Type> {

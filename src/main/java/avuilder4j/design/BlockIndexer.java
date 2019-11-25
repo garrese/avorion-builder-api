@@ -1,6 +1,6 @@
 package avuilder4j.design;
 
-import avuilder4j.data.loaders.dtos.DataMaps;
+import avuilder4j.data.DataMaps;
 import avuilder4j.design.base.BlockFunctionalIndexerGeneric;
 
 public class BlockIndexer extends BlockFunctionalIndexerGeneric<Block, Structure> {

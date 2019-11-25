@@ -1,6 +1,6 @@
 package avuilder4j.design.base;
 
-import avuilder4j.data.loaders.dtos.DataMaps;
+import avuilder4j.data.DataMaps;
 
 @SuppressWarnings("rawtypes")
 public abstract class BlockFunctionalIndexerGeneric<B extends BlockFunctionalGeneric, S extends BlockFunctionalStructureGeneric<B>>

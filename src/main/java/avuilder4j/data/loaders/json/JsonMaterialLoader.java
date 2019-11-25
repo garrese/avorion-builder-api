@@ -2,8 +2,8 @@ package avuilder4j.data.loaders.json;
 
 import java.util.Map;
 
+import avuilder4j.data.Material;
 import avuilder4j.data.loaders.base.Loader;
-import avuilder4j.data.loaders.dtos.Material;
 import avuilder4j.error.Avuilder4jException;
 
 public class JsonMaterialLoader implements Loader<Integer, Material> {

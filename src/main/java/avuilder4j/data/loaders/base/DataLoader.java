@@ -3,12 +3,12 @@ package avuilder4j.data.loaders.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import avuilder4j.data.loaders.dtos.DataMaps;
-import avuilder4j.data.loaders.dtos.Material;
-import avuilder4j.data.loaders.dtos.Shape;
-import avuilder4j.data.loaders.dtos.Type;
-import avuilder4j.data.loaders.dtos.TypeModel;
-import avuilder4j.data.loaders.dtos.TypeModelByMaterial;
+import avuilder4j.data.DataMaps;
+import avuilder4j.data.Material;
+import avuilder4j.data.Shape;
+import avuilder4j.data.Type;
+import avuilder4j.data.TypeModel;
+import avuilder4j.data.TypeModelByMaterial;
 import avuilder4j.error.Avuilder4jException;
 
 public abstract class DataLoader {

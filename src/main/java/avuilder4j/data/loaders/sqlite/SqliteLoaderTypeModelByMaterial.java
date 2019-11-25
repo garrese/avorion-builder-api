@@ -4,8 +4,8 @@ import java.sql.ResultSet;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 
-import avuilder4j.data.loaders.dtos.TypeModelByMaterial;
-import avuilder4j.data.loaders.dtos.TypeModelByMaterial.MapIndex;
+import avuilder4j.data.TypeModelByMaterial;
+import avuilder4j.data.TypeModelByMaterial.MapIndex;
 import avuilder4j.error.Avuilder4jException;
 
 public final class SqliteLoaderTypeModelByMaterial

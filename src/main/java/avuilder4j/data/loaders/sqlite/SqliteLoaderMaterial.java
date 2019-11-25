@@ -4,8 +4,8 @@ import java.sql.ResultSet;
 import java.util.AbstractMap;
 import java.util.Map;
 
-import avuilder4j.data.loaders.dtos.Material;
-import avuilder4j.data.loaders.dtos.MaterialParams;
+import avuilder4j.data.Material;
+import avuilder4j.data.MaterialParams;
 import avuilder4j.error.Avuilder4jException;
 
 public class SqliteLoaderMaterial extends SqliteLoader<Integer, Material> {

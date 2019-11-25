@@ -4,8 +4,8 @@ import java.sql.ResultSet;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 
-import avuilder4j.data.loaders.dtos.TypeModel;
-import avuilder4j.data.loaders.dtos.TypeModelParams;
+import avuilder4j.data.TypeModel;
+import avuilder4j.data.TypeModelParams;
 import avuilder4j.error.Avuilder4jException;
 
 public class SqliteLoaderTypeModel extends SqliteLoader<Integer, TypeModel> {
