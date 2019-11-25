@@ -6,7 +6,7 @@ public class DataReport extends DataReportGeneric<Double> {
 	public DataReport() {}
 
 	public DataReport(String tags) {
-		setTags(tags);
+		super(tags);
 	}
 
 	public DataReport(Double result) {

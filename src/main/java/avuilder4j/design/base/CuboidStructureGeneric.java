@@ -8,15 +8,17 @@ import avuilder4j.design.enums.Axis;
 import avuilder4j.design.enums.Rotation;
 import avuilder4j.design.sub.AxisEnds;
 import avuilder4j.design.sub.DataReport;
+import avuilder4j.design.sub.Tagable;
+import avuilder4j.design.sub.TagsAdministrator;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
 
 @SuppressWarnings("rawtypes")
-public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B> implements Serializable {
+public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B> implements Serializable, Tagable {
 	private static final long serialVersionUID = 3084475335938461639L;
 
-	protected Tags tags = new Tags();
+	protected TagsAdministrator tagsAdministrator = new TagsAdministrator();
 
 	public void escalate(double ratio) {
 		escalate(ratio, (Axis[]) null);
@@ -91,23 +93,6 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 		escalate(ratio, axesIds);
 	}
 
-	public List<B> getByTags(String tags) {
-		List<B> r = new ArrayList<B>();
-		for (B cuboid : this) {
-			if (cuboid.hasTags(tags))
-				r.add(cuboid);
-		}
-		return r;
-	}
-
-	public B getByTagsUnique(String tags) {
-		for (B cuboid : this) {
-			if (cuboid.hasTags(tags))
-				return cuboid;
-		}
-		return null;
-	}
-
 	public void rotate(Rotation rotationId) {
 		rotate(rotationId, 1);
 	}
@@ -138,8 +123,11 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 
 	public List<B> getBlocks() { return this; }
 
+	@Override
+	public TagsAdministrator getTagsAdministrator() { return tagsAdministrator; }
+
 	public DataReport getVolumeCuboid(List<? extends CuboidGeneric> blocks) {
-		DataReport r = new DataReport(tags + " totalCuboidVolume");
+		DataReport r = new DataReport(getTagsAdministrator().getTags() + " totalCuboidVolume");
 		for (CuboidGeneric b : blocks) {
 			r.addToResult(b.getVolumeCuboid());
 		}
@@ -150,7 +138,7 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("CuboidStructureGeneric [tags=");
-		builder.append(tags);
+		builder.append(tagsAdministrator.getTags());
 		for (CuboidGeneric cuboid : this) {
 			builder.append("\n\t").append(cuboid);
 		}

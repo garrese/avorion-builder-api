@@ -167,17 +167,13 @@ public class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<
 	@Override
 	public String toString() {
 
-		String tags = "";
-		if (this.tags != null)
-			tags = this.tags;
-
 		String parentSring = null;
 		if (parent != null)
 			parentSring = "[id=" + parent.getIndex() + "]";
 
 		//@formatter:off
 		return "BlockPlan ["
-				+ "tags=\"" + tags + "\""
+				+ "tags=\"" + getTagsAdministrator().getTags() + "\""
 				+ ", index=" + index 
 				+ ", parent=" + parentSring
 				+ ", material=" + material

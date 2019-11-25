@@ -2,6 +2,7 @@ package avuilder4j.design.base;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import avuilder4j.design.enums.Axis;
 import avuilder4j.design.enums.Corner;
@@ -11,6 +12,8 @@ import avuilder4j.design.enums.Rotation;
 import avuilder4j.design.sub.AxisEnds;
 import avuilder4j.design.sub.Lengths;
 import avuilder4j.design.sub.Point;
+import avuilder4j.design.sub.Tagable;
+import avuilder4j.design.sub.TagsAdministrator;
 import avuilder4j.design.sub.Vector;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
@@ -22,7 +25,7 @@ import avuilder4j.error.Avuilder4jRuntimeException;
  * The cuboid is defined by one {@link AxisEnds} in each of the three coordinate axis.
  */
 @SuppressWarnings("rawtypes")
-public class CuboidGeneric<T extends CuboidGeneric> extends Tags implements Serializable {
+public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tagable {
 	private static final long serialVersionUID = -5598838939653504628L;
 
 	/**
@@ -49,6 +52,8 @@ public class CuboidGeneric<T extends CuboidGeneric> extends Tags implements Seri
 	 * Cuboid's parent index in a structure.
 	 */
 	protected T parent;
+
+	protected TagsAdministrator tagsAdministrator = new TagsAdministrator();
 
 //	public static Cuboid deepCopy(Cuboid cuboid) {
 //		Cuboid c = null;
@@ -597,7 +602,7 @@ public class CuboidGeneric<T extends CuboidGeneric> extends Tags implements Seri
 
 		//@formatter:off
 		return "Block ["
-				+ "tags=\"" + tags + "\""
+				+ "tags=\"" + tagsAdministrator.getTags() + "\""
 				+ ", index=" + index 
 				+ ", parent=" + parentSring
 				+ ", lengths=" + getLengths()
@@ -617,15 +622,7 @@ public class CuboidGeneric<T extends CuboidGeneric> extends Tags implements Seri
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((axisX == null) ? 0 : axisX.hashCode());
-		result = prime * result + ((axisY == null) ? 0 : axisY.hashCode());
-		result = prime * result + ((axisZ == null) ? 0 : axisZ.hashCode());
-		result = prime * result + ((index == null) ? 0 : index.hashCode());
-		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
-		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
-		return result;
+		return Objects.hash(axisX, axisY, axisZ, index, parent, tagsAdministrator);
 	}
 
 	@Override
@@ -634,40 +631,15 @@ public class CuboidGeneric<T extends CuboidGeneric> extends Tags implements Seri
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof CuboidGeneric))
 			return false;
 		CuboidGeneric other = (CuboidGeneric) obj;
-		if (axisX == null) {
-			if (other.axisX != null)
-				return false;
-		} else if (!axisX.equals(other.axisX))
-			return false;
-		if (axisY == null) {
-			if (other.axisY != null)
-				return false;
-		} else if (!axisY.equals(other.axisY))
-			return false;
-		if (axisZ == null) {
-			if (other.axisZ != null)
-				return false;
-		} else if (!axisZ.equals(other.axisZ))
-			return false;
-		if (index == null) {
-			if (other.index != null)
-				return false;
-		} else if (!index.equals(other.index))
-			return false;
-		if (parent == null) {
-			if (other.parent != null)
-				return false;
-		} else if (!parent.equals(other.parent))
-			return false;
-		if (tags == null) {
-			if (other.tags != null)
-				return false;
-		} else if (!tags.equals(other.tags))
-			return false;
-		return true;
+		return Objects.equals(axisX, other.axisX) && Objects.equals(axisY, other.axisY)
+				&& Objects.equals(axisZ, other.axisZ) && Objects.equals(index, other.index)
+				&& Objects.equals(parent, other.parent) && Objects.equals(tagsAdministrator, other.tagsAdministrator);
 	}
+
+	@Override
+	public TagsAdministrator getTagsAdministrator() { return tagsAdministrator; }
 
 }

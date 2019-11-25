@@ -3,18 +3,17 @@ package avuilder4j.design.sub;
 import java.io.Serializable;
 import java.util.Objects;
 
-import avuilder4j.design.base.Tags;
-
-public class DataReportGeneric<V> extends Tags implements Serializable {
+public class DataReportGeneric<V> extends TagsAdministrator implements Serializable, Tagable {
 	private static final long serialVersionUID = 16373479010101139L;
 
 	protected V result;
 	protected int nulls;
+	protected TagsAdministrator tagsAdministrator = new TagsAdministrator();
 
 	public DataReportGeneric() {}
 
 	public DataReportGeneric(String tags) {
-		setTags(tags);
+		tagsAdministrator.addTags(tags);
 	}
 
 	public DataReportGeneric(V result) {
@@ -22,6 +21,9 @@ public class DataReportGeneric<V> extends Tags implements Serializable {
 	}
 
 	public V getResult() { return result; }
+
+	@Override
+	public TagsAdministrator getTagsAdministrator() { return tagsAdministrator; }
 
 	public void setResult(V result) { this.result = result; }
 
@@ -41,7 +43,7 @@ public class DataReportGeneric<V> extends Tags implements Serializable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("DataReportGeneric [tags=");
-		builder.append(tags);
+		builder.append(tagsAdministrator.getTags());
 		builder.append(", result=");
 		builder.append(result);
 		builder.append(", nulls=");

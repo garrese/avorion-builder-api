@@ -7,7 +7,7 @@ public class BlockFunctionalStructureGeneric<T extends BlockFunctionalGeneric> e
 	private static final long serialVersionUID = 8757900473268467596L;
 
 	public DataReport getVolumeBlock() {
-		DataReport r = new DataReport(getTags() + " totalVolumeBlock");
+		DataReport r = new DataReport(getTagsAdministrator().getTags() + " totalVolumeBlock");
 		for (BlockFunctionalGeneric b : this) {
 			r.addToResult(b.getVolumeBlock());
 		}
@@ -15,7 +15,7 @@ public class BlockFunctionalStructureGeneric<T extends BlockFunctionalGeneric> e
 	}
 
 	public DataReport getVolumeStat() {
-		DataReport r = new DataReport(getTags() + " totalVolumeStat");
+		DataReport r = new DataReport(getTagsAdministrator().getTags() + " totalVolumeStat");
 		for (BlockFunctionalGeneric b : this) {
 			r.addToResult(b.getVolumeStat());
 		}
@@ -23,7 +23,7 @@ public class BlockFunctionalStructureGeneric<T extends BlockFunctionalGeneric> e
 	}
 
 	public DataReport getDensity() {
-		DataReport r = new DataReport(getTags() + " totalDensity");
+		DataReport r = new DataReport(getTagsAdministrator().getTags() + " totalDensity");
 		for (BlockFunctionalGeneric b : this) {
 			r.addToResult(b.getDensity());
 		}
@@ -31,7 +31,7 @@ public class BlockFunctionalStructureGeneric<T extends BlockFunctionalGeneric> e
 	}
 
 	public DataReport getMass() {
-		DataReport r = new DataReport(getTags() + " totalMass");
+		DataReport r = new DataReport(getTagsAdministrator().getTags() + " totalMass");
 		for (BlockFunctionalGeneric b : this) {
 			r.addToResult(b.getMass());
 		}

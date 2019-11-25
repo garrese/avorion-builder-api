@@ -195,10 +195,6 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 	@Override
 	public String toString() {
 
-		String tags = "";
-		if (this.tags != null)
-			tags = this.tags;
-
 		String parentSring = null;
 		if (parent != null)
 			parentSring = "[id=" + parent.getIndex() + "]";
@@ -212,7 +208,7 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 
 		//@formatter:off
 		return "Block ["
-				+ "tags=\"" + tags + "\""
+				+ "tags=\"" + tagsAdministrator.getTags() + "\""
 				+ ", index=" + getIndex() 
 				+ ", parent=" + parentSring
 				+ ", material=" + materialName
