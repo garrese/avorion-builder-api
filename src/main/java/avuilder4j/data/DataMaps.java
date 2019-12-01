@@ -4,42 +4,47 @@ import java.util.Map;
 
 public class DataMaps {
 
-	protected Map<Integer, Material> materialMap;
-	protected Map<Integer, Shape> shapeMap;
-	protected Map<Integer, Type> typeMap;
-	protected Map<Integer, TypeModel> typeModelMap;
-	protected Map<TypeModelByMaterial.MapIndex, TypeModelByMaterial> typeModelByMaterialMap;
+	protected static Map<Integer, Material> materialMap;
+	protected static Map<String, MetaValue> metaValueMap;
+	protected static Map<Integer, Shape> shapeMap;
+	protected static Map<Integer, Type> typeMap;
+	protected static Map<Integer, TypeModel> typeModelMap;
+	protected static Map<TypeModelByMaterial.MapIndex, TypeModelByMaterial> typeModelByMaterialMap;
 
-	public Map<Integer, Material> getMaterialMap() { return materialMap; }
+	public static Map<Integer, Material> getMaterialMap() { return materialMap; }
 
-	public void setMaterialMap(Map<Integer, Material> materialMap) { this.materialMap = materialMap; }
+	public static void setMaterialMap(Map<Integer, Material> materialMap) { DataMaps.materialMap = materialMap; }
 
-	public Map<Integer, Shape> getShapeMap() { return shapeMap; }
+	public static Map<String, MetaValue> getMetaValueMap() { return metaValueMap; }
 
-	public void setShapeMap(Map<Integer, Shape> shapeMap) { this.shapeMap = shapeMap; }
+	public static void setMetaValueMap(Map<String, MetaValue> metaValueMap) { DataMaps.metaValueMap = metaValueMap; }
 
-	public Map<Integer, Type> getTypeMap() { return typeMap; }
+	public static Map<Integer, Shape> getShapeMap() { return shapeMap; }
 
-	public void setTypeMap(Map<Integer, Type> typeMap) { this.typeMap = typeMap; }
+	public static void setShapeMap(Map<Integer, Shape> shapeMap) { DataMaps.shapeMap = shapeMap; }
 
-	public Map<Integer, TypeModel> getTypeModelMap() { return typeModelMap; }
+	public static Map<Integer, Type> getTypeMap() { return typeMap; }
 
-	public void setTypeModelMap(Map<Integer, TypeModel> typeModelMap) { this.typeModelMap = typeModelMap; }
+	public static void setTypeMap(Map<Integer, Type> typeMap) { DataMaps.typeMap = typeMap; }
 
-	public Map<TypeModelByMaterial.MapIndex, TypeModelByMaterial> getTypeModelByMaterialMap() {
+	public static Map<Integer, TypeModel> getTypeModelMap() { return typeModelMap; }
+
+	public static void setTypeModelMap(Map<Integer, TypeModel> typeModelMap) { DataMaps.typeModelMap = typeModelMap; }
+
+	public static Map<TypeModelByMaterial.MapIndex, TypeModelByMaterial> getTypeModelByMaterialMap() {
 		return typeModelByMaterialMap;
 	}
 
-	public void setTypeModelByMaterialMap(
+	public static void setTypeModelByMaterialMap(
 			Map<TypeModelByMaterial.MapIndex, TypeModelByMaterial> typeModelByMaterialMap) {
-		this.typeModelByMaterialMap = typeModelByMaterialMap;
+		DataMaps.typeModelByMaterialMap = typeModelByMaterialMap;
 	}
 
-	@Override
-	public String toString() {
+	public static String getReport() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("DataMap START >>>\n");
 		builder.append("materialMap = " + formatMapString(materialMap) + ",\n");
+		builder.append("metaValueMap = " + formatMapString(metaValueMap) + ",\n");
 		builder.append("typeModelMap = " + formatMapString(typeModelMap) + ",\n");
 		builder.append("typeModelByMaterialMap = " + formatMapString(typeModelByMaterialMap) + ",\n");
 		builder.append("typeMap = " + formatMapString(typeMap) + ",\n");
@@ -48,6 +53,7 @@ public class DataMaps {
 		return builder.toString();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static String formatMapString(Map map) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{\n");

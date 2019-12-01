@@ -11,6 +11,16 @@ public class TagsAdministrator implements Serializable {
 
 	protected List<String> tagList = new ArrayList<>();
 
+	public TagsAdministrator() {}
+
+	public TagsAdministrator(String tags) {
+		addTags(tags);
+	}
+
+	public TagsAdministrator(List<String> tags) {
+		addTags(tags);
+	}
+
 	public static <T extends Tagable> List<T> findInList(List<T> list, List<String> tags) {
 		List<T> r = new ArrayList<>();
 		for (T t : list) {

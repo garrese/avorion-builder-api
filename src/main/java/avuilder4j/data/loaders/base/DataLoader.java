@@ -5,6 +5,7 @@ import java.util.List;
 
 import avuilder4j.data.DataMaps;
 import avuilder4j.data.Material;
+import avuilder4j.data.MetaValue;
 import avuilder4j.data.Shape;
 import avuilder4j.data.Type;
 import avuilder4j.data.TypeModel;
@@ -14,6 +15,7 @@ import avuilder4j.error.Avuilder4jException;
 public abstract class DataLoader {
 
 	protected Loader<Integer, Material> materialLoader;
+	protected Loader<String, MetaValue> metaValueLoader;
 	protected Loader<Integer, Shape> shapeLoader;
 	protected Loader<Integer, Type> typeLoader;
 	protected Loader<Integer, TypeModel> typeModelLoader;
@@ -28,6 +30,12 @@ public abstract class DataLoader {
 	public Loader<Integer, Material> getMaterialLoader() { return materialLoader; }
 
 	public void setMaterialLoader(Loader<Integer, Material> materialLoader) { this.materialLoader = materialLoader; }
+
+	public Loader<String, MetaValue> getMetaValueLoader() { return metaValueLoader; }
+
+	public void setMetaValueLoader(Loader<String, MetaValue> metaValueLoader) {
+		this.metaValueLoader = metaValueLoader;
+	}
 
 	public Loader<Integer, Shape> getShapeLoader() { return shapeLoader; }
 
@@ -56,6 +64,7 @@ public abstract class DataLoader {
 	public List<Loader> getAllLoaders() {
 		List<Loader> loaders = new ArrayList<>();
 		loaders.add(materialLoader);
+		loaders.add(metaValueLoader);
 		loaders.add(shapeLoader);
 		loaders.add(typeLoader);
 		loaders.add(typeModelLoader);
@@ -66,6 +75,7 @@ public abstract class DataLoader {
 	public DataMaps loadAll() throws Avuilder4jException {
 		DataMaps map = new DataMaps();
 		map.setMaterialMap(materialLoader.loadAll());
+		map.setMetaValueMap(metaValueLoader.loadAll());
 		map.setShapeMap(shapeLoader.loadAll());
 		map.setTypeMap(typeLoader.loadAll());
 		map.setTypeModelMap(typeModelLoader.loadAll());

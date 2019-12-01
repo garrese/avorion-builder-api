@@ -2,7 +2,7 @@ package avuilder4j.util;
 
 public class Formulae {
 
-	public static double getSystemSlotVolumeBarrier(int systemSlots) {
+	public static double getSystemSlotProcessingBarrier(int systemSlots) {
 		double volBase = 2000.0;
 		double powBase = 2.5;
 		double powModTill11 = 6.0;

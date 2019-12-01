@@ -8,6 +8,7 @@ public class SqliteDataLoader extends DataLoader {
 	@Override
 	public void instantiateLoaders() {
 		setMaterialLoader(new SqliteLoaderMaterial());
+		setMetaValueLoader(new SqliteLoaderMetaValue());
 		setShapeLoader(new SqliteLoaderShape());
 		setTypeLoader(new SqliteLoaderType());
 		setTypeModelLoader(new SqliteLoaderTypeModel());

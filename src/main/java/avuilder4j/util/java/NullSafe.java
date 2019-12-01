@@ -1,4 +1,4 @@
-package avuilder4j.util;
+package avuilder4j.util.java;
 
 import java.util.function.Supplier;
 

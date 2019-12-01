@@ -8,13 +8,12 @@ import avuilder4j.data.TypeModel;
 import avuilder4j.data.TypeModelByMaterial;
 import avuilder4j.data.TypeModelByMaterial.MapIndex;
 import avuilder4j.error.AvValidations;
-import avuilder4j.util.NullSafe;
+import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.values.Metas;
 
 @SuppressWarnings("rawtypes")
 public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends BlockPlanGeneric<T> {
 	private static final long serialVersionUID = -7276801719926846539L;
-
-	protected DataMaps dataMaps;
 
 	protected Material material;
 	protected Shape shape;
@@ -22,47 +21,93 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 	protected TypeModel typeModel;
 	protected TypeModelByMaterial typeModelByMaterial;
 
-	public BlockFunctionalGeneric(DataMaps generalDataMap) {
-		this.dataMaps = generalDataMap;
-	}
+	public Double getCreditCost() {
+		return NullSafe.get(() -> getVolumeBlock() * material.getCreditCost() * typeModelByMaterial.getCreditCostMod());
+	};
+
+	public Double getDensity() { return NullSafe.get(() -> material.getDensity() * typeModel.getDensityMod()); }
 
 	public Double getDurability() {
 		return NullSafe.get(() -> getVolumeBlock() * material.getDurability() * typeModel.getDurabilityMod());
+	}
+
+	public Double getEngineersReq() { return NullSafe.get(() -> getVolumeBlock() * typeModel.getEngineers() / 1000); }
+
+	public Double getSergeantsReq() {
+		return NullSafe.get(() -> {
+			Double crew = (getMechanicsReq() + getEngineersReq());
+			Double ratio = DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_CREW_PER_SERGEANT).getNumericValue();
+			return crew / ratio;
+		});
+	}
+
+	public Double getLieutenantsReq() {
+		return NullSafe.get(() -> getSergeantsReq()
+				/ DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getNumericValue());
+	}
+
+	public Double getCommandersReq() {
+		return NullSafe.get(() -> getLieutenantsReq()
+				/ DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_LIEUTENANTS_PER_COMMANDER).getNumericValue());
+	}
+
+	public Double getGeneralsReq() {
+		return NullSafe.get(() -> getCommandersReq()
+				/ DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_COMMANDERS_PER_GENERAL).getNumericValue());
+	}
+
+	@Override
+	public Integer getIndex() { return NullSafe.get(() -> type.getIndex()); }
+
+	public Double getMass() { return NullSafe.get(() -> getDensity() * getVolumeBlock()); }
+
+	public Material getMaterial() { return material; }
+
+	public Double getMaterialCost() {
+		return NullSafe.get(() -> getVolumeBlock() * material.getMaterialCost() * typeModel.getMaterialCostMod());
+	};
+
+	@Override
+	public Integer getMaterialIndex() { return NullSafe.get(() -> material.getIndex()); }
+
+	public Double getMechanicsReq() { return NullSafe.get(() -> getVolumeBlock() * typeModel.getMechanics() / 1000); }
+
+	public Double getProcessingPower() { return NullSafe.get(() -> getVolumeBlock() * typeModel.getProcessingMod()); }
+
+	public Shape getShape() { return shape; }
+
+	public Type getType() { return type; }
+
+	@Override
+	public Integer getTypeIndex() { return NullSafe.get(() -> type.getIndex()); }
+
+	public TypeModel getTypeModel() { return typeModel; }
+
+	public TypeModelByMaterial getTypeModelByMaterial() { return typeModelByMaterial; }
+
+	public String getTypeName() {
+		if (typeModel != null) {
+			StringBuilder typeName = new StringBuilder();
+			typeName.append(typeModel.getName());
+			if (shape != null && !shape.getName().trim().isEmpty()) {
+				typeName.append(" ").append(shape.getName());
+			}
+			return typeName.toString();
+		} else {
+			return null;
+		}
 	}
 
 	public Double getVolumeBlock() { return NullSafe.get(() -> getVolumeCuboid() * shape.getVolumeMod()); }
 
 	public Double getVolumeStat() { return NullSafe.get(() -> getVolumeBlock() * typeModel.getVolumeStatMod()); }
 
-	public Double getDensity() { return NullSafe.get(() -> material.getDensity() * typeModel.getDensityMod()); }
-
-	public Double getMass() { return NullSafe.get(() -> getDensity() * getVolumeBlock()); }
-
-	@Override
-	public Integer getIndex() { return NullSafe.get(() -> type.getIndex()); }
-
-	@Override
-	public Integer getMaterialIndex() { return NullSafe.get(() -> material.getIndex()); }
-
-	@Override
-	public Integer getTypeIndex() { return NullSafe.get(() -> type.getIndex()); }
-
-	public Material getMaterial() { return material; }
-
-	public Shape getShape() { return shape; }
-
-	public Type getType() { return type; }
-
-	public TypeModel getTypeModel() { return typeModel; }
-
-	public TypeModelByMaterial getTypeModelByMaterial() { return typeModelByMaterial; }
-
 	@Override
 	public void setMaterial(Integer materialIndex) {
 		Material material = null;
 		if (materialIndex != null) {
-			AvValidations.keyInMap(materialIndex, NullSafe.get(() -> dataMaps.getMaterialMap()));
-			material = NullSafe.get(() -> dataMaps.getMaterialMap().get(materialIndex));
+			AvValidations.keyInMap(materialIndex, NullSafe.get(() -> DataMaps.getMaterialMap()));
+			material = NullSafe.get(() -> DataMaps.getMaterialMap().get(materialIndex));
 		}
 		setMaterial(material);
 	}
@@ -76,8 +121,8 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 	public void setType(Integer typeIndex) {
 		Type type = null;
 		if (typeIndex != null) {
-			AvValidations.keyInMap(typeIndex, NullSafe.get(() -> dataMaps.getTypeMap()));
-			type = NullSafe.get(() -> dataMaps.getTypeMap().get(typeIndex));
+			AvValidations.keyInMap(typeIndex, NullSafe.get(() -> DataMaps.getTypeMap()));
+			type = NullSafe.get(() -> DataMaps.getTypeMap().get(typeIndex));
 		}
 		setType(type);
 	}
@@ -88,55 +133,6 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 		refreshTypeModel();
 		refreshTypeModelByMaterial();
 		refreshShape();
-	}
-
-	public DataMaps getDataMaps() { return dataMaps; }
-
-	protected void refreshShape() {
-		if (type != null) {
-			AvValidations.keyInMap(type.getShapeIndex(), NullSafe.get(() -> dataMaps.getShapeMap()));
-			shape = NullSafe.get(() -> dataMaps.getShapeMap().get(type.getShapeIndex()));
-		} else {
-			shape = null;
-		}
-	}
-
-	protected void refreshTypeModel() {
-		if (type != null) {
-			AvValidations.keyInMap(type.getTypeModelIndex(), NullSafe.get(() -> dataMaps.getTypeModelMap()));
-			typeModel = NullSafe.get(() -> dataMaps.getTypeModelMap().get(type.getTypeModelIndex()));
-		} else {
-			typeModel = null;
-		}
-	}
-
-	protected void refreshTypeModelByMaterial() {
-		if (typeModel != null && material != null) {
-
-			TypeModelByMaterial.MapIndex idx = new MapIndex(typeModel.getIndex(), material.getIndex());
-			AvValidations.keyInMap(idx, NullSafe.get(() -> dataMaps.getTypeModelByMaterialMap()));
-			typeModelByMaterial = NullSafe.get(() -> dataMaps.getTypeModelByMaterialMap().get(idx));
-
-		} else {
-			typeModel = null;
-		}
-	}
-
-	public void setDataMaps(DataMaps dataMap) { this.dataMaps = dataMap; }
-
-	public String getTypeName() {
-		String typeName;
-		if (typeModel != null) {
-			typeName = typeModel.getName();
-			if (shape != null) {
-				if (!typeName.trim().isEmpty()) {
-					typeName += " " + shape.getName();
-				}
-			}
-		} else {
-			typeName = "null";
-		}
-		return typeName;
 	}
 
 	@Override
@@ -156,6 +152,31 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 				+ getOrientation() + "]";
 		// @formatter:on
 
+	}
+
+	protected void refreshShape() {
+		if (type != null) {
+			shape = NullSafe.get(() -> DataMaps.getShapeMap().get(type.getShapeIndex()));
+		} else {
+			shape = null;
+		}
+	}
+
+	protected void refreshTypeModel() {
+		if (type != null) {
+			typeModel = NullSafe.get(() -> DataMaps.getTypeModelMap().get(type.getTypeModelIndex()));
+		} else {
+			typeModel = null;
+		}
+	}
+
+	protected void refreshTypeModelByMaterial() {
+		if (typeModel != null && material != null) {
+			TypeModelByMaterial.MapIndex idx = new MapIndex(typeModel.getIndex(), material.getIndex());
+			typeModelByMaterial = NullSafe.get(() -> DataMaps.getTypeModelByMaterialMap().get(idx));
+		} else {
+			typeModel = null;
+		}
 	}
 
 }

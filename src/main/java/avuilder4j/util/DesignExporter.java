@@ -19,7 +19,6 @@ import org.w3c.dom.Element;
 import avuilder4j.design.base.BlockPlanInterface;
 import avuilder4j.error.Avuilder4jException;
 
-@SuppressWarnings("rawtypes")
 public class DesignExporter {
 
 	public static final int ROOT_PARENT = -1;

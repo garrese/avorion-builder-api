@@ -3,9 +3,7 @@ package avuilder4j.design.base;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import avuilder4j.design.enums.Axis;
 import avuilder4j.design.enums.Rotation;
@@ -15,7 +13,6 @@ import avuilder4j.design.sub.TagsAdministrator;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
-import avuilder4j.util.OperationOfNullables;
 
 @SuppressWarnings("rawtypes")
 public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B> implements Serializable, Tagable {
@@ -129,18 +126,17 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 	@Override
 	public TagsAdministrator getTagsAdministrator() { return tagsAdministrator; }
 
-	public OperationOfNullables<Double> getVolumeCuboid(List<? extends CuboidGeneric> blocks) {
-		return operation(OperationOfNullables.sumDoubles, B::getVolumeCuboid, "totalVolumeCuboid");
+	public double getVolumeCuboid(List<? extends CuboidGeneric> blocks) {
+		return sumFromBlocks(B::getVolumeCuboid);
 	}
 
-	protected <N, A> OperationOfNullables<N> operation(BiFunction<A, N, N> operation,
-			Function<B, A> getArgumentFunction, String tags) {
-		OperationOfNullables<N> op = new OperationOfNullables<>(getTagsAdministrator().getTags() + " " + tags);
-
-		List<A> args = this.stream().map(getArgumentFunction).collect(Collectors.toList());
-
-		op.operate(operation, args);
-		return op;
+	public double sumFromBlocks(Function<B, Double> getAttributeFunction) {
+		double r = 0;
+		for (B block : this) {
+			if (getAttributeFunction.apply(block) != null)
+				r += getAttributeFunction.apply(block);
+		}
+		return r;
 	}
 
 	@Override

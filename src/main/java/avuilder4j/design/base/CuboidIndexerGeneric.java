@@ -16,7 +16,7 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 	protected Lengths defaultLengths = new Lengths(2, 2, 2);
 
 	public CuboidIndexerGeneric() {
-		structure = getStructureInstance();
+		setStructure(getStructureInstance());
 	}
 
 	public void indexBlock(B block) {
@@ -89,6 +89,8 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 	}
 
 	public S getStructure() { return structure; }
+
+	protected void setStructure(S structure) { this.structure = structure; }
 
 	public int getIndexCount() { return indexCount; }
 

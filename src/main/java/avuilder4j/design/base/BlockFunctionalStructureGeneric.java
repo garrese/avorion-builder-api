@@ -1,6 +1,8 @@
 package avuilder4j.design.base;
 
-import avuilder4j.util.OperationOfNullables;
+import avuilder4j.data.DataMaps;
+import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.values.Metas;
 
 @SuppressWarnings("rawtypes")
 public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> extends BlockPlanStructureGeneric<B> {
@@ -12,20 +14,51 @@ public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> e
 
 	public void setSubstructure(boolean isSubstructure) { this.isSubstructure = isSubstructure; }
 
-	public OperationOfNullables<Double> getVolumeBlock() {
-		return operation(OperationOfNullables.sumDoubles, (b) -> b.getMass(), "totalMass");
+	public double getVolumeBlock() { return sumFromBlocks(B::getVolumeBlock); }
+
+	public double getVolumeStat() { return sumFromBlocks(B::getVolumeStat); }
+
+	public double getDurability() { return sumFromBlocks(B::getDurability); }
+
+	public double getDensity() { return sumFromBlocks(B::getDensity); }
+
+	public double getMass() { return sumFromBlocks(B::getMass); }
+
+	public double getMechanicsReq() { return truncateIfNotSub(sumFromBlocks(B::getMechanicsReq)); }
+
+	public double getEngineersReq() { return truncateIfNotSub(sumFromBlocks(B::getEngineersReq)); }
+
+	public double getSargeantsReq() {
+		double ref = getMechanicsReq() + getEngineersReq();
+		double ratio = NullSafe
+				.get(() -> DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_CREW_PER_SERGEANT).getNumericValue(), 1.0);
+		return truncateIfNotSub(ref / ratio);
+
 	}
 
-	public OperationOfNullables<Double> getVolumeStat() {
-		return operation(OperationOfNullables.sumDoubles, (b) -> b.getMass(), "totalMass");
+	public double getLieutenantsReq() {
+		double ref = getSargeantsReq();
+		double ratio = NullSafe.get(() -> DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_SERGEANTS_PER_LIEUTENANT)
+				.getNumericValue(), 1.0);
+		return truncateIfNotSub(ref / ratio);
 	}
 
-	public OperationOfNullables<Double> getDensity() {
-		return operation(OperationOfNullables.sumDoubles, (b) -> b.getMass(), "totalMass");
+	public double getCommandersReq() {
+		double ref = getLieutenantsReq();
+		double ratio = NullSafe.get(() -> DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_LIEUTENANTS_PER_COMMANDER)
+				.getNumericValue(), 1.0);
+		return truncateIfNotSub(ref / ratio);
 	}
 
-	public OperationOfNullables<Double> getMass() {
-		return operation(OperationOfNullables.sumDoubles, (b) -> b.getMass(), "totalMass");
+	public double getGeneralsReq() {
+		double ref = getCommandersReq();
+		double ratio = NullSafe.get(() -> DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_COMMANDERS_PER_GENERAL)
+				.getNumericValue(), 1.0);
+		return truncateIfNotSub(ref / ratio);
+	}
+
+	protected double truncateIfNotSub(double v) {
+		return isSubstructure ? v : Math.floor(v);
 	}
 
 }
