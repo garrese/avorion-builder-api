@@ -9,6 +9,7 @@ public abstract class BlockFunctionalIndexerGeneric<B extends BlockFunctionalGen
 	protected DataMaps dataMaps;
 
 	public BlockFunctionalIndexerGeneric(DataMaps dataMaps) {
+		getStructure().setSubstructure(false);
 		this.dataMaps = dataMaps;
 	}
 

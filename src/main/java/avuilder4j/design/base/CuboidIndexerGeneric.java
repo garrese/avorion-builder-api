@@ -10,10 +10,14 @@ import avuilder4j.design.sub.Lengths;
 @SuppressWarnings("rawtypes")
 public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric<B>> {
 
-	protected S structure = getStructureInstance();
+	protected S structure;
 	protected int indexCount;
 
 	protected Lengths defaultLengths = new Lengths(2, 2, 2);
+
+	public CuboidIndexerGeneric() {
+		structure = getStructureInstance();
+	}
 
 	public void indexBlock(B block) {
 		indexCount++;

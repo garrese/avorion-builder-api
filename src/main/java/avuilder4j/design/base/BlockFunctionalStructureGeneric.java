@@ -1,41 +1,31 @@
 package avuilder4j.design.base;
 
-import avuilder4j.design.sub.DataReport;
+import avuilder4j.util.OperationOfNullables;
 
 @SuppressWarnings("rawtypes")
-public class BlockFunctionalStructureGeneric<T extends BlockFunctionalGeneric> extends BlockPlanStructureGeneric<T> {
+public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> extends BlockPlanStructureGeneric<B> {
 	private static final long serialVersionUID = 8757900473268467596L;
 
-	public DataReport getVolumeBlock() {
-		DataReport r = new DataReport(getTagsAdministrator().getTags() + " totalVolumeBlock");
-		for (BlockFunctionalGeneric b : this) {
-			r.addToResult(b.getVolumeBlock());
-		}
-		return r;
+	protected boolean isSubstructure = true;
+
+	public boolean isSubstructure() { return isSubstructure; }
+
+	public void setSubstructure(boolean isSubstructure) { this.isSubstructure = isSubstructure; }
+
+	public OperationOfNullables<Double> getVolumeBlock() {
+		return operation(OperationOfNullables.sumDoubles, (b) -> b.getMass(), "totalMass");
 	}
 
-	public DataReport getVolumeStat() {
-		DataReport r = new DataReport(getTagsAdministrator().getTags() + " totalVolumeStat");
-		for (BlockFunctionalGeneric b : this) {
-			r.addToResult(b.getVolumeStat());
-		}
-		return r;
+	public OperationOfNullables<Double> getVolumeStat() {
+		return operation(OperationOfNullables.sumDoubles, (b) -> b.getMass(), "totalMass");
 	}
 
-	public DataReport getDensity() {
-		DataReport r = new DataReport(getTagsAdministrator().getTags() + " totalDensity");
-		for (BlockFunctionalGeneric b : this) {
-			r.addToResult(b.getDensity());
-		}
-		return r;
+	public OperationOfNullables<Double> getDensity() {
+		return operation(OperationOfNullables.sumDoubles, (b) -> b.getMass(), "totalMass");
 	}
 
-	public DataReport getMass() {
-		DataReport r = new DataReport(getTagsAdministrator().getTags() + " totalMass");
-		for (BlockFunctionalGeneric b : this) {
-			r.addToResult(b.getMass());
-		}
-		return r;
+	public OperationOfNullables<Double> getMass() {
+		return operation(OperationOfNullables.sumDoubles, (b) -> b.getMass(), "totalMass");
 	}
 
 }

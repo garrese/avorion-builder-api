@@ -15,8 +15,8 @@ public class AvValidations {
 	public static final int MAX_FIXED_FACES = 2;
 
 	public static <K> void keyInMap(K key, Map<K, ?> map) {
-		if (!map.containsKey(key))
-			throw new NullPointerException();
+		if (map == null || !map.containsKey(key))
+			throw new Avuilder4jRuntimeException(AvErrors.INDEX_NOT_FOUND);
 	}
 
 	public static void volumes(double... volume) {

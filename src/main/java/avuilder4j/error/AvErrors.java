@@ -26,7 +26,8 @@ public class AvErrors {
 	public static final String FACE_NOT_RECOGNIZED = "Face ID not recognized.";
 	public static final String FACE_REPEATED = "Invalid faces. Some face is repeated.";
 	public static final String INDEX_NEGATIVE = "Index values must be greather than 0.";
-	public static final String INDEX_NOT_IN_MAPS = "Index not found in the data maps.";
+	public static final String INDEX_NOT_IN_MAPS = "Index not found in the data maps available.";
+	public static final String INDEX_NOT_FOUND = "Index not found in the map.";
 	public static final String INDEX_NOT_NULLABLE = "Index values are not nullable.";
 	public static final String LENGTH_NOT_POSITIVE = "Invalid length. Length must be greather than 0.";
 	public static final String NOT_MUTABLE_OBJECT = "Impossible to change immutable object.";

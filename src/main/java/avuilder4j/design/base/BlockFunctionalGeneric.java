@@ -7,9 +7,8 @@ import avuilder4j.data.Type;
 import avuilder4j.data.TypeModel;
 import avuilder4j.data.TypeModelByMaterial;
 import avuilder4j.data.TypeModelByMaterial.MapIndex;
-import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
-import avuilder4j.error.Avuilder4jRuntimeException;
+import avuilder4j.util.NullSafe;
 
 @SuppressWarnings("rawtypes")
 public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends BlockPlanGeneric<T> {
@@ -27,96 +26,43 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 		this.dataMaps = generalDataMap;
 	}
 
-	public Double getHealth() {
-		try {
-			return getVolumeBlock() * material.getDurability() * typeModel.getDurabilityMod();
-		} catch (NullPointerException e) {
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-		}
+	public Double getDurability() {
+		return NullSafe.get(() -> getVolumeBlock() * material.getDurability() * typeModel.getDurabilityMod());
 	}
 
-	public Double getVolumeBlock() {
-		try {
-			return getVolumeCuboid() * shape.getVolumeMod();
-		} catch (NullPointerException e) {
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-		}
-	}
+	public Double getVolumeBlock() { return NullSafe.get(() -> getVolumeCuboid() * shape.getVolumeMod()); }
 
-	public Double getVolumeStat() {
-		try {
-			return getVolumeBlock() * typeModel.getVolumeStatMod();
-		} catch (NullPointerException e) {
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-		}
-	}
+	public Double getVolumeStat() { return NullSafe.get(() -> getVolumeBlock() * typeModel.getVolumeStatMod()); }
 
-	public Double getDensity() {
-		try {
-			return material.getDensity() * typeModel.getDensityMod();
-		} catch (NullPointerException e) {
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-		}
-	}
+	public Double getDensity() { return NullSafe.get(() -> material.getDensity() * typeModel.getDensityMod()); }
 
-	public Double getMass() {
-		try {
-			return getDensity() * getVolumeBlock();
-		} catch (NullPointerException e) {
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-		}
-	}
+	public Double getMass() { return NullSafe.get(() -> getDensity() * getVolumeBlock()); }
 
 	@Override
-	public Integer getIndex() {
-		if (type != null)
-			return type.getIndex();
-		else
-			return null;
-	}
+	public Integer getIndex() { return NullSafe.get(() -> type.getIndex()); }
 
 	@Override
-	public Integer getMaterialIndex() {
-		if (material != null)
-			return material.getIndex();
-		else
-			return null;
-	}
+	public Integer getMaterialIndex() { return NullSafe.get(() -> material.getIndex()); }
 
 	@Override
-	public Integer getTypeIndex() {
-		if (type != null)
-			return type.getIndex();
-		else
-			return null;
-	}
+	public Integer getTypeIndex() { return NullSafe.get(() -> type.getIndex()); }
 
-	public Material getMaterial() {
-		return material;
-	}
+	public Material getMaterial() { return material; }
 
-	public Shape getShape() {
-		return shape;
-	}
+	public Shape getShape() { return shape; }
 
-	public Type getType() {
-		return type;
-	}
+	public Type getType() { return type; }
 
-	public TypeModel getTypeModel() {
-		return typeModel;
-	}
+	public TypeModel getTypeModel() { return typeModel; }
 
-	public TypeModelByMaterial getTypeModelByMaterial() {
-		return typeModelByMaterial;
-	}
+	public TypeModelByMaterial getTypeModelByMaterial() { return typeModelByMaterial; }
 
 	@Override
 	public void setMaterial(Integer materialIndex) {
 		Material material = null;
 		if (materialIndex != null) {
-			AvValidations.keyInMap(materialIndex, dataMaps.getMaterialMap());
-			material = dataMaps.getMaterialMap().get(materialIndex);
+			AvValidations.keyInMap(materialIndex, NullSafe.get(() -> dataMaps.getMaterialMap()));
+			material = NullSafe.get(() -> dataMaps.getMaterialMap().get(materialIndex));
 		}
 		setMaterial(material);
 	}
@@ -130,8 +76,8 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 	public void setType(Integer typeIndex) {
 		Type type = null;
 		if (typeIndex != null) {
-			AvValidations.keyInMap(typeIndex, dataMaps.getTypeMap());
-			type = dataMaps.getTypeMap().get(typeIndex);
+			AvValidations.keyInMap(typeIndex, NullSafe.get(() -> dataMaps.getTypeMap()));
+			type = NullSafe.get(() -> dataMaps.getTypeMap().get(typeIndex));
 		}
 		setType(type);
 	}
@@ -144,14 +90,12 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 		refreshShape();
 	}
 
-	public DataMaps getDataMaps() {
-		return dataMaps;
-	}
+	public DataMaps getDataMaps() { return dataMaps; }
 
 	protected void refreshShape() {
 		if (type != null) {
-			AvValidations.keyInMap(type.getShapeIndex(), dataMaps.getShapeMap());
-			shape = dataMaps.getShapeMap().get(type.getShapeIndex());
+			AvValidations.keyInMap(type.getShapeIndex(), NullSafe.get(() -> dataMaps.getShapeMap()));
+			shape = NullSafe.get(() -> dataMaps.getShapeMap().get(type.getShapeIndex()));
 		} else {
 			shape = null;
 		}
@@ -159,35 +103,26 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 
 	protected void refreshTypeModel() {
 		if (type != null) {
-			try {
-				AvValidations.keyInMap(type.getTypeModelIndex(), dataMaps.getTypeModelMap());
-				typeModel = dataMaps.getTypeModelMap().get(type.getTypeModelIndex());
-			} catch (NullPointerException e) {
-				throw new Avuilder4jRuntimeException(AvErrors.INDEX_NOT_IN_MAPS, e);
-			}
+			AvValidations.keyInMap(type.getTypeModelIndex(), NullSafe.get(() -> dataMaps.getTypeModelMap()));
+			typeModel = NullSafe.get(() -> dataMaps.getTypeModelMap().get(type.getTypeModelIndex()));
 		} else {
 			typeModel = null;
 		}
-
 	}
 
 	protected void refreshTypeModelByMaterial() {
 		if (typeModel != null && material != null) {
-			try {
-				TypeModelByMaterial.MapIndex idx = new MapIndex(typeModel.getIndex(), material.getIndex());
-				AvValidations.keyInMap(idx, dataMaps.getTypeModelByMaterialMap());
-				typeModelByMaterial = dataMaps.getTypeModelByMaterialMap().get(idx);
-			} catch (NullPointerException e) {
-				throw new Avuilder4jRuntimeException(AvErrors.INDEX_NOT_IN_MAPS, e);
-			}
+
+			TypeModelByMaterial.MapIndex idx = new MapIndex(typeModel.getIndex(), material.getIndex());
+			AvValidations.keyInMap(idx, NullSafe.get(() -> dataMaps.getTypeModelByMaterialMap()));
+			typeModelByMaterial = NullSafe.get(() -> dataMaps.getTypeModelByMaterialMap().get(idx));
+
 		} else {
 			typeModel = null;
 		}
 	}
 
-	public void setDataMaps(DataMaps dataMap) {
-		this.dataMaps = dataMap;
-	}
+	public void setDataMaps(DataMaps dataMap) { this.dataMaps = dataMap; }
 
 	public String getTypeName() {
 		String typeName;
@@ -211,12 +146,7 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 		if (parent != null)
 			parentSring = "[id=" + parent.getIndex() + "]";
 
-		String materialName;
-		if (material != null) {
-			materialName = material.getName();
-		} else {
-			materialName = "null";
-		}
+		String materialName = NullSafe.get(() -> material.getName());
 
 		// @formatter:off
 		return "Block [" + "tags=\"" + tagsAdministrator.getTags() + "\"" + ", index=" + getIndex() + ", parent="
