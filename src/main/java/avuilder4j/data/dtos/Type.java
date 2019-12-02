@@ -1,4 +1,4 @@
-package avuilder4j.data;
+package avuilder4j.data.dtos;
 
 public class Type {
 

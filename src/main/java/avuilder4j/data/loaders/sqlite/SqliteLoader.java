@@ -23,9 +23,13 @@ public abstract class SqliteLoader<K, V> implements Loader<K, V> {
 		return connection;
 	}
 
-	public String getDbFilePath() { return dbFilePath; }
+	public String getDbFilePath() {
+		return dbFilePath;
+	}
 
-	public void setDbFilePath(String dbFilePath) { this.dbFilePath = dbFilePath; }
+	public void setDbFilePath(String dbFilePath) {
+		this.dbFilePath = dbFilePath;
+	}
 
 	public Map<K, V> connectAndLoadAll(String tableName) throws Avuilder4jException {
 		Connection c = null;

@@ -8,57 +8,70 @@ import avuilder4j.util.values.Metas;
 public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> extends BlockPlanStructureGeneric<B> {
 	private static final long serialVersionUID = 8757900473268467596L;
 
-	protected boolean isSubstructure = true;
+	protected boolean retrieveFinalStructureData = false;
 
-	public boolean isSubstructure() { return isSubstructure; }
+	public boolean isRetrieveFinalStructureData() {
+		return retrieveFinalStructureData;
+	}
 
-	public void setSubstructure(boolean isSubstructure) { this.isSubstructure = isSubstructure; }
+	public void setRetrieveFinalStructureData(boolean retrieveFinalStructureData) {
+		this.retrieveFinalStructureData = retrieveFinalStructureData;
+	}
 
-	public double getVolumeBlock() { return sumFromBlocks(B::getVolumeBlock); }
+	public double getVolumeBlock() {
+		return sumFromBlocks(B::getVolumeBlock);
+	}
 
-	public double getVolumeStat() { return sumFromBlocks(B::getVolumeStat); }
+	public double getVolumeStat() {
+		return sumFromBlocks(B::getVolumeStat);
+	}
 
-	public double getDurability() { return sumFromBlocks(B::getDurability); }
+	public double getDurability() {
+		return sumFromBlocks(B::getDurability);
+	}
 
-	public double getDensity() { return sumFromBlocks(B::getDensity); }
+	public double getDensity() {
+		return sumFromBlocks(B::getDensity);
+	}
 
-	public double getMass() { return sumFromBlocks(B::getMass); }
+	public double getMass() {
+		return sumFromBlocks(B::getMass);
+	}
 
-	public double getMechanicsReq() { return truncateIfNotSub(sumFromBlocks(B::getMechanicsReq)); }
+	public double getMechanicsReq() {
+		return truncateIfFinal(sumFromBlocks(B::getMechanicsReq));
+	}
 
-	public double getEngineersReq() { return truncateIfNotSub(sumFromBlocks(B::getEngineersReq)); }
+	public double getEngineersReq() {
+		return truncateIfFinal(sumFromBlocks(B::getEngineersReq));
+	}
 
 	public double getSargeantsReq() {
-		double ref = getMechanicsReq() + getEngineersReq();
-		double ratio = NullSafe
-				.get(() -> DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_CREW_PER_SERGEANT).getNumericValue(), 1.0);
-		return truncateIfNotSub(ref / ratio);
+		Double dividend = NullSafe.get(() -> getMechanicsReq() + getEngineersReq());
+		Double divider = NullSafe
+				.get(() -> DataMaps.getMetaValue(Metas.CREW_RATIO_CREW_PER_SERGEANT).getNumericValue());
+		Double result = NullSafe.get(() -> dividend / divider);
+		return result;
 
 	}
 
 	public double getLieutenantsReq() {
-		double ref = getSargeantsReq();
-		double ratio = NullSafe.get(() -> DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_SERGEANTS_PER_LIEUTENANT)
-				.getNumericValue(), 1.0);
-		return truncateIfNotSub(ref / ratio);
+		return NullSafe.get(() -> getSargeantsReq()
+				/ DataMaps.getMetaValue(Metas.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getNumericValue());
 	}
 
 	public double getCommandersReq() {
-		double ref = getLieutenantsReq();
-		double ratio = NullSafe.get(() -> DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_LIEUTENANTS_PER_COMMANDER)
-				.getNumericValue(), 1.0);
-		return truncateIfNotSub(ref / ratio);
+		return NullSafe.get(() -> getLieutenantsReq()
+				/ DataMaps.getMetaValue(Metas.CREW_RATIO_LIEUTENANTS_PER_COMMANDER).getNumericValue());
 	}
 
 	public double getGeneralsReq() {
-		double ref = getCommandersReq();
-		double ratio = NullSafe.get(() -> DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_COMMANDERS_PER_GENERAL)
-				.getNumericValue(), 1.0);
-		return truncateIfNotSub(ref / ratio);
+		return NullSafe.get(() -> getCommandersReq()
+				/ DataMaps.getMetaValue(Metas.CREW_RATIO_COMMANDERS_PER_GENERAL).getNumericValue());
 	}
 
-	protected double truncateIfNotSub(double v) {
-		return isSubstructure ? v : Math.floor(v);
+	protected double truncateIfFinal(double v) {
+		return retrieveFinalStructureData ? Math.floor(v) : v;
 	}
 
 }

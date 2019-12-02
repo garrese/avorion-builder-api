@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 
-import avuilder4j.data.MetaValue;
+import avuilder4j.data.dtos.MetaValue;
 import avuilder4j.error.Avuilder4jException;
 
 public class SqliteLoaderMetaValue extends SqliteLoader<String, MetaValue> {

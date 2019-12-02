@@ -2,7 +2,7 @@ package avuilder4j.data.loaders.json;
 
 import java.util.Map;
 
-import avuilder4j.data.Material;
+import avuilder4j.data.dtos.Material;
 import avuilder4j.data.loaders.base.Loader;
 import avuilder4j.error.Avuilder4jException;
 
