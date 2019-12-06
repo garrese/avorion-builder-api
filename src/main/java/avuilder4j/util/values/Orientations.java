@@ -1,7 +1,7 @@
 package avuilder4j.util.values;
 
 import avuilder4j.design.enums.Axis;
-import avuilder4j.design.sub.Orientation;
+import avuilder4j.design.sub.dimensional.Orientation;
 import avuilder4j.error.AvErrors;
 
 public class Orientations {

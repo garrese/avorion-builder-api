@@ -19,15 +19,18 @@ public class SqliteLoaderTypeModel extends SqliteLoader<Integer, TypeModel> {
 
 	@Override
 	public SimpleEntry<Integer, TypeModel> onSqliteDataMapping(ResultSet r) throws Exception {
-		TypeModelParams p = new TypeModelParams(r.getInt("idx"));
+		TypeModelParams p = new TypeModelParams(SqliteLoader.<Integer>getWrapper(r, "idx"));
 		p.setName(r.getString("name"));
-		p.setDensityMod(r.getDouble("densityMod"));
-		p.setDurabilityMod(r.getDouble("durabilityMod"));
-		p.setMaterialCostMod(r.getDouble("materialCostMod"));
-		p.setMechanics(r.getDouble("mechanics"));
+		p.setDensityMod(SqliteLoader.<Double>getWrapper(r, "densityMod"));
+		p.setDurabilityMod(SqliteLoader.<Double>getWrapper(r, "durabilityMod"));
+		p.setMaterialCostMod(SqliteLoader.<Double>getWrapper(r, "materialCostMod"));
+		p.setMechanics(SqliteLoader.<Double>getWrapper(r, "mechanics"));
 		p.setEngineers(r.getDouble("engineers"));
-		p.setProcessingMod(r.getDouble("processingMod"));
-		p.setVolumeStatMod(r.getDouble("volumeStatMod"));
+		p.setProcessingMod(SqliteLoader.<Double>getWrapper(r, "processingMod"));
+		p.setVolumeStatMod(SqliteLoader.<Double>getWrapper(r, "volumeStatMod"));
+		p.setCollisionReduction(SqliteLoader.<Double>getWrapper(r, "collisionReduction"));
+		p.setComment(r.getString("comment"));
+
 		TypeModel tm = new TypeModel(p);
 		return new SimpleEntry<Integer, TypeModel>(tm.getIndex(), tm);
 	}

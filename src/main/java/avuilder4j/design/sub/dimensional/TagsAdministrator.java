@@ -1,4 +1,4 @@
-package avuilder4j.design.sub;
+package avuilder4j.design.sub.dimensional;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -7,9 +7,9 @@ import java.util.function.Function;
 
 import avuilder4j.design.enums.Axis;
 import avuilder4j.design.enums.Rotation;
-import avuilder4j.design.sub.AxisEnds;
-import avuilder4j.design.sub.Tagable;
-import avuilder4j.design.sub.TagsAdministrator;
+import avuilder4j.design.sub.dimensional.AxisEnds;
+import avuilder4j.design.sub.dimensional.Tagable;
+import avuilder4j.design.sub.dimensional.TagsAdministrator;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;

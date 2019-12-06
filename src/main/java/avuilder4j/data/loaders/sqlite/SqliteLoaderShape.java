@@ -18,9 +18,9 @@ public class SqliteLoaderShape extends SqliteLoader<Integer, Shape> {
 
 	@Override
 	public SimpleEntry<Integer, Shape> onSqliteDataMapping(ResultSet r) throws Exception {
-		Integer i = r.getInt("idx");
+		Integer i = SqliteLoader.<Integer>getWrapper(r, "idx");
 		String n = r.getString("name");
-		Double v = r.getDouble("volumeMod");
+		Double v = SqliteLoader.<Double>getWrapper(r, "volumeMod");
 		Shape shape = new Shape(i, n, v);
 		return new SimpleEntry<Integer, Shape>(shape.getIndex(), shape);
 	}

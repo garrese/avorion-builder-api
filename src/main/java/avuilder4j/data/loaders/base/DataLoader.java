@@ -18,62 +18,11 @@ public abstract class DataLoader {
 	protected Loader<String, MetaValue> metaValueLoader;
 	protected Loader<Integer, Shape> shapeLoader;
 	protected Loader<Integer, Type> typeLoader;
-	protected Loader<Integer, TypeModel> typeModelLoader;
 	protected Loader<TypeModelByMaterial.MapIndex, TypeModelByMaterial> typeModelByMaterialLoader;
+	protected Loader<Integer, TypeModel> typeModelLoader;
 
 	public DataLoader() {
 		instantiateLoaders();
-	}
-
-	public abstract void instantiateLoaders();
-
-	public Loader<Integer, Material> getMaterialLoader() {
-		return materialLoader;
-	}
-
-	public void setMaterialLoader(Loader<Integer, Material> materialLoader) {
-		this.materialLoader = materialLoader;
-	}
-
-	public Loader<String, MetaValue> getMetaValueLoader() {
-		return metaValueLoader;
-	}
-
-	public void setMetaValueLoader(Loader<String, MetaValue> metaValueLoader) {
-		this.metaValueLoader = metaValueLoader;
-	}
-
-	public Loader<Integer, Shape> getShapeLoader() {
-		return shapeLoader;
-	}
-
-	public void setShapeLoader(Loader<Integer, Shape> shapeLoader) {
-		this.shapeLoader = shapeLoader;
-	}
-
-	public Loader<Integer, Type> getTypeLoader() {
-		return typeLoader;
-	}
-
-	public void setTypeLoader(Loader<Integer, Type> typeLoader) {
-		this.typeLoader = typeLoader;
-	}
-
-	public Loader<Integer, TypeModel> getTypeModelLoader() {
-		return typeModelLoader;
-	}
-
-	public void setTypeModelLoader(Loader<Integer, TypeModel> typeModelLoader) {
-		this.typeModelLoader = typeModelLoader;
-	}
-
-	public Loader<TypeModelByMaterial.MapIndex, TypeModelByMaterial> getTypeModelByMaterialLoader() {
-		return typeModelByMaterialLoader;
-	}
-
-	public void setTypeModelByMaterialLoader(
-			Loader<TypeModelByMaterial.MapIndex, TypeModelByMaterial> typeModelByMaterialLoader) {
-		this.typeModelByMaterialLoader = typeModelByMaterialLoader;
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -88,6 +37,22 @@ public abstract class DataLoader {
 		return loaders;
 	}
 
+	public Loader<Integer, Material> getMaterialLoader() { return materialLoader; }
+
+	public Loader<String, MetaValue> getMetaValueLoader() { return metaValueLoader; }
+
+	public Loader<Integer, Shape> getShapeLoader() { return shapeLoader; }
+
+	public Loader<Integer, Type> getTypeLoader() { return typeLoader; }
+
+	public Loader<TypeModelByMaterial.MapIndex, TypeModelByMaterial> getTypeModelByMaterialLoader() {
+		return typeModelByMaterialLoader;
+	}
+
+	public Loader<Integer, TypeModel> getTypeModelLoader() { return typeModelLoader; }
+
+	public abstract void instantiateLoaders();
+
 	public void loadAll() throws Avuilder4jException {
 		DataMaps.setMaterialMap(materialLoader.loadAll());
 		DataMaps.setMetaValueMap(metaValueLoader.loadAll());
@@ -96,6 +61,25 @@ public abstract class DataLoader {
 		DataMaps.setTypeModelMap(typeModelLoader.loadAll());
 		DataMaps.setTypeModelByMaterialMap(typeModelByMaterialLoader.loadAll());
 
+	}
+
+	protected void setMaterialLoader(Loader<Integer, Material> materialLoader) { this.materialLoader = materialLoader; }
+
+	protected void setMetaValueLoader(Loader<String, MetaValue> metaValueLoader) {
+		this.metaValueLoader = metaValueLoader;
+	}
+
+	protected void setShapeLoader(Loader<Integer, Shape> shapeLoader) { this.shapeLoader = shapeLoader; }
+
+	protected void setTypeLoader(Loader<Integer, Type> typeLoader) { this.typeLoader = typeLoader; }
+
+	protected void setTypeModelByMaterialLoader(
+			Loader<TypeModelByMaterial.MapIndex, TypeModelByMaterial> typeModelByMaterialLoader) {
+		this.typeModelByMaterialLoader = typeModelByMaterialLoader;
+	}
+
+	protected void setTypeModelLoader(Loader<Integer, TypeModel> typeModelLoader) {
+		this.typeModelLoader = typeModelLoader;
 	}
 
 }

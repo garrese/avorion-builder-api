@@ -24,4 +24,8 @@ public class TypeModelParams extends TypeModelFields {
 
 	public void setVolumeStatMod(Double volumeMod) { this.volumeStatMod = volumeMod; }
 
+	public void setCollisionReduction(Double collisionReduction) { this.collisionReduction = collisionReduction; }
+
+	public void setComment(String comment) { this.comment = comment; }
+
 }

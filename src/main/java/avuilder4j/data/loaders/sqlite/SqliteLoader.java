@@ -23,13 +23,9 @@ public abstract class SqliteLoader<K, V> implements Loader<K, V> {
 		return connection;
 	}
 
-	public String getDbFilePath() {
-		return dbFilePath;
-	}
+	public String getDbFilePath() { return dbFilePath; }
 
-	public void setDbFilePath(String dbFilePath) {
-		this.dbFilePath = dbFilePath;
-	}
+	public void setDbFilePath(String dbFilePath) { this.dbFilePath = dbFilePath; }
 
 	public Map<K, V> connectAndLoadAll(String tableName) throws Avuilder4jException {
 		Connection c = null;
@@ -61,4 +57,8 @@ public abstract class SqliteLoader<K, V> implements Loader<K, V> {
 
 	public abstract AbstractMap.SimpleEntry<K, V> onSqliteDataMapping(ResultSet r) throws Exception;
 
+	@SuppressWarnings("unchecked")
+	public static <T> T getWrapper(ResultSet r, String columnName) throws SQLException {
+		return r.getObject(columnName) != null ? (T) r.getObject(columnName) : null;
+	}
 }

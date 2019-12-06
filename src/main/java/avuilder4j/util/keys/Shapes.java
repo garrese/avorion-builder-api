@@ -1,4 +1,4 @@
-package avuilder4j.util.values;
+package avuilder4j.util.keys;
 
 public class Shapes {
 

@@ -13,6 +13,8 @@ public class TypeModel extends TypeModelFields {
 			this.engineers = p.getEngineers();
 			this.processingMod = p.getProcessingMod();
 			this.volumeStatMod = p.getVolumeStatMod();
+			this.collisionReduction = p.getCollisionReduction();
+			this.comment = p.getComment();
 		}
 	}
 

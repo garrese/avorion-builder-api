@@ -18,12 +18,12 @@ public class SqliteLoaderMetaValue extends SqliteLoader<String, MetaValue> {
 
 	@Override
 	public SimpleEntry<String, MetaValue> onSqliteDataMapping(ResultSet r) throws Exception {
-		String l = r.getString("label");
+		String n = r.getString("name");
 		String g = r.getString("group");
-		String tv = r.getString("textValue");
-		Double nv = r.getDouble("numericValue");
+		String tv = r.getString("text");
+		Double nv = SqliteLoader.<Double>getWrapper(r, "number");
 
-		MetaValue metaValue = new MetaValue(l, g, tv, nv);
-		return new SimpleEntry<String, MetaValue>(metaValue.getLabel(), metaValue);
+		MetaValue metaValue = new MetaValue(n, g, tv, nv);
+		return new SimpleEntry<String, MetaValue>(metaValue.getName(), metaValue);
 	}
 }

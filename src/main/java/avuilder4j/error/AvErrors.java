@@ -1,6 +1,6 @@
 package avuilder4j.error;
 
-import avuilder4j.design.sub.Orientation;
+import avuilder4j.design.sub.dimensional.Orientation;
 
 public class AvErrors {
 

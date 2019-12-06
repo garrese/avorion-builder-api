@@ -6,7 +6,7 @@ import java.util.Map;
 
 import avuilder4j.design.enums.Axis;
 import avuilder4j.design.enums.Face;
-import avuilder4j.design.sub.Orientation;
+import avuilder4j.design.sub.dimensional.Orientation;
 
 public class AvValidations {
 

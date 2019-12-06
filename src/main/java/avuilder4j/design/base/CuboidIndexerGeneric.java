@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import avuilder4j.design.sub.Lengths;
+import avuilder4j.design.sub.dimensional.Lengths;
 
 @SuppressWarnings("rawtypes")
 public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric<B>> {

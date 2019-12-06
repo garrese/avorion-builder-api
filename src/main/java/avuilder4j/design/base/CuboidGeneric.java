@@ -9,15 +9,16 @@ import avuilder4j.design.enums.Corner;
 import avuilder4j.design.enums.End;
 import avuilder4j.design.enums.Face;
 import avuilder4j.design.enums.Rotation;
-import avuilder4j.design.sub.AxisEnds;
-import avuilder4j.design.sub.Lengths;
-import avuilder4j.design.sub.Point;
-import avuilder4j.design.sub.Tagable;
-import avuilder4j.design.sub.TagsAdministrator;
-import avuilder4j.design.sub.Vector;
+import avuilder4j.design.sub.dimensional.AxisEnds;
+import avuilder4j.design.sub.dimensional.Lengths;
+import avuilder4j.design.sub.dimensional.Point;
+import avuilder4j.design.sub.dimensional.Tagable;
+import avuilder4j.design.sub.dimensional.TagsAdministrator;
+import avuilder4j.design.sub.dimensional.Vector;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
+import avuilder4j.util.java.NullSafe;
 
 /**
  * Represents a cuboid in a Cartesian coordinate system.
@@ -371,6 +372,15 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 		} else {
 			return null;
 		}
+	}
+
+	public Double getSurfaceArea() {
+		return NullSafe.get(() -> {
+			Double face1 = axisX.getLength() * axisY.getLength();
+			Double face2 = axisX.getLength() * axisZ.getLength();
+			Double face3 = axisY.getLength() * axisZ.getLength();
+			return 2 * (face1 + face2 + face3);
+		});
 	}
 
 	public boolean isCuboidDefined() {

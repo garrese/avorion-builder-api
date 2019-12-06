@@ -21,11 +21,13 @@ public final class SqliteLoaderTypeModelByMaterial
 	@Override
 	public SimpleEntry<TypeModelByMaterial.MapIndex, TypeModelByMaterial> onSqliteDataMapping(ResultSet r)
 			throws Exception {
-		int typeModelIndex = r.getInt("typeModelIdx");
-		int materialIndex = r.getInt("materialIdx");
-		Double creditCostMod = r.getDouble("creditCostMod");
+		Integer typeModelIndex = SqliteLoader.<Integer>getWrapper(r, "typeModelIdx");
+		Integer materialIndex = SqliteLoader.<Integer>getWrapper(r, "materialIdx");
+		Double creditCostMod = SqliteLoader.<Double>getWrapper(r, "creditCostMod");
+		Double meta1 = SqliteLoader.<Double>getWrapper(r, "meta1");
+		Double meta2 = SqliteLoader.<Double>getWrapper(r, "meta2");
 		TypeModelByMaterial.MapIndex idx = new MapIndex(typeModelIndex, materialIndex);
-		TypeModelByMaterial tmbm = new TypeModelByMaterial(idx, creditCostMod);
+		TypeModelByMaterial tmbm = new TypeModelByMaterial(idx, creditCostMod, meta1, meta2);
 		return new SimpleEntry<TypeModelByMaterial.MapIndex, TypeModelByMaterial>(tmbm.getMapIndex(), tmbm);
 	}
 

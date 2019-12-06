@@ -18,9 +18,9 @@ public class SqliteLoaderType extends SqliteLoader<Integer, Type> {
 
 	@Override
 	public SimpleEntry<Integer, Type> onSqliteDataMapping(ResultSet r) throws Exception {
-		Integer idx = r.getInt("idx");
-		int typeModelIndex = r.getInt("typeModelIdx");
-		int shapeIdx = r.getInt("shapeIdx");
+		Integer idx = SqliteLoader.<Integer>getWrapper(r, "idx");
+		Integer typeModelIndex = SqliteLoader.<Integer>getWrapper(r, "typeModelIdx");
+		Integer shapeIdx = SqliteLoader.<Integer>getWrapper(r, "shapeIdx");
 		Type type = new Type(idx, typeModelIndex, shapeIdx);
 		return new SimpleEntry<Integer, Type>(type.getIndex(), type);
 	}

@@ -1,9 +1,9 @@
 package avuilder4j.design.base;
 
-import avuilder4j.design.sub.Orientation;
+import avuilder4j.design.sub.dimensional.Orientation;
+import avuilder4j.util.keys.Mats;
+import avuilder4j.util.keys.Types;
 import avuilder4j.util.values.Colors;
-import avuilder4j.util.values.Mats;
-import avuilder4j.util.values.Types;
 
 @SuppressWarnings("rawtypes")
 public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S extends BlockPlanStructureGeneric<B>>

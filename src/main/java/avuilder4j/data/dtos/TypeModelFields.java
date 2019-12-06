@@ -1,5 +1,7 @@
 package avuilder4j.data.dtos;
 
+import java.util.Objects;
+
 public abstract class TypeModelFields {
 
 	protected Integer index;
@@ -11,6 +13,8 @@ public abstract class TypeModelFields {
 	protected Double engineers;
 	protected Double processingMod;
 	protected Double volumeStatMod;
+	protected Double collisionReduction;
+	protected String comment;
 
 	public Integer getIndex() { return index; }
 
@@ -29,6 +33,10 @@ public abstract class TypeModelFields {
 	public Double getProcessingMod() { return processingMod; }
 
 	public Double getVolumeStatMod() { return volumeStatMod; }
+
+	public Double getCollisionReduction() { return collisionReduction; }
+
+	public String getComment() { return comment; }
 
 	@Override
 	public String toString() {
@@ -51,24 +59,36 @@ public abstract class TypeModelFields {
 		builder.append(processingMod);
 		builder.append(", volumeStatMod=");
 		builder.append(volumeStatMod);
+		builder.append(", collisionReduction=");
+		builder.append(collisionReduction);
+		builder.append(", comment=");
+		builder.append("\"").append(comment).append("\"");
+		builder.append("]");
+		return builder.toString();
+	}
+
+	public String toStringReduced() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("TypeModelFields [index=");
+		builder.append(index);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", densityMod=");
+		builder.append(densityMod);
+		builder.append(", durabilityMod=");
+		builder.append(durabilityMod);
+		builder.append(", materialCostMod=");
+		builder.append(materialCostMod);
+		builder.append(", collisionReduction=");
+		builder.append(collisionReduction);
 		builder.append("]");
 		return builder.toString();
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((densityMod == null) ? 0 : densityMod.hashCode());
-		result = prime * result + ((durabilityMod == null) ? 0 : durabilityMod.hashCode());
-		result = prime * result + ((engineers == null) ? 0 : engineers.hashCode());
-		result = prime * result + ((index == null) ? 0 : index.hashCode());
-		result = prime * result + ((materialCostMod == null) ? 0 : materialCostMod.hashCode());
-		result = prime * result + ((mechanics == null) ? 0 : mechanics.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((processingMod == null) ? 0 : processingMod.hashCode());
-		result = prime * result + ((volumeStatMod == null) ? 0 : volumeStatMod.hashCode());
-		return result;
+		return Objects
+				.hash(collisionReduction, comment, densityMod, durabilityMod, engineers, index, materialCostMod, mechanics, name, processingMod, volumeStatMod);
 	}
 
 	@Override
@@ -77,55 +97,15 @@ public abstract class TypeModelFields {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof TypeModelFields))
 			return false;
 		TypeModelFields other = (TypeModelFields) obj;
-		if (densityMod == null) {
-			if (other.densityMod != null)
-				return false;
-		} else if (!densityMod.equals(other.densityMod))
-			return false;
-		if (durabilityMod == null) {
-			if (other.durabilityMod != null)
-				return false;
-		} else if (!durabilityMod.equals(other.durabilityMod))
-			return false;
-		if (engineers == null) {
-			if (other.engineers != null)
-				return false;
-		} else if (!engineers.equals(other.engineers))
-			return false;
-		if (index == null) {
-			if (other.index != null)
-				return false;
-		} else if (!index.equals(other.index))
-			return false;
-		if (materialCostMod == null) {
-			if (other.materialCostMod != null)
-				return false;
-		} else if (!materialCostMod.equals(other.materialCostMod))
-			return false;
-		if (mechanics == null) {
-			if (other.mechanics != null)
-				return false;
-		} else if (!mechanics.equals(other.mechanics))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (processingMod == null) {
-			if (other.processingMod != null)
-				return false;
-		} else if (!processingMod.equals(other.processingMod))
-			return false;
-		if (volumeStatMod == null) {
-			if (other.volumeStatMod != null)
-				return false;
-		} else if (!volumeStatMod.equals(other.volumeStatMod))
-			return false;
-		return true;
+		return Objects.equals(collisionReduction, other.collisionReduction) && Objects.equals(comment, other.comment)
+				&& Objects.equals(densityMod, other.densityMod) && Objects.equals(durabilityMod, other.durabilityMod)
+				&& Objects.equals(engineers, other.engineers) && Objects.equals(index, other.index)
+				&& Objects.equals(materialCostMod, other.materialCostMod) && Objects.equals(mechanics, other.mechanics)
+				&& Objects.equals(name, other.name) && Objects.equals(processingMod, other.processingMod)
+				&& Objects.equals(volumeStatMod, other.volumeStatMod);
 	}
 
 }

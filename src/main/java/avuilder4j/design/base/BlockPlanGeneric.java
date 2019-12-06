@@ -1,7 +1,7 @@
 package avuilder4j.design.base;
 
-import avuilder4j.design.sub.Lengths;
-import avuilder4j.design.sub.Orientation;
+import avuilder4j.design.sub.dimensional.Lengths;
+import avuilder4j.design.sub.dimensional.Orientation;
 import avuilder4j.error.AvValidations;
 
 /**

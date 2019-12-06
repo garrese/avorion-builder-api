@@ -6,29 +6,44 @@ import java.util.Objects;
 public class MetaValue implements Serializable {
 	private static final long serialVersionUID = -5211125129554805337L;
 
-	protected String label;
+	protected String name;
 	protected String group;
-	protected String textValue;
-	protected Double numericValue;
+	protected String text;
+	protected Double number;
 
-	public MetaValue(String label, String group, String textValue, Double numericValue) {
-		this.label = label;
+	public MetaValue(String name, String group, String text, Double number) {
+		this.name = name;
 		this.group = group;
-		this.textValue = textValue;
-		this.numericValue = numericValue;
+		this.text = text;
+		this.number = number;
 	}
 
-	public String getLabel() { return label; }
+	public String getName() { return name; }
 
 	public String getGroup() { return group; }
 
-	public String getTextValue() { return textValue; }
+	public String getTextValue() { return text; }
 
-	public Double getNumericValue() { return numericValue; }
+	public Double getNumber() { return number; }
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("MetaValue [name=");
+		builder.append(name);
+		builder.append(", group=");
+		builder.append(group);
+		builder.append(", text=");
+		builder.append(text);
+		builder.append(", number=");
+		builder.append(number);
+		builder.append("]");
+		return builder.toString();
+	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(group, label, numericValue, textValue);
+		return Objects.hash(group, name, number, text);
 	}
 
 	@Override
@@ -40,23 +55,8 @@ public class MetaValue implements Serializable {
 		if (!(obj instanceof MetaValue))
 			return false;
 		MetaValue other = (MetaValue) obj;
-		return Objects.equals(group, other.group) && Objects.equals(label, other.label)
-				&& Objects.equals(numericValue, other.numericValue) && Objects.equals(textValue, other.textValue);
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("MetaValue [label=");
-		builder.append(label);
-		builder.append(", group=");
-		builder.append(group);
-		builder.append(", textValue=");
-		builder.append(textValue);
-		builder.append(", numericValue=");
-		builder.append(numericValue);
-		builder.append("]");
-		return builder.toString();
+		return Objects.equals(group, other.group) && Objects.equals(name, other.name)
+				&& Objects.equals(number, other.number) && Objects.equals(text, other.text);
 	}
 
 }

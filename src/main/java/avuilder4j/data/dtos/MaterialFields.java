@@ -1,5 +1,7 @@
 package avuilder4j.data.dtos;
 
+import java.util.Objects;
+
 public abstract class MaterialFields {
 
 	protected Integer index;
@@ -47,15 +49,7 @@ public abstract class MaterialFields {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((creditCost == null) ? 0 : creditCost.hashCode());
-		result = prime * result + ((density == null) ? 0 : density.hashCode());
-		result = prime * result + ((durability == null) ? 0 : durability.hashCode());
-		result = prime * result + ((index == null) ? 0 : index.hashCode());
-		result = prime * result + ((materialCost == null) ? 0 : materialCost.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+		return Objects.hash(creditCost, density, durability, index, materialCost, name);
 	}
 
 	@Override
@@ -64,40 +58,12 @@ public abstract class MaterialFields {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof MaterialFields))
 			return false;
 		MaterialFields other = (MaterialFields) obj;
-		if (creditCost == null) {
-			if (other.creditCost != null)
-				return false;
-		} else if (!creditCost.equals(other.creditCost))
-			return false;
-		if (density == null) {
-			if (other.density != null)
-				return false;
-		} else if (!density.equals(other.density))
-			return false;
-		if (durability == null) {
-			if (other.durability != null)
-				return false;
-		} else if (!durability.equals(other.durability))
-			return false;
-		if (index == null) {
-			if (other.index != null)
-				return false;
-		} else if (!index.equals(other.index))
-			return false;
-		if (materialCost == null) {
-			if (other.materialCost != null)
-				return false;
-		} else if (!materialCost.equals(other.materialCost))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+		return Objects.equals(creditCost, other.creditCost) && Objects.equals(density, other.density)
+				&& Objects.equals(durability, other.durability) && Objects.equals(index, other.index)
+				&& Objects.equals(materialCost, other.materialCost) && Objects.equals(name, other.name);
 	}
 
 }

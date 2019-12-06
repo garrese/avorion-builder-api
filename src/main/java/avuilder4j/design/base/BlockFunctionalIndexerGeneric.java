@@ -5,6 +5,6 @@ public abstract class BlockFunctionalIndexerGeneric<B extends BlockFunctionalGen
 		extends BlockPlanIndexerGeneric<B, S> {
 
 	public BlockFunctionalIndexerGeneric() {
-		getStructure().setRetrieveFinalStructureData(true);
+		getStructure().setRetrieveFinalStats(true);
 	}
 }

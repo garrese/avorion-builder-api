@@ -19,65 +19,45 @@ public class DataMaps {
 	protected static Map<Integer, TypeModel> typeModelMap;
 	protected static Map<TypeModelByMaterial.MapIndex, TypeModelByMaterial> typeModelByMaterialMap;
 
-	public static Map<Integer, Material> getMaterialMap() {
-		return materialMap;
-	}
+	public static Map<Integer, Material> getMaterialMap() { return materialMap; }
 
-	public static void setMaterialMap(Map<Integer, Material> materialMap) {
-		DataMaps.materialMap = materialMap;
-	}
+	public static void setMaterialMap(Map<Integer, Material> materialMap) { DataMaps.materialMap = materialMap; }
 
 	public static Material getMaterial(Object key) {
 		return NullSafe.get(() -> getMaterialMap().get(key));
 	}
 
-	public static Map<String, MetaValue> getMetaValueMap() {
-		return metaValueMap;
-	}
+	public static Map<String, MetaValue> getMetaValueMap() { return metaValueMap; }
 
 	public static MetaValue getMetaValue(Object key) {
 		return NullSafe.get(() -> getMetaValueMap().get(key));
 	}
 
-	public static void setMetaValueMap(Map<String, MetaValue> metaValueMap) {
-		DataMaps.metaValueMap = metaValueMap;
-	}
+	public static void setMetaValueMap(Map<String, MetaValue> metaValueMap) { DataMaps.metaValueMap = metaValueMap; }
 
-	public static Map<Integer, Shape> getShapeMap() {
-		return shapeMap;
-	}
+	public static Map<Integer, Shape> getShapeMap() { return shapeMap; }
 
 	public static Shape getShape(Object key) {
 		return NullSafe.get(() -> getShapeMap().get(key));
 	}
 
-	public static void setShapeMap(Map<Integer, Shape> shapeMap) {
-		DataMaps.shapeMap = shapeMap;
-	}
+	public static void setShapeMap(Map<Integer, Shape> shapeMap) { DataMaps.shapeMap = shapeMap; }
 
-	public static Map<Integer, Type> getTypeMap() {
-		return typeMap;
-	}
+	public static Map<Integer, Type> getTypeMap() { return typeMap; }
 
 	public static Type getType(Object key) {
 		return NullSafe.get(() -> getTypeMap().get(key));
 	}
 
-	public static void setTypeMap(Map<Integer, Type> typeMap) {
-		DataMaps.typeMap = typeMap;
-	}
+	public static void setTypeMap(Map<Integer, Type> typeMap) { DataMaps.typeMap = typeMap; }
 
-	public static Map<Integer, TypeModel> getTypeModelMap() {
-		return typeModelMap;
-	}
+	public static Map<Integer, TypeModel> getTypeModelMap() { return typeModelMap; }
 
 	public static TypeModel getTypeModel(Object key) {
 		return NullSafe.get(() -> getTypeModelMap().get(key));
 	}
 
-	public static void setTypeModelMap(Map<Integer, TypeModel> typeModelMap) {
-		DataMaps.typeModelMap = typeModelMap;
-	}
+	public static void setTypeModelMap(Map<Integer, TypeModel> typeModelMap) { DataMaps.typeModelMap = typeModelMap; }
 
 	public static Map<TypeModelByMaterial.MapIndex, TypeModelByMaterial> getTypeModelByMaterialMap() {
 		return typeModelByMaterialMap;
@@ -113,7 +93,7 @@ public class DataMaps {
 		int i = 0;
 		for (Object o : map.values()) {
 			i++;
-			sb.append("\t").append(i).append("บ: ").append(o).append("\n");
+			sb.append("\t").append(i).append("ยบ: ").append(o).append("\n");
 		}
 
 		sb.append("}");

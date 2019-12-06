@@ -1,18 +1,30 @@
 package avuilder4j.data.dtos;
 
-public class TypeModelByMaterial {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class TypeModelByMaterial implements Serializable {
+	private static final long serialVersionUID = 4213877716842924589L;
 
 	protected MapIndex mapIndex;
 	protected Double creditCostMod;
+	protected Double effect;
+	protected Double effectSecond;
 
-	public TypeModelByMaterial(MapIndex mapIndex, Double creditCostMod) {
+	public TypeModelByMaterial(MapIndex mapIndex, Double creditCostMod, Double meta1, Double meta2) {
 		this.mapIndex = mapIndex;
 		this.creditCostMod = creditCostMod;
+		this.effect = meta1;
+		this.effectSecond = meta2;
 	}
 
 	public Double getCreditCostMod() { return creditCostMod; }
 
 	public MapIndex getMapIndex() { return mapIndex; }
+
+	public Double getEffect() { return effect; }
+
+	public Double getEffectSecond() { return effectSecond; }
 
 	public static class MapIndex {
 
@@ -79,17 +91,17 @@ public class TypeModelByMaterial {
 		builder.append(mapIndex);
 		builder.append(", creditCostMod=");
 		builder.append(creditCostMod);
+		builder.append(", effect=");
+		builder.append(effect);
+		builder.append(", effectSecond=");
+		builder.append(effectSecond);
 		builder.append("]");
 		return builder.toString();
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((creditCostMod == null) ? 0 : creditCostMod.hashCode());
-		result = prime * result + ((mapIndex == null) ? 0 : mapIndex.hashCode());
-		return result;
+		return Objects.hash(creditCostMod, effect, effectSecond, mapIndex);
 	}
 
 	@Override
@@ -98,20 +110,11 @@ public class TypeModelByMaterial {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof TypeModelByMaterial))
 			return false;
 		TypeModelByMaterial other = (TypeModelByMaterial) obj;
-		if (creditCostMod == null) {
-			if (other.creditCostMod != null)
-				return false;
-		} else if (!creditCostMod.equals(other.creditCostMod))
-			return false;
-		if (mapIndex == null) {
-			if (other.mapIndex != null)
-				return false;
-		} else if (!mapIndex.equals(other.mapIndex))
-			return false;
-		return true;
+		return Objects.equals(creditCostMod, other.creditCostMod) && Objects.equals(effect, other.effect)
+				&& Objects.equals(effectSecond, other.effectSecond) && Objects.equals(mapIndex, other.mapIndex);
 	}
 
 }

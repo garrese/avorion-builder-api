@@ -19,12 +19,12 @@ public class SqliteLoaderMaterial extends SqliteLoader<Integer, Material> {
 
 	@Override
 	public AbstractMap.SimpleEntry<Integer, Material> onSqliteDataMapping(ResultSet r) throws Exception {
-		MaterialParams p = new MaterialParams(r.getInt("idx"));
+		MaterialParams p = new MaterialParams(SqliteLoader.<Integer>getWrapper(r, "idx"));
 		p.setName(r.getString("name"));
-		p.setDensity(r.getDouble("density"));
-		p.setDurability(r.getDouble("durability"));
-		p.setCreditCost(r.getDouble("creditCost"));
-		p.setMaterialCost(r.getDouble("materialCost"));
+		p.setDensity(SqliteLoader.<Double>getWrapper(r, "density"));
+		p.setDurability(SqliteLoader.<Double>getWrapper(r, "durability"));
+		p.setCreditCost(SqliteLoader.<Double>getWrapper(r, "creditCost"));
+		p.setMaterialCost(SqliteLoader.<Double>getWrapper(r, "materialCost"));
 		Material m = new Material(p);
 		return new AbstractMap.SimpleEntry<Integer, Material>(m.getIndex(), m);
 	}
