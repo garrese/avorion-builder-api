@@ -7,7 +7,7 @@ import java.util.Map;
 import avuilder4j.data.dtos.Shape;
 import avuilder4j.error.Avuilder4jException;
 
-public class SqliteLoaderShape extends SqliteLoader<Integer, Shape> {
+public class SqliteLoaderShapes extends SqliteLoader<Integer, Shape> {
 
 	public static final String TABLE_NAME = "Shape";
 
@@ -21,7 +21,8 @@ public class SqliteLoaderShape extends SqliteLoader<Integer, Shape> {
 		Integer i = SqliteLoader.<Integer>getWrapper(r, "idx");
 		String n = r.getString("name");
 		Double v = SqliteLoader.<Double>getWrapper(r, "volumeMod");
-		Shape shape = new Shape(i, n, v);
+		Integer s = SqliteLoader.<Integer>getWrapper(r, "symmetricIdx");
+		Shape shape = new Shape(i, n, v, s);
 		return new SimpleEntry<Integer, Shape>(shape.getIndex(), shape);
 	}
 

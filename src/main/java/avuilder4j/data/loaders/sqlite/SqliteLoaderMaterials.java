@@ -8,7 +8,7 @@ import avuilder4j.data.dtos.Material;
 import avuilder4j.data.dtos.MaterialParams;
 import avuilder4j.error.Avuilder4jException;
 
-public class SqliteLoaderMaterial extends SqliteLoader<Integer, Material> {
+public class SqliteLoaderMaterials extends SqliteLoader<Integer, Material> {
 
 	public static final String TABLE_NAME = "Material";
 

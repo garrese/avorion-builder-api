@@ -20,9 +20,9 @@ public class TypeModelParams extends TypeModelFields {
 
 	public void setEngineers(Double engineers) { this.engineers = engineers; }
 
-	public void setProcessingMod(Double processingMod) { this.processingMod = processingMod; }
+	public void setProcess(Boolean process) { this.process = process; }
 
-	public void setVolumeStatMod(Double volumeMod) { this.volumeStatMod = volumeMod; }
+	public void setHasVolume(Boolean hasVolume) { this.hasVolume = hasVolume; }
 
 	public void setCollisionReduction(Double collisionReduction) { this.collisionReduction = collisionReduction; }
 

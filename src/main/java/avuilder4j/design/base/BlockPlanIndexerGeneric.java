@@ -24,6 +24,24 @@ public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S exte
 		return block;
 	}
 
+	public B createBlock(Integer material, Integer type) {
+		B block = super.createBlock();
+		block.setColor(defaultColor);
+		block.setMaterial(material);
+		block.setType(type);
+		block.setOrientation(defaultOrientation);
+		return block;
+	}
+
+	public B createBlock(Integer type) {
+		B block = super.createBlock();
+		block.setColor(defaultColor);
+		block.setMaterial(defaultMaterial);
+		block.setType(type);
+		block.setOrientation(defaultOrientation);
+		return block;
+	}
+
 	/**
 	 * Gets the {@link #defaultColor}.
 	 * 

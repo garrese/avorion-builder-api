@@ -16,4 +16,17 @@ public class NullSafe {
 		return get(supplier, null);
 	}
 
+	public static void get(Procedure procedure) {
+		get(procedure, null);
+	}
+
+	public static void get(Procedure procedure, Procedure exceptionAction) {
+		try {
+			procedure.proceed();
+		} catch (NullPointerException e) {
+			if (exceptionAction != null)
+				exceptionAction.proceed();
+		}
+	}
+
 }

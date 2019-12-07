@@ -8,7 +8,7 @@ import avuilder4j.data.dtos.TypeModel;
 import avuilder4j.data.dtos.TypeModelParams;
 import avuilder4j.error.Avuilder4jException;
 
-public class SqliteLoaderTypeModel extends SqliteLoader<Integer, TypeModel> {
+public class SqliteLoaderTypeModels extends SqliteLoader<Integer, TypeModel> {
 
 	public static final String TABLE_NAME = "TypeModel";
 
@@ -26,8 +26,8 @@ public class SqliteLoaderTypeModel extends SqliteLoader<Integer, TypeModel> {
 		p.setMaterialCostMod(SqliteLoader.<Double>getWrapper(r, "materialCostMod"));
 		p.setMechanics(SqliteLoader.<Double>getWrapper(r, "mechanics"));
 		p.setEngineers(r.getDouble("engineers"));
-		p.setProcessingMod(SqliteLoader.<Double>getWrapper(r, "processingMod"));
-		p.setVolumeStatMod(SqliteLoader.<Double>getWrapper(r, "volumeStatMod"));
+		p.setProcess(SqliteLoader.getBoolean(r, "process"));
+		p.setHasVolume(SqliteLoader.getBoolean(r, "hasVolume"));
 		p.setCollisionReduction(SqliteLoader.<Double>getWrapper(r, "collisionReduction"));
 		p.setComment(r.getString("comment"));
 

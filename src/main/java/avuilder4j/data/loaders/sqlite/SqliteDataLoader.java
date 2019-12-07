@@ -7,12 +7,12 @@ public class SqliteDataLoader extends DataLoader {
 
 	@Override
 	public void instantiateLoaders() {
-		setMaterialLoader(new SqliteLoaderMaterial());
-		setMetaValueLoader(new SqliteLoaderMetaValue());
-		setShapeLoader(new SqliteLoaderShape());
-		setTypeLoader(new SqliteLoaderType());
-		setTypeModelLoader(new SqliteLoaderTypeModel());
-		setTypeModelByMaterialLoader(new SqliteLoaderTypeModelByMaterial());
+		setMaterialsLoader(new SqliteLoaderMaterials());
+		setConstantsLoader(new SqliteLoaderConstants());
+		setShapesLoader(new SqliteLoaderShapes());
+		setTypesLoader(new SqliteLoaderTypes());
+		setTypeModelsLoader(new SqliteLoaderTypeModels());
+		setTypeModelsByMaterialsLoader(new SqliteLoaderTypeModelsByMaterials());
 	}
 
 	@SuppressWarnings("rawtypes")

@@ -2,13 +2,13 @@ package avuilder4j.design.sub.functional;
 
 import avuilder4j.data.DataMaps;
 import avuilder4j.util.java.NullSafe;
-import avuilder4j.util.keys.Metas;
+import avuilder4j.util.keys.Cons;
 
-public class FightersSpace {
+public class FightersMinMaxCap {
 
-	public FightersSpace() {}
+	public FightersMinMaxCap() {}
 
-	public FightersSpace(Integer maxFighters) {
+	public FightersMinMaxCap(Integer maxFighters) {
 		this.maxFighters = maxFighters;
 	}
 
@@ -30,7 +30,7 @@ public class FightersSpace {
 	public void setMaxFighters(Integer maxFighters) { this.maxFighters = maxFighters; }
 
 	public Integer getMinFighters() {
-		return NullSafe.get(() -> maxFighters / DataMaps.getMetaValue(Metas.MAX_FIGHTER_SIZE).getNumber().intValue());
+		return NullSafe.get(() -> maxFighters / DataMaps.getConstantValue(Cons.MAX_FIGHTER_SIZE).intValue());
 	}
 
 }

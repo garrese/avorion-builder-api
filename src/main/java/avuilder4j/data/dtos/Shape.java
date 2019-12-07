@@ -8,10 +8,13 @@ public class Shape {
 
 	protected Double volumeMod;
 
-	public Shape(Integer index, String name, Double volumeMod) {
+	protected Integer symmetricIdx;
+
+	public Shape(Integer index, String name, Double volumeMod, Integer symmetricIdx) {
 		this.index = index;
 		this.name = name;
 		this.volumeMod = volumeMod;
+		this.symmetricIdx = symmetricIdx;
 	}
 
 	public Integer getIndex() { return index; }
@@ -19,6 +22,8 @@ public class Shape {
 	public String getName() { return name; }
 
 	public Double getVolumeMod() { return volumeMod; }
+
+	public Integer getSymmetricIdx() { return symmetricIdx; }
 
 	@Override
 	public String toString() {
@@ -29,6 +34,8 @@ public class Shape {
 		builder.append(name);
 		builder.append(", volumeMod=");
 		builder.append(volumeMod);
+		builder.append(", symmetricIdx=");
+		builder.append(symmetricIdx);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -39,6 +46,7 @@ public class Shape {
 		int result = 1;
 		result = prime * result + ((index == null) ? 0 : index.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((symmetricIdx == null) ? 0 : symmetricIdx.hashCode());
 		result = prime * result + ((volumeMod == null) ? 0 : volumeMod.hashCode());
 		return result;
 	}
@@ -49,7 +57,7 @@ public class Shape {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Shape))
 			return false;
 		Shape other = (Shape) obj;
 		if (index == null) {
@@ -61,6 +69,11 @@ public class Shape {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
+			return false;
+		if (symmetricIdx == null) {
+			if (other.symmetricIdx != null)
+				return false;
+		} else if (!symmetricIdx.equals(other.symmetricIdx))
 			return false;
 		if (volumeMod == null) {
 			if (other.volumeMod != null)

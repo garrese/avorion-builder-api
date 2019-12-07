@@ -11,8 +11,8 @@ public class TypeModel extends TypeModelFields {
 			this.materialCostMod = p.getMaterialCostMod();
 			this.mechanics = p.getMechanics();
 			this.engineers = p.getEngineers();
-			this.processingMod = p.getProcessingMod();
-			this.volumeStatMod = p.getVolumeStatMod();
+			this.process = p.isProcess();
+			this.hasVolume = p.isHasVolume();
 			this.collisionReduction = p.getCollisionReduction();
 			this.comment = p.getComment();
 		}

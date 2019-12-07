@@ -3,7 +3,7 @@ package avuilder4j.design.base;
 import avuilder4j.data.DataMaps;
 import avuilder4j.util.java.NullSafe;
 import avuilder4j.util.java.Utils;
-import avuilder4j.util.keys.Metas;
+import avuilder4j.util.keys.Cons;
 
 @SuppressWarnings("rawtypes")
 public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> extends BlockPlanStructureGeneric<B> {
@@ -34,7 +34,7 @@ public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> e
 	public double getSargeantsReq() {
 		Double dividend = NullSafe.get(() -> getMechanicsReq() + getEngineersReq());
 		Double divider = NullSafe
-				.get(() -> DataMaps.getMetaValue(Metas.CREW_RATIO_CREW_PER_SERGEANT).getNumber());
+				.get(() -> DataMaps.getConstant(Cons.CREW_RATIO_CREW_PER_SERGEANT).getValue());
 		Double result = NullSafe.get(() -> dividend / divider);
 		return result;
 
@@ -42,17 +42,17 @@ public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> e
 
 	public double getLieutenantsReq() {
 		return NullSafe.get(() -> getSargeantsReq()
-				/ DataMaps.getMetaValue(Metas.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getNumber());
+				/ DataMaps.getConstant(Cons.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getValue());
 	}
 
 	public double getCommandersReq() {
 		return NullSafe.get(() -> getLieutenantsReq()
-				/ DataMaps.getMetaValue(Metas.CREW_RATIO_LIEUTENANTS_PER_COMMANDER).getNumber());
+				/ DataMaps.getConstant(Cons.CREW_RATIO_LIEUTENANTS_PER_COMMANDER).getValue());
 	}
 
 	public double getGeneralsReq() {
 		return NullSafe.get(() -> getCommandersReq()
-				/ DataMaps.getMetaValue(Metas.CREW_RATIO_COMMANDERS_PER_GENERAL).getNumber());
+				/ DataMaps.getConstant(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue());
 	}
 
 	protected Double truncateIfFinal(Double v) {

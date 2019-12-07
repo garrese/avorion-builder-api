@@ -453,13 +453,13 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 
 	public void moveCenterByVector(Vector vector) {
 		for (Axis axisId : Axis.values()) {
-			getAxis(axisId).moveCenterByVector(vector.getAxisComponent(axisId));
+			getAxis(axisId).moveCenterByVector(vector.getXyzByAxis(axisId));
 		}
 	}
 
 	public void moveCenterToPoint(Point point) {
 		for (Axis axisId : Axis.values()) {
-			getAxis(axisId).moveCenterToPoint(point.getAxisComponent(axisId));
+			getAxis(axisId).moveCenterToPoint(point.getXyzByAxis(axisId));
 		}
 	}
 
@@ -562,7 +562,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 
 		if (fixedFacesIds.length == 0) {
 			for (Axis axisId : Axis.values()) {
-				getAxis(axisId).setLength(lengths.getLength(axisId));
+				getAxis(axisId).setLength(lengths.getXyzByAxis(axisId));
 			}
 
 		} else {
@@ -573,7 +573,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 			for (int i = 0; i < fixedFacesIds.length; i++) {
 				Axis axisId = Axis.getAxisIdByFaceId(fixedFacesIds[i]);
 				End endId = End.getEndIdByFaceId(fixedFacesIds[i]);
-				getAxis(axisId).setLength(lengths.getLength(axisId), endId);
+				getAxis(axisId).setLength(lengths.getXyzByAxis(axisId), endId);
 
 				if (axisId == Axis.X) {
 					notFixedX = false;
@@ -586,11 +586,11 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 
 			// not fixed axes
 			if (notFixedX)
-				axisX.setLength(lengths.lengthX);
+				axisX.setLength(lengths.x);
 			if (notFixedY)
-				axisY.setLength(lengths.lengthY);
+				axisY.setLength(lengths.y);
 			if (notFixedZ)
-				axisZ.setLength(lengths.lengthZ);
+				axisZ.setLength(lengths.z);
 		}
 	}
 

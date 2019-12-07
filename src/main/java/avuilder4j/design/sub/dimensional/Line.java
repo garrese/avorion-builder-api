@@ -11,20 +11,15 @@ public class Line implements Serializable {
 	private Point p1;
 	private Point p2;
 
-	public Line() {
-	}
+	public Line() {}
 
-	/**
-	 * @param p1 the {@link #p1}
-	 * @param p2 the {@link #p2}
-	 */
 	public Line(Point p1, Point p2) {
 		this.p1 = p1;
 		this.p2 = p2;
 	}
 
 	public boolean isLineDefined() {
-		if (p1 != null && p2 != null && p1.isDefined() && p2.isDefined())
+		if (p1 != null && p2 != null && p1.isXyzDefined() && p2.isXyzDefined())
 			return true;
 		else
 			return false;
@@ -59,36 +54,28 @@ public class Line implements Serializable {
 	 * 
 	 * @return the {@link #p1}.
 	 */
-	public Point getP1() {
-		return p1;
-	}
+	public Point getP1() { return p1; }
 
 	/**
 	 * Sets the {@link #p1}.
 	 * 
 	 * @param p1 the {@link #p1} to set.
 	 */
-	public void setP1(Point p1) {
-		this.p1 = p1;
-	}
+	public void setP1(Point p1) { this.p1 = p1; }
 
 	/**
 	 * Gets the {@link #p2}.
 	 * 
 	 * @return the {@link #p2}.
 	 */
-	public Point getP2() {
-		return p2;
-	}
+	public Point getP2() { return p2; }
 
 	/**
 	 * Sets the {@link #p2}.
 	 * 
 	 * @param p2 the {@link #p2} to set.
 	 */
-	public void setP2(Point p2) {
-		this.p2 = p2;
-	}
+	public void setP2(Point p2) { this.p2 = p2; }
 
 	/*
 	 * (non-Javadoc)

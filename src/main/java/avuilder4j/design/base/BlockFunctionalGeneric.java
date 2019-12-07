@@ -1,5 +1,7 @@
 package avuilder4j.design.base;
 
+import java.util.Arrays;
+
 import avuilder4j.data.DataMaps;
 import avuilder4j.data.dtos.Material;
 import avuilder4j.data.dtos.Shape;
@@ -8,13 +10,14 @@ import avuilder4j.data.dtos.TypeModel;
 import avuilder4j.data.dtos.TypeModelByMaterial;
 import avuilder4j.data.dtos.TypeModelByMaterial.MapIndex;
 import avuilder4j.design.sub.dimensional.AxisEnds;
+import avuilder4j.design.sub.dimensional.Vector;
 import avuilder4j.error.AvValidations;
 import avuilder4j.util.java.NullSafe;
-import avuilder4j.util.keys.Metas;
+import avuilder4j.util.keys.Cons;
 import avuilder4j.util.keys.Types;
 
 @SuppressWarnings("rawtypes")
-public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends BlockPlanGeneric<T> {
+public class BlockFunctionalGeneric<B extends BlockFunctionalGeneric> extends BlockPlanGeneric<B> {
 	private static final long serialVersionUID = -7276801719926846539L;
 
 	protected Material material;
@@ -23,51 +26,25 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 	protected TypeModel typeModel;
 	protected TypeModelByMaterial typeModelByMaterial;
 
-	public Double getCargoHold() { return getStorage(Types.CARGO_BAY); }
-
-	public Double getHangarSpace() { return getStorage(Types.HANGAR); }
-
-	public Double getTorpedoStorage() { return getStorage(Types.TORPEDO_STORAGE); }
-
-	protected Double getStorage(Integer index) {
-		return NullSafe.get(() -> {
-			if (material.getIndex().equals(index)) {
-				return typeModelByMaterial.getEffect() * getStorageVolume(typeModelByMaterial.getEffectSecond());
-			} else {
-				return null;
-			}
-		});
-	}
-
-	protected Double getStorageVolume(Double border) {
-		return NullSafe.get(() -> {
-			Double vol = 1d;
-			for (AxisEnds ends : getAllAxes()) {
-				vol *= ends.getLength() - border;
-			}
-			return vol;
-		});
-	}
-
 	public Double getCreditCost() {
 		return NullSafe.get(() -> getVolumeBlock() * material.getCreditCost() * typeModelByMaterial.getCreditCostMod());
-	};
+	}
 
 	public Double getCrewReqCommanders() {
 		return NullSafe.get(() -> getCrewReqLieutenants()
-				/ DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_LIEUTENANTS_PER_COMMANDER).getNumber());
+				/ DataMaps.getConstantsMap().get(Cons.CREW_RATIO_LIEUTENANTS_PER_COMMANDER).getValue());
 	}
 
 	public Double getCrewReqEngineers() { return NullSafe.get(() -> getVolumeBlock() * typeModel.getEngineers()); }
 
 	public Double getCrewReqGenerals() {
 		return NullSafe.get(() -> getCrewReqCommanders()
-				/ DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_COMMANDERS_PER_GENERAL).getNumber());
+				/ DataMaps.getConstantsMap().get(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue());
 	}
 
 	public Double getCrewReqLieutenants() {
 		return NullSafe.get(() -> getSergeantsReq()
-				/ DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getNumber());
+				/ DataMaps.getConstantsMap().get(Cons.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getValue());
 	}
 
 	public Double getCrewReqMechanics() { return NullSafe.get(() -> getVolumeBlock() * typeModel.getMechanics()); }
@@ -76,7 +53,31 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 
 	public Double getDurability() {
 		return NullSafe.get(() -> getVolumeBlock() * material.getDurability() * typeModel.getDurabilityMod());
-	}
+	};
+
+	public Double getEffAcademyCap() { return getEffectBasic(Types.ACADEMY); }
+
+	public Double getEffCargoHold() { return getEffectStorage(Types.CARGO_BAY); }
+
+	public Double getEffComputerCoreProcessingPower() { return getEffectBasic(Types.COMPUTER_CORE); }
+
+	public Double getEffHangarSpace() { return getEffectStorage(Types.HANGAR); }
+
+	public Double getEffTorpedoStorage() { return getEffectStorage(Types.TORPEDO_STORAGE); }
+
+	public Double getEffAssemblyCap() { return getEffectBasic(Types.ASSEMBLY); }
+
+	public Double getEffCloningCap() { return getEffectBasic(Types.CLONING_PODS); }
+
+	public Double getEffEnergyContainerCap() { return getEffectBasic(Types.ENERGY_CONTAINER); }
+
+	public Double getEffEnergyGenerated() { return getEffectBasic(Types.GENERATOR); }
+
+	public Double getEffShieldGenerated() { return getEffectBasic(Types.SHIELD_GENERATOR); }
+
+	public Vector getEffEngineForce() { return new Vector(getEffectBasic(Types.ENGINE), 0, 0); }
+
+	public Double getEffForce() { return getEffectBasic(Types.ENGINE); }
 
 	@Override
 	public Integer getIndex() { return NullSafe.get(() -> type.getIndex()); }
@@ -87,17 +88,24 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 
 	public Double getMaterialCost() {
 		return NullSafe.get(() -> getVolumeBlock() * material.getMaterialCost() * typeModel.getMaterialCostMod());
-	};
+	}
 
 	@Override
 	public Integer getMaterialIndex() { return NullSafe.get(() -> material.getIndex()); }
 
-	public Double getProcessingPower() { return NullSafe.get(() -> getVolumeBlock() * typeModel.getProcessingMod()); }
+	public Double getProcessingPowerBase() {
+		return NullSafe.get(() -> {
+			if (NullSafe.get(() -> typeModel.isProcess())) {
+				return getVolumeBlock();
+			} else
+				return 0d;
+		});
+	};
 
 	public Double getSergeantsReq() {
 		return NullSafe.get(() -> {
 			Double crew = (getCrewReqMechanics() + getCrewReqEngineers());
-			Double ratio = DataMaps.getMetaValueMap().get(Metas.CREW_RATIO_CREW_PER_SERGEANT).getNumber();
+			Double ratio = DataMaps.getConstantsMap().get(Cons.CREW_RATIO_CREW_PER_SERGEANT).getValue();
 			return crew / ratio;
 		});
 	}
@@ -128,13 +136,20 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 
 	public Double getVolumeBlock() { return NullSafe.get(() -> getVolumeCuboid() * shape.getVolumeMod()); }
 
-	public Double getVolumeStat() { return NullSafe.get(() -> getVolumeBlock() * typeModel.getVolumeStatMod()); }
+	public Double getVolumeStat() {
+		return NullSafe.get(() -> {
+			if (NullSafe.get(() -> typeModel.isHasVolume())) {
+				return getVolumeBlock();
+			} else
+				return 0d;
+		});
+	}
 
 	@Override
 	public void setMaterial(Integer materialIndex) {
 		Material material = null;
 		if (materialIndex != null) {
-			AvValidations.keyInMap(materialIndex, DataMaps.getMaterialMap());
+			AvValidations.keyInMap(materialIndex, DataMaps.getMaterialsMap());
 			material = DataMaps.getMaterial(materialIndex);
 		}
 		setMaterial(material);
@@ -149,7 +164,7 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 	public void setType(Integer typeIndex) {
 		Type type = null;
 		if (typeIndex != null) {
-			AvValidations.keyInMap(typeIndex, DataMaps.getTypeMap());
+			AvValidations.keyInMap(typeIndex, DataMaps.getTypesMap());
 			type = DataMaps.getType(typeIndex);
 		}
 		setType(type);
@@ -189,6 +204,36 @@ public class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends Bl
 			+ "]";
 		// @formatter:on
 
+	}
+
+	protected Double getEffectBasic(Integer typeModelIndex) {
+		return NullSafe.get(() -> {
+			if (typeModel.getIndex().equals(typeModelIndex)) {
+				return getVolumeBlock() * typeModelByMaterial.getEffect();
+			} else {
+				return null;
+			}
+		});
+	}
+
+	protected Double getEffectStorage(Integer... index) {
+		return NullSafe.get(() -> {
+			if (Arrays.stream(index).anyMatch(typeModel.getIndex()::equals)) {
+				return typeModelByMaterial.getEffect() * getEffectStorageVolume();
+			} else {
+				return null;
+			}
+		});
+	}
+
+	protected Double getEffectStorageVolume() {
+		return NullSafe.get(() -> {
+			Double vol = 1d;
+			for (AxisEnds ends : getAllAxes()) {
+				vol *= ends.getLength() - DataMaps.getConstantValue(Cons.CONTAINERS_WALL_THICKNESS);
+			}
+			return vol;
+		});
 	}
 
 	protected void refreshShape() {

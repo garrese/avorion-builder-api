@@ -11,6 +11,7 @@ import java.util.Map;
 
 import avuilder4j.data.loaders.base.Loader;
 import avuilder4j.error.Avuilder4jException;
+import avuilder4j.util.java.NullSafe;
 
 public abstract class SqliteLoader<K, V> implements Loader<K, V> {
 
@@ -60,5 +61,10 @@ public abstract class SqliteLoader<K, V> implements Loader<K, V> {
 	@SuppressWarnings("unchecked")
 	public static <T> T getWrapper(ResultSet r, String columnName) throws SQLException {
 		return r.getObject(columnName) != null ? (T) r.getObject(columnName) : null;
+	}
+
+	public static Boolean getBoolean(ResultSet r, String columnName) throws SQLException {
+		Integer i = SqliteLoader.<Integer>getWrapper(r, columnName);
+		return NullSafe.get(() -> i == 1 ? true : false, null);
 	}
 }

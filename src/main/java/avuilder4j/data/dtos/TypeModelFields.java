@@ -11,8 +11,8 @@ public abstract class TypeModelFields {
 	protected Double materialCostMod;
 	protected Double mechanics;
 	protected Double engineers;
-	protected Double processingMod;
-	protected Double volumeStatMod;
+	protected Boolean process;
+	protected Boolean hasVolume;
 	protected Double collisionReduction;
 	protected String comment;
 
@@ -30,9 +30,9 @@ public abstract class TypeModelFields {
 
 	public Double getEngineers() { return engineers; }
 
-	public Double getProcessingMod() { return processingMod; }
+	public Boolean isProcess() { return process; }
 
-	public Double getVolumeStatMod() { return volumeStatMod; }
+	public Boolean isHasVolume() { return hasVolume; }
 
 	public Double getCollisionReduction() { return collisionReduction; }
 
@@ -55,10 +55,10 @@ public abstract class TypeModelFields {
 		builder.append(mechanics);
 		builder.append(", engineers=");
 		builder.append(engineers);
-		builder.append(", processingMod=");
-		builder.append(processingMod);
-		builder.append(", volumeStatMod=");
-		builder.append(volumeStatMod);
+		builder.append(", process=");
+		builder.append(process);
+		builder.append(", hasVolume=");
+		builder.append(hasVolume);
 		builder.append(", collisionReduction=");
 		builder.append(collisionReduction);
 		builder.append(", comment=");
@@ -88,7 +88,7 @@ public abstract class TypeModelFields {
 	@Override
 	public int hashCode() {
 		return Objects
-				.hash(collisionReduction, comment, densityMod, durabilityMod, engineers, index, materialCostMod, mechanics, name, processingMod, volumeStatMod);
+				.hash(collisionReduction, comment, densityMod, durabilityMod, engineers, index, materialCostMod, mechanics, name, process, hasVolume);
 	}
 
 	@Override
@@ -104,8 +104,8 @@ public abstract class TypeModelFields {
 				&& Objects.equals(densityMod, other.densityMod) && Objects.equals(durabilityMod, other.durabilityMod)
 				&& Objects.equals(engineers, other.engineers) && Objects.equals(index, other.index)
 				&& Objects.equals(materialCostMod, other.materialCostMod) && Objects.equals(mechanics, other.mechanics)
-				&& Objects.equals(name, other.name) && Objects.equals(processingMod, other.processingMod)
-				&& Objects.equals(volumeStatMod, other.volumeStatMod);
+				&& Objects.equals(name, other.name) && Objects.equals(process, other.process)
+				&& Objects.equals(hasVolume, other.hasVolume);
 	}
 
 }

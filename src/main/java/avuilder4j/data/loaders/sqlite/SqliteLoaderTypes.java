@@ -7,7 +7,7 @@ import java.util.Map;
 import avuilder4j.data.dtos.Type;
 import avuilder4j.error.Avuilder4jException;
 
-public class SqliteLoaderType extends SqliteLoader<Integer, Type> {
+public class SqliteLoaderTypes extends SqliteLoader<Integer, Type> {
 
 	public static final String TABLE_NAME = "Type";
 
