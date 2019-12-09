@@ -101,7 +101,7 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 		if (times <= 0)
 			throw new IllegalArgumentException("'times' argument can not be lower than 1.");
 
-		Axis[] axesIds = Axis.getAxesInvolvedInRotation(rotationId);
+		Axis[] axesIds = Axis.getAxesInvolvedInCuboidRotation(rotationId);
 		try {
 			for (int i = 0; i < times; i++) {
 				for (B cuboid : this) {

@@ -9,10 +9,6 @@ public class Vector extends Xyz<Vector> implements Serializable {
 		super();
 	}
 
-	public Vector(double x, double y, double z) {
-		super(x, y, z);
-	}
-
 	public Vector(Double x, Double y, Double z) {
 		super(x, y, z);
 	}
@@ -39,19 +35,6 @@ public class Vector extends Xyz<Vector> implements Serializable {
 	@Override
 	public Vector returnThis() {
 		return this;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Vector [x=");
-		builder.append(x);
-		builder.append(", y=");
-		builder.append(y);
-		builder.append(", z=");
-		builder.append(z);
-		builder.append("]");
-		return builder.toString();
 	}
 
 }

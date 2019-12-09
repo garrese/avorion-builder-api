@@ -1,7 +1,5 @@
 package avuilder4j.error;
 
-import avuilder4j.design.sub.dimensional.Orientation;
-
 public class AvErrors {
 
 	public static final String ARGUMENT_CASE_NOT_RECOGNIZED = "Argument case not recognized.";
@@ -36,8 +34,7 @@ public class AvErrors {
 	public static final String NOT_STATS_REGISTERED_TYPE = "No stats registered for type index ";
 	public static final String NOT_SUFFICIENTLY_DEFINED = "Object not sufficiently defined.";
 	public static final String OBJET_CLOSED = "Unable to modify closed objects.";
-	public static final String ORIENTATION_NOT_IN_RANGE = "Orientation values must be between " + Orientation.MIN_LOOK
-			+ " and " + Orientation.MAX_LOOK + ".";
+	public static final String ORIENTATION_INVALID = "Orientation values (look and up) can not refer to same or opposite faces";
 	public static final String ORIENTATION_NOT_NULLABLE = "Orientation values are not nullable.";
 	public static final String POINT_NOT_RECOGNIZED = "Point ID not recognized.";
 	public static final String RATIO_NOT_POSITIVE = "Invalid ratio. Ratio must be greather than 0.";

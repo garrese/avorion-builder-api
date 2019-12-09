@@ -23,7 +23,7 @@ public class DesignExporter {
 
 	public static final int ROOT_PARENT = -1;
 
-	protected String exportRoute = "";
+	protected String exportRoute = "ships/";
 
 	public void export(List<? extends BlockPlanInterface> blocks, String shipName) throws Avuilder4jException {
 
@@ -62,7 +62,7 @@ public class DesignExporter {
 				}
 				addAttribute(doc, itemE, "parent", String.valueOf(parentIndex));
 
-				addAttribute(doc, itemE, "index", String.valueOf(block.getIndex()));
+				addAttribute(doc, itemE, "index", String.valueOf(block.getIndexInStructure()));
 
 				// block
 				Element blockE = doc.createElement("block");
@@ -119,10 +119,10 @@ public class DesignExporter {
 		for (BlockPlanInterface block : blocks) {
 			block.validateBlockPlan();
 			if (block.getParentIndex() == null || block.getParentIndex().equals(-1)) {
-				if (roots.size() > 0) {
+				roots.add(block);
+				if (roots.size() > 1) {
 					throw new Avuilder4jException("Can not be more than one root block. roots= " + roots);
 				}
-				roots.add(block);
 			}
 		}
 		if (roots.size() == 0) {

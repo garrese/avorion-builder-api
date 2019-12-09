@@ -3,12 +3,14 @@ package avuilder4j.design.base;
 import avuilder4j.design.sub.dimensional.Lengths;
 import avuilder4j.design.sub.dimensional.Orientation;
 import avuilder4j.error.AvValidations;
+import avuilder4j.util.java.NullSafe;
 
 /**
  * Represents an Avorion full functional block in a structure.
  */
 @SuppressWarnings("rawtypes")
-public class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<T> implements BlockPlanInterface {
+public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<T>
+		implements BlockPlanInterface {
 	private static final long serialVersionUID = -1896528590585386376L;
 
 //	public static Block deepCopy(Block bb) {
@@ -144,21 +146,31 @@ public class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<
 	 * 
 	 * @param color the {@link #color} to set.
 	 */
-	public void setColor(String color) {
+	public T setColor(String color) {
 		AvValidations.colors(true, color);
 		this.color = color;
+		return returnThis();
 	}
 
-	public void setMaterial(Integer material) { this.material = material; }
+	public T setMaterial(Integer material) {
+		this.material = material;
+		return returnThis();
+	}
 
 	/**
 	 * Sets the {@link #orientation}.
 	 * 
 	 * @param orientation the {@link #orientation} to set.
 	 */
-	public void setOrientation(Orientation orientation) { this.orientation = orientation; }
+	public T setOrientation(Orientation orientation) {
+		this.orientation = orientation;
+		return returnThis();
+	}
 
-	public void setType(Integer type) { this.type = type; }
+	public T setType(Integer type) {
+		this.type = type;
+		return returnThis();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -169,12 +181,12 @@ public class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<
 
 		String parentSring = null;
 		if (parent != null)
-			parentSring = "[id=" + parent.getIndex() + "]";
+			parentSring = "[id=" + parent.getIndexInStructure() + "]";
 
 		//@formatter:off
 		return "BlockPlan ["
 				+ "tags=\"" + getTagsAdministrator().getTags() + "\""
-				+ ", index=" + index 
+				+ ", index=" + indexInStructure 
 				+ ", parent=" + parentSring
 				+ ", material=" + material
 				+ ", type=" + type 
@@ -194,12 +206,12 @@ public class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<
 	@Override
 	public void validateBlockPlan() {
 		validateCuboid();
-		AvValidations.indexes(false, getIndex());
-		if (!getParentIndex().equals(-1))
+		AvValidations.indexes(false, getIndexInStructure());
+		if (getParentIndex() != null && !getParentIndex().equals(-1))
 			AvValidations.indexes(true, getParentIndex());
 		AvValidations.notNull(getMaterialIndex(), "Material");
 		AvValidations.notNull(getTypeIndex(), "Type");
-		AvValidations.orientation(false, getLook(), getUp());
+		AvValidations.orientations(false, getOrientation());
 		AvValidations.colors(false, getColor());
 		AvValidations.ends(false, getLX(), getUX());
 		AvValidations.ends(false, getLY(), getUY());
@@ -209,7 +221,7 @@ public class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<
 	@Override
 	public Integer getParentIndex() {
 		if (getParent() != null)
-			return getParent().getIndex();
+			return getParent().getIndexInStructure();
 		else
 			return null;
 	}
@@ -263,19 +275,9 @@ public class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<
 	}
 
 	@Override
-	public Integer getLook() {
-		if (getOrientation() != null)
-			return getOrientation().getLook();
-		else
-			return null;
-	}
+	public Integer getLook() { return NullSafe.go(() -> getOrientation().getLook().getIndex()); }
 
 	@Override
-	public Integer getUp() {
-		if (getOrientation() != null)
-			return getOrientation().getUp();
-		else
-			return null;
-	}
+	public Integer getUp() { return NullSafe.go(() -> getOrientation().getUp().getIndex()); }
 
 }

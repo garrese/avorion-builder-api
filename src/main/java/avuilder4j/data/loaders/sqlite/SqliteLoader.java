@@ -65,6 +65,6 @@ public abstract class SqliteLoader<K, V> implements Loader<K, V> {
 
 	public static Boolean getBoolean(ResultSet r, String columnName) throws SQLException {
 		Integer i = SqliteLoader.<Integer>getWrapper(r, columnName);
-		return NullSafe.get(() -> i == 1 ? true : false, null);
+		return NullSafe.go(() -> i == 1 ? true : false, null);
 	}
 }

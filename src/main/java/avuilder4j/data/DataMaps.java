@@ -24,17 +24,17 @@ public class DataMaps {
 	public static void setMaterialsMap(Map<Integer, Material> materialMap) { DataMaps.materialMap = materialMap; }
 
 	public static Material getMaterial(Object key) {
-		return NullSafe.get(() -> getMaterialsMap().get(key));
+		return NullSafe.go(() -> getMaterialsMap().get(key));
 	}
 
 	public static Map<String, Constant> getConstantsMap() { return ConstantsMap; }
 
 	public static Constant getConstant(Object key) {
-		return NullSafe.get(() -> getConstantsMap().get(key));
+		return NullSafe.go(() -> getConstantsMap().get(key));
 	}
 
 	public static Double getConstantValue(Object key) {
-		return NullSafe.get(() -> getConstant(key).getValue());
+		return NullSafe.go(() -> getConstant(key).getValue());
 	}
 
 	public static void setConstantsMap(Map<String, Constant> metaValueMap) { DataMaps.ConstantsMap = metaValueMap; }
@@ -42,7 +42,7 @@ public class DataMaps {
 	public static Map<Integer, Shape> getShapesMap() { return shapesMap; }
 
 	public static Shape getShape(Object key) {
-		return NullSafe.get(() -> getShapesMap().get(key));
+		return NullSafe.go(() -> getShapesMap().get(key));
 	}
 
 	public static void setShapesMap(Map<Integer, Shape> shapeMap) { DataMaps.shapesMap = shapeMap; }
@@ -50,7 +50,7 @@ public class DataMaps {
 	public static Map<Integer, Type> getTypesMap() { return typesMap; }
 
 	public static Type getType(Object key) {
-		return NullSafe.get(() -> getTypesMap().get(key));
+		return NullSafe.go(() -> getTypesMap().get(key));
 	}
 
 	public static void setTypesMap(Map<Integer, Type> typeMap) { DataMaps.typesMap = typeMap; }
@@ -58,7 +58,7 @@ public class DataMaps {
 	public static Map<Integer, TypeModel> getTypeModelsMap() { return typeModelsMap; }
 
 	public static TypeModel getTypeModel(Object key) {
-		return NullSafe.get(() -> getTypeModelsMap().get(key));
+		return NullSafe.go(() -> getTypeModelsMap().get(key));
 	}
 
 	public static void setTypeModelsMap(Map<Integer, TypeModel> typeModelMap) { DataMaps.typeModelsMap = typeModelMap; }
@@ -68,7 +68,7 @@ public class DataMaps {
 	}
 
 	public static TypeModelByMaterial getTypeModelByMaterial(Object key) {
-		return NullSafe.get(() -> getTypeModelsByMaterialsMap().get(key));
+		return NullSafe.go(() -> getTypeModelsByMaterialsMap().get(key));
 	}
 
 	public static void setTypeModelsByMaterialsMap(

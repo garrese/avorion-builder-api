@@ -12,10 +12,6 @@ public class Point extends Xyz<Point> implements Serializable {
 		super();
 	}
 
-	public Point(double x, double y, double z) {
-		super(x, y, z);
-	}
-
 	public Point(Double x, Double y, Double z) {
 		super(x, y, z);
 	}

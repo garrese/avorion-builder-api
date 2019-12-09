@@ -2,13 +2,10 @@ package avuilder4j.data;
 
 public class Formulae {
 
-	public static double getSystemSlotProcessingBarrier(int systemSlots) {
-		double volBase = 2000.0;
-		double powBase = 2.5;
+	public static double getProcessingPowerBySystemSlotsBarrier(int systemSlots) {
 		double powModTill11 = 6.0;
-
 		double pow;
-		if (systemSlots > 0 && systemSlots < 11) {
+		if (systemSlots >= 1 && systemSlots <= 10) {
 			pow = systemSlots - powModTill11;
 		} else {
 			switch (systemSlots) {
@@ -31,18 +28,44 @@ public class Formulae {
 				throw new IllegalArgumentException("System slots number must be from 1 to 15.");
 			}
 		}
-		return volBase * Math.pow(powBase, pow);
+		return 2000 * Math.pow(2.5, pow);
 	}
 
-	public static double getMaterialDurability(int materialIndex) {
-		double durBase = 4.0;
-		double powBase = 1.5;
-		return durBase * Math.pow(powBase, materialIndex);
+	public static double getProcessingPowerBySystemSlots(int systemSlots) {
+		return 1 + getProcessingPowerBySystemSlotsBarrier(systemSlots);
 	}
 
-	public static double getMaterialCreditCost(int materialIndex) {
-		double baseCost = 10.0 / 9.0;
+	public static double materialDurability(int materialIndex) {
+		return 4 * Math.pow(1.5, materialIndex);
+	}
+
+	public static double materialCreditCost(int materialIndex) {
+		double baseCost = 10 / 9;
 		double basePow = 1.35;
 		return baseCost * Math.pow(basePow, materialIndex);
+	}
+
+	public static double generator(int materialIndex, double volume) {
+		return volume * 1875000 * (40 + 3 * materialIndex + Math.pow(materialIndex, 2));
+	}
+
+	public static double shieldGenerator(int materialIndex, double volume) {
+		return volume * 70 * Math.pow(1.5, materialIndex);
+	}
+
+	public static double storagesEffectiveVolume(double x, double y, double z) {
+		return (x - 0.5) * (y - 0.5) * (z - 0.5);
+	}
+
+	public static double cargoHold(double x, double y, double z) {
+		return 3.5 * storagesEffectiveVolume(x, y, z);
+	}
+
+	public static double hangar(double x, double y, double z) {
+		return 0.5 * storagesEffectiveVolume(x, y, z);
+	}
+
+	public static double torpedoStorage(double x, double y, double z) {
+		return 3.5 * storagesEffectiveVolume(x, y, z);
 	}
 }

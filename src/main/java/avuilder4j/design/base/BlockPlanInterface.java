@@ -4,7 +4,7 @@ import avuilder4j.error.Avuilder4jException;
 
 public interface BlockPlanInterface {
 
-	public Integer getIndex();
+	public Integer getIndexInStructure();
 
 	public Integer getParentIndex();
 

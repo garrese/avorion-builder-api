@@ -9,13 +9,13 @@ public class TypeModelByMaterial implements Serializable {
 	protected MapIndex mapIndex;
 	protected Double creditCostMod;
 	protected Double effect;
-	protected Double effectSecond;
+	protected Double effects;
 
-	public TypeModelByMaterial(MapIndex mapIndex, Double creditCostMod, Double meta1, Double meta2) {
+	public TypeModelByMaterial(MapIndex mapIndex, Double creditCostMod, Double effect, Double effect2) {
 		this.mapIndex = mapIndex;
 		this.creditCostMod = creditCostMod;
-		this.effect = meta1;
-		this.effectSecond = meta2;
+		this.effect = effect;
+		this.effects = effect2;
 	}
 
 	public Double getCreditCostMod() { return creditCostMod; }
@@ -24,7 +24,7 @@ public class TypeModelByMaterial implements Serializable {
 
 	public Double getEffect() { return effect; }
 
-	public Double getEffectSecond() { return effectSecond; }
+	public Double getEffect2() { return effects; }
 
 	public static class MapIndex {
 
@@ -94,14 +94,14 @@ public class TypeModelByMaterial implements Serializable {
 		builder.append(", effect=");
 		builder.append(effect);
 		builder.append(", effectSecond=");
-		builder.append(effectSecond);
+		builder.append(effects);
 		builder.append("]");
 		return builder.toString();
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(creditCostMod, effect, effectSecond, mapIndex);
+		return Objects.hash(creditCostMod, effect, effects, mapIndex);
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class TypeModelByMaterial implements Serializable {
 			return false;
 		TypeModelByMaterial other = (TypeModelByMaterial) obj;
 		return Objects.equals(creditCostMod, other.creditCostMod) && Objects.equals(effect, other.effect)
-				&& Objects.equals(effectSecond, other.effectSecond) && Objects.equals(mapIndex, other.mapIndex);
+				&& Objects.equals(effects, other.effects) && Objects.equals(mapIndex, other.mapIndex);
 	}
 
 }

@@ -4,9 +4,9 @@ import java.util.Objects;
 
 import avuilder4j.design.enums.Axis;
 import avuilder4j.error.AvErrors;
-import avuilder4j.util.java.ReturnThis;
 import avuilder4j.util.java.Copyable;
 import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.ReturnThis;
 
 @SuppressWarnings("rawtypes")
 public abstract class Xyz<T extends Xyz> implements Copyable<T>, ReturnThis<T> {
@@ -14,12 +14,6 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, ReturnThis<T> {
 	public Double x, y, z;
 
 	public Xyz() {}
-
-	public Xyz(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
 
 	public Xyz(Double x, Double y, Double z) {
 		this.x = x;
@@ -95,7 +89,7 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, ReturnThis<T> {
 
 	public T negateXYZ() {
 		for (Axis axis : Axis.values()) {
-			NullSafe.get(() -> setXyzByAxis(axis, getXyzByAxis(axis) * -1));
+			NullSafe.go(() -> setXyzByAxis(axis, getXyzByAxis(axis) * -1));
 		}
 		return returnThis();
 	}
@@ -107,16 +101,20 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, ReturnThis<T> {
 		return returnThis();
 	}
 
+	public T setXyz(Double xyz) {
+		return setXyz(xyz, xyz, xyz);
+	}
+
 	public T setXyzByAxis(Axis axis, Double value) {
 		switch (axis) {
 		case X:
-			setX(x);
+			setX(value);
 			break;
 		case Y:
-			setY(y);
+			setY(value);
 			break;
 		case Z:
-			setZ(z);
+			setZ(value);
 			break;
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
@@ -126,14 +124,14 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, ReturnThis<T> {
 
 	public T subXyz(Xyz b) {
 		for (Axis axis : Axis.values()) {
-			NullSafe.get(() -> setXyzByAxis(axis, getXyzByAxis(axis) - b.getXyzByAxis(axis)));
+			NullSafe.go(() -> setXyzByAxis(axis, getXyzByAxis(axis) - b.getXyzByAxis(axis)));
 		}
 		return returnThis();
 	}
 
 	public T sumXyz(Xyz b) {
 		for (Axis axis : Axis.values()) {
-			NullSafe.get(() -> setXyzByAxis(axis, getXyzByAxis(axis) + b.getXyzByAxis(axis)));
+			NullSafe.go(() -> setXyzByAxis(axis, getXyzByAxis(axis) + b.getXyzByAxis(axis)));
 		}
 		return returnThis();
 	}

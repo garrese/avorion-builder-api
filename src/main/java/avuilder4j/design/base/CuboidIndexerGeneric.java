@@ -21,7 +21,7 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 
 	public void indexBlock(B block) {
 		indexCount++;
-		block.setIndex(indexCount);
+		block.setIndexInStructure(indexCount);
 		structure.add(block);
 	}
 
@@ -49,7 +49,7 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 	}
 
 	public void importBlocks(List<B> blocks) {
-		Collections.sort(blocks, (o1, o2) -> o1.getIndex().compareTo(o2.getIndex()));
+		Collections.sort(blocks, (o1, o2) -> o1.getIndexInStructure().compareTo(o2.getIndexInStructure()));
 		for (B block : blocks) {
 			indexImportedBlock(block);
 		}
@@ -79,10 +79,10 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 
 	protected void indexImportedBlock(B block) {
 		if (block != null) {
-			if (block.getIndex() == null || block.getIndex() <= indexCount) {
+			if (block.getIndexInStructure() == null || block.getIndexInStructure() <= indexCount) {
 				indexBlock(block);
 			} else {
-				indexCount = block.getIndex();
+				indexCount = block.getIndexInStructure();
 				structure.add(block);
 			}
 		}
@@ -106,7 +106,7 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 	public void getIndexesMap() {
 		Map<Integer, Integer> indexes = new HashMap<>();
 		for (B block : structure) {
-			Integer index = block.getIndex();
+			Integer index = block.getIndexInStructure();
 			if (index != null)
 				indexes.put(index, index);
 		}

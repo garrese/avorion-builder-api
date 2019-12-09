@@ -40,24 +40,16 @@ public class AvValidations {
 		}
 	}
 
-	public static void orientation(boolean nullable, Integer... orientationValues) {
-		for (Integer orientation : orientationValues) {
-			if (orientation == null) {
-				if (!nullable)
-					throw new IllegalArgumentException(AvErrors.ORIENTATION_NOT_NULLABLE);
-			} else if (orientation < 0 || orientation > 6) {
-				throw new IllegalArgumentException(AvErrors.ORIENTATION_NOT_IN_RANGE);
-			}
-		}
-	}
-
-	public static void orientation(boolean nullable, Orientation... orientationValues) {
-		for (Orientation orientation : orientationValues) {
-			if (orientation == null) {
+	public static void orientations(boolean nullable, Orientation... orientations) {
+		for (Orientation orientation : orientations) {
+			if (orientation == null || orientation.getLook() == null || orientation.getUp() == null) {
 				if (!nullable)
 					throw new IllegalArgumentException(AvErrors.ORIENTATION_NOT_NULLABLE);
 			} else {
-				orientation(nullable, orientation.getLook(), orientation.getUp());
+				boolean equals = orientation.getLook().equals(orientation.getUp());
+				boolean opposite = orientation.getLook().equals(Face.getOpposite(orientation.getUp()));
+				if (equals || opposite)
+					throw new IllegalArgumentException(AvErrors.ORIENTATION_INVALID);
 			}
 		}
 	}
@@ -118,7 +110,7 @@ public class AvValidations {
 	public static void validateFixedFacesAxes(Face... fixedFacesIds) {
 		Axis[] fixedFacesAxes = new Axis[fixedFacesIds.length];
 		for (int i = 0; i < fixedFacesIds.length; i++) {
-			fixedFacesAxes[i] = Axis.getAxisIdByFaceId(fixedFacesIds[i]);
+			fixedFacesAxes[i] = Axis.getAxisByFace(fixedFacesIds[i]);
 		}
 		AvValidations.validateIdArgsRepetition(fixedFacesAxes, AvErrors.FACE_FIXED_AXES);
 	}

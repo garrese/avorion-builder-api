@@ -7,7 +7,7 @@ import java.util.Locale;
 public class Utils {
 
 	public static Double round(Double v, int zeros) {
-		return NullSafe.get(() -> {
+		return NullSafe.go(() -> {
 			Double rounding = 1d;
 			for (int i = 0; i < zeros; i++) {
 				rounding *= 10;
@@ -17,7 +17,7 @@ public class Utils {
 	}
 
 	public static String formatDecimal(Double v, int zeros) {
-		return NullSafe.get(() -> {
+		return NullSafe.go(() -> {
 			String formula = "#";
 			for (int i = 0; i < zeros; i++) {
 				if (i == 0)

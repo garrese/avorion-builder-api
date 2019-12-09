@@ -8,7 +8,7 @@ public enum Axis {
 	Y,
 	Z;
 
-	public static Axis[] getAxesInvolvedInRotation(Rotation rotation) {
+	public static Axis[] getAxesInvolvedInCuboidRotation(Rotation rotation) {
 		Axis[] axes = new Axis[2];
 		switch (rotation) {
 		case AROUND_X:
@@ -32,7 +32,7 @@ public enum Axis {
 		return axes;
 	}
 
-	public static Axis getAxisIdByFaceId(Face faceId) {
+	public static Axis getAxisByFace(Face faceId) {
 		switch (faceId) {
 		case UX:
 		case LX:

@@ -19,6 +19,7 @@ import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.ReturnThis;
 
 /**
  * Represents a cuboid in a Cartesian coordinate system.
@@ -26,7 +27,7 @@ import avuilder4j.util.java.NullSafe;
  * The cuboid is defined by one {@link AxisEnds} in each of the three coordinate axis.
  */
 @SuppressWarnings("rawtypes")
-public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tagable {
+public abstract class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tagable, ReturnThis<T> {
 	private static final long serialVersionUID = -5598838939653504628L;
 
 	/**
@@ -47,7 +48,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 	/**
 	 * Cuboid's index in structure.
 	 */
-	protected Integer index;
+	protected Integer indexInStructure;
 
 	/**
 	 * Cuboid's parent index in a structure.
@@ -73,12 +74,12 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 
 	public CuboidGeneric(Integer index) {
 		super();
-		this.index = index;
+		this.indexInStructure = index;
 	}
 
 	public CuboidGeneric(Integer index, T parent) {
 		super();
-		this.index = index;
+		this.indexInStructure = index;
 		this.parent = parent;
 	}
 
@@ -86,7 +87,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 		setLengths(lengths);
 	}
 
-	public void attachTo(T destinationCuboid, Face destinationFaceId) {
+	public T attachTo(T destinationCuboid, Face destinationFace) {
 		Point faceOrigin = null;
 		Point faceDestination = null;
 
@@ -95,25 +96,26 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 		validateCuboid();
 		destinationCuboid.validateCuboid();
 
-		faceDestination = destinationCuboid.getFaceCenter(destinationFaceId);
-		faceOrigin = getFaceCenter(getOppositeFaceId(destinationFaceId));
+		faceDestination = destinationCuboid.getFaceCenter(destinationFace);
+		faceOrigin = getFaceCenter(Face.getOpposite(destinationFace));
 		Vector centerToOwnFace = Vector.pointDiff(getCenter(), faceOrigin);
 
 		moveCenterToPoint(faceDestination);
 		moveCenterByVector(centerToOwnFace);
 
 		parent = destinationCuboid;
+		return returnThis();
 	}
 
-	public void escalate(double ratio) {
-		escalate(ratio, null, null);
+	public T escalate(double ratio) {
+		return escalate(ratio, null, null);
 	}
 
-	public void escalate(double ratio, Face[] fixedFacesIds) {
-		escalate(ratio, fixedFacesIds, null);
+	public T escalate(double ratio, Face[] fixedFacesIds) {
+		return escalate(ratio, fixedFacesIds, null);
 	}
 
-	public void escalate(double ratio, Face[] fixedFaces, Axis[] axes) {
+	public T escalate(double ratio, Face[] fixedFaces, Axis[] axes) {
 		if (axes == null || axes.length == 0) {
 			axes = Axis.values();
 		}
@@ -130,7 +132,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 			AxisEnds axis = getAxis(axisId);
 			boolean axisCompleted = false;
 			for (Face faceId : fixedFaces) {
-				Axis faceIdAxisId = Axis.getAxisIdByFaceId(faceId);
+				Axis faceIdAxisId = Axis.getAxisByFace(faceId);
 				if (axisId == faceIdAxisId) {
 					End endId = End.getEndIdByFaceId(faceId);
 					axis.escalateStatic(ratio, endId);
@@ -141,17 +143,18 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 				axis.escalateStatic(ratio, null);
 			}
 		}
+		return returnThis();
 	}
 
-	public void escalateByVolume(double finalVolume) {
-		escalateByVolume(finalVolume, null, null);
+	public T escalateByVolume(double finalVolume) {
+		return escalateByVolume(finalVolume, null, null);
 	}
 
-	public void escalateByVolume(double finalVolume, Face... fixedFacesIds) {
-		escalateByVolume(finalVolume, fixedFacesIds, null);
+	public T escalateByVolume(double finalVolume, Face... fixedFacesIds) {
+		return escalateByVolume(finalVolume, fixedFacesIds, null);
 	}
 
-	public void escalateByVolume(double finalVolume, Face[] fixedFacesIds, Axis[] axesIds) {
+	public T escalateByVolume(double finalVolume, Face[] fixedFacesIds, Axis[] axesIds) {
 		if (axesIds == null) {
 			axesIds = Axis.values();
 		}
@@ -174,6 +177,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 			throw new Avuilder4jRuntimeException(AvErrors.AXIS_AMOUNT);
 		}
 		escalate(ratio, fixedFacesIds, axesIds);
+		return returnThis();
 	}
 
 	public ArrayList<AxisEnds> getAllAxes() {
@@ -321,11 +325,11 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 	}
 
 	/**
-	 * Gets the {@link #index}.
+	 * Gets the {@link #indexInStructure}.
 	 * 
-	 * @return the {@link #index}.
+	 * @return the {@link #indexInStructure}.
 	 */
-	public Integer getIndex() { return index; }
+	public Integer getIndexInStructure() { return indexInStructure; }
 
 	public Lengths getLengths() {
 		Double lenX = null;
@@ -338,25 +342,6 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 		if (axisZ != null)
 			lenZ = axisZ.getLength();
 		return new Lengths(lenX, lenY, lenZ);
-	}
-
-	public Face getOppositeFaceId(Face faceId) {
-		switch (faceId) {
-		case UX:
-			return Face.LX;
-		case LX:
-			return Face.UX;
-		case UY:
-			return Face.LY;
-		case LY:
-			return Face.UY;
-		case UZ:
-			return Face.LZ;
-		case LZ:
-			return Face.UZ;
-		default:
-			throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
-		}
 	}
 
 	/**
@@ -375,7 +360,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 	}
 
 	public Double getSurfaceArea() {
-		return NullSafe.get(() -> {
+		return NullSafe.go(() -> {
 			Double face1 = axisX.getLength() * axisY.getLength();
 			Double face2 = axisX.getLength() * axisZ.getLength();
 			Double face3 = axisY.getLength() * axisZ.getLength();
@@ -394,11 +379,11 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 		return true;
 	}
 
-	public void matchToFace(T reference, Face faceMatching) {
-		matchToFace(reference, faceMatching, true);
+	public T matchToFace(T reference, Face faceMatching) {
+		return matchToFace(reference, faceMatching, true);
 	}
 
-	public void matchToFace(T reference, Face faceMatching, boolean attach) {
+	public T matchToFace(T reference, Face faceMatching, boolean attach) {
 
 		Axis[] matchingAxesIds = new Axis[2];
 		switch (faceMatching) {
@@ -431,6 +416,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 		if (attach) {
 			attachTo(reference, faceMatching);
 		}
+		return returnThis();
 
 	}
 
@@ -440,9 +426,10 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 	 * @param originRefPoint
 	 * @param destinyRefPoint
 	 */
-	public void moveByPointsOfReference(Point originRefPoint, Point destinyRefPoint) {
+	public T moveByPointsOfReference(Point originRefPoint, Point destinyRefPoint) {
 		Vector v = Vector.pointDiff(destinyRefPoint, originRefPoint);
 		moveCenterByVector(v);
+		return returnThis();
 	}
 //	public void moveByPointsOfReference(Point originRefPoint, Point destinyRefPoint) {
 //		Vector centerToRefDistance = Vector.pointDiff(getCenter(), originRefPoint);
@@ -451,27 +438,29 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 //		moveCenterByVector(centerToRefDistance);
 //	}
 
-	public void moveCenterByVector(Vector vector) {
-		for (Axis axisId : Axis.values()) {
-			getAxis(axisId).moveCenterByVector(vector.getXyzByAxis(axisId));
+	public T moveCenterByVector(Vector vector) {
+		for (Axis axis : Axis.values()) {
+			getAxis(axis).moveCenterByVector(vector.getXyzByAxis(axis));
 		}
+		return returnThis();
 	}
 
-	public void moveCenterToPoint(Point point) {
+	public T moveCenterToPoint(Point point) {
 		for (Axis axisId : Axis.values()) {
 			getAxis(axisId).moveCenterToPoint(point.getXyzByAxis(axisId));
 		}
+		return returnThis();
 	}
 
-	public void rotate(int rotationId) {
-		rotate(rotationId);
+	public T rotate(int rotationId) {
+		return rotate(rotationId);
 	}
 
-	public void rotate(Rotation rotationId, Face... fixedFacesIds) {
+	public T rotate(Rotation rotationId, Face... fixedFacesIds) {
 		AvValidations.validateFixedFacesMaxNumber(fixedFacesIds);
 		AvValidations.validateFixedFacesAxes(fixedFacesIds);
 
-		Axis[] axesIds = Axis.getAxesInvolvedInRotation(rotationId);
+		Axis[] axesIds = Axis.getAxesInvolvedInCuboidRotation(rotationId);
 		try {
 			AxisEnds axis0 = getAxis(axesIds[0]);
 			AxisEnds axis1 = getAxis(axesIds[1]);
@@ -481,10 +470,10 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 			End axis0FixedEnd = null;
 			End axis1FixedEnd = null;
 			for (Face faceId : fixedFacesIds) {
-				if (axesIds[0] == Axis.getAxisIdByFaceId(faceId)) {
+				if (axesIds[0] == Axis.getAxisByFace(faceId)) {
 					axis0FixedEnd = End.getEndIdByFaceId(faceId);
 				}
-				if (axesIds[1] == Axis.getAxisIdByFaceId(faceId)) {
+				if (axesIds[1] == Axis.getAxisByFace(faceId)) {
 					axis1FixedEnd = End.getEndIdByFaceId(faceId);
 				}
 			}
@@ -496,9 +485,10 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 		} catch (Exception e) {
 			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED, e);
 		}
+		return returnThis();
 	}
 
-	public void setAxis(Axis axis, AxisEnds axisEnds) {
+	public T setAxis(Axis axis, AxisEnds axisEnds) {
 		switch (axis) {
 		case X:
 			setAxisX(axisEnds);
@@ -512,6 +502,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
 		}
+		return returnThis();
 	}
 
 	/**
@@ -519,37 +510,47 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 	 * 
 	 * @param lineX the {@link #axisX} to set.
 	 */
-	public void setAxisX(AxisEnds lineX) { this.axisX = lineX; }
+	public T setAxisX(AxisEnds lineX) {
+		this.axisX = lineX;
+		return returnThis();
+	}
 
 	/**
 	 * Sets the {@link #axisY}.
 	 * 
 	 * @param lineY the {@link #axisY} to set.
 	 */
-	public void setAxisY(AxisEnds lineY) { this.axisY = lineY; }
+	public T setAxisY(AxisEnds lineY) {
+		this.axisY = lineY;
+		return returnThis();
+	}
 
 	/**
 	 * Sets the {@link #axisZ}.
 	 * 
 	 * @param lineZ the {@link #axisZ} to set.
 	 */
-	public void setAxisZ(AxisEnds lineZ) { this.axisZ = lineZ; }
+	public T setAxisZ(AxisEnds lineZ) {
+		this.axisZ = lineZ;
+		return returnThis();
+	}
 
 	/**
-	 * Sets the {@link #index}.
+	 * Sets the {@link #indexInStructure}.
 	 * 
-	 * @param index the {@link #index} to set.
+	 * @param index the {@link #indexInStructure} to set.
 	 */
-	public void setIndex(Integer index) {
+	public T setIndexInStructure(Integer index) {
 		AvValidations.indexes(true, index);
-		this.index = index;
+		this.indexInStructure = index;
+		return returnThis();
 	}
 
-	public void setLengths(Lengths lengths) {
-		setLengths(lengths, (Face[]) null);
+	public T setLengths(Lengths lengths) {
+		return setLengths(lengths, (Face[]) null);
 	}
 
-	public void setLengths(Lengths lengths, Face... fixedFacesIds) {
+	public T setLengths(Lengths lengths, Face... fixedFacesIds) {
 		if (lengths == null) {
 			lengths = new Lengths();
 		}
@@ -571,7 +572,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 			boolean notFixedY = true;
 			boolean notFixedZ = true;
 			for (int i = 0; i < fixedFacesIds.length; i++) {
-				Axis axisId = Axis.getAxisIdByFaceId(fixedFacesIds[i]);
+				Axis axisId = Axis.getAxisByFace(fixedFacesIds[i]);
 				End endId = End.getEndIdByFaceId(fixedFacesIds[i]);
 				getAxis(axisId).setLength(lengths.getXyzByAxis(axisId), endId);
 
@@ -592,6 +593,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 			if (notFixedZ)
 				axisZ.setLength(lengths.z);
 		}
+		return returnThis();
 	}
 
 	/**
@@ -599,7 +601,10 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 	 * 
 	 * @param parent the {@link #parent} to set.
 	 */
-	public void setParent(T parent) { this.parent = parent; }
+	public T setParent(T parent) {
+		this.parent = parent;
+		return returnThis();
+	}
 
 	@Override
 	public String toString() {
@@ -607,13 +612,13 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 		String parentSring = "[";
 		parentSring += parent != null;
 		if (parent != null)
-			parentSring += ", id=" + parent.getIndex();
+			parentSring += ", id=" + parent.getIndexInStructure();
 		parentSring += "]";
 
 		//@formatter:off
 		return "Block ["
 				+ "tags=\"" + tagsAdministrator.getTags() + "\""
-				+ ", index=" + index 
+				+ ", index=" + indexInStructure 
 				+ ", parent=" + parentSring
 				+ ", lengths=" + getLengths()
 				+ ", volumeCuboid=" + getVolumeCuboid()
@@ -632,7 +637,7 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(axisX, axisY, axisZ, index, parent, tagsAdministrator);
+		return Objects.hash(axisX, axisY, axisZ, indexInStructure, parent, tagsAdministrator);
 	}
 
 	@Override
@@ -645,11 +650,14 @@ public class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tag
 			return false;
 		CuboidGeneric other = (CuboidGeneric) obj;
 		return Objects.equals(axisX, other.axisX) && Objects.equals(axisY, other.axisY)
-				&& Objects.equals(axisZ, other.axisZ) && Objects.equals(index, other.index)
+				&& Objects.equals(axisZ, other.axisZ) && Objects.equals(indexInStructure, other.indexInStructure)
 				&& Objects.equals(parent, other.parent) && Objects.equals(tagsAdministrator, other.tagsAdministrator);
 	}
 
 	@Override
 	public TagsAdministrator getTagsAdministrator() { return tagsAdministrator; }
+
+	@Override
+	public abstract T returnThis();
 
 }
