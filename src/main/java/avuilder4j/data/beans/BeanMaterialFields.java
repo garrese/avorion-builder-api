@@ -1,8 +1,8 @@
-package avuilder4j.data.dtos;
+package avuilder4j.data.beans;
 
 import java.util.Objects;
 
-public abstract class MaterialFields {
+public abstract class BeanMaterialFields {
 
 	protected Integer index;
 
@@ -31,7 +31,7 @@ public abstract class MaterialFields {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("MaterialFields [index=");
+		builder.append("Material [index=");
 		builder.append(index);
 		builder.append(", name=");
 		builder.append(name);
@@ -58,9 +58,9 @@ public abstract class MaterialFields {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof MaterialFields))
+		if (!(obj instanceof BeanMaterialFields))
 			return false;
-		MaterialFields other = (MaterialFields) obj;
+		BeanMaterialFields other = (BeanMaterialFields) obj;
 		return Objects.equals(creditCost, other.creditCost) && Objects.equals(density, other.density)
 				&& Objects.equals(durability, other.durability) && Objects.equals(index, other.index)
 				&& Objects.equals(materialCost, other.materialCost) && Objects.equals(name, other.name);

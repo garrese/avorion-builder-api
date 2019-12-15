@@ -2,10 +2,10 @@ package avuilder4j.design.sub.functional;
 
 import avuilder4j.data.DataMaps;
 import avuilder4j.util.java.NullSafe;
-import avuilder4j.util.java.ReturnThis;
+import avuilder4j.util.java.Chainable;
 import avuilder4j.util.keys.Cons;
 
-public class HangarSpace implements ReturnThis<HangarSpace> {
+public class HangarSpace implements Chainable<HangarSpace> {
 
 	protected Double hangarSpace;
 
@@ -16,14 +16,14 @@ public class HangarSpace implements ReturnThis<HangarSpace> {
 	}
 
 	public HangarSpace addHangarSpace(Double hangarSpace) {
-		NullSafe.go(() -> setHangarSpace(getHangarSpace() + hangarSpace));
-		return returnThis();
+		NullSafe.run(() -> setHangarSpace(getHangarSpace() + hangarSpace));
+		return chain();
 	}
 
-	public Integer getMaxFighters() { return NullSafe.go(() -> getHangarSpace().intValue()); }
+	public Integer getMaxFighters() { return NullSafe.run(() -> getHangarSpace().intValue()); }
 
 	public Integer getMinFighters() {
-		return NullSafe.go(() -> getMaxFighters() / DataMaps.getConstantValue(Cons.MAX_FIGHTER_SIZE).intValue());
+		return NullSafe.run(() -> getMaxFighters() / DataMaps.getConstantValue(Cons.MAX_FIGHTER_SIZE).intValue());
 	}
 
 	public Double getHangarSpace() { return hangarSpace; }
@@ -44,7 +44,7 @@ public class HangarSpace implements ReturnThis<HangarSpace> {
 	}
 
 	@Override
-	public HangarSpace returnThis() {
+	public HangarSpace chain() {
 		return this;
 	}
 

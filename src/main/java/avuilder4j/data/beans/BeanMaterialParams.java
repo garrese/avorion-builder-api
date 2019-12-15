@@ -1,10 +1,10 @@
-package avuilder4j.data.dtos;
+package avuilder4j.data.beans;
 
-public class MaterialParams extends MaterialFields {
+public class BeanMaterialParams extends BeanMaterialFields {
 
-	public MaterialParams() {}
+	public BeanMaterialParams() {}
 
-	public MaterialParams(Integer index) {
+	public BeanMaterialParams(Integer index) {
 		this.index = index;
 	}
 

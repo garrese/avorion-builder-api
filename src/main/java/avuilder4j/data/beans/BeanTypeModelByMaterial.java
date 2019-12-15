@@ -1,30 +1,22 @@
-package avuilder4j.data.dtos;
+package avuilder4j.data.beans;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class TypeModelByMaterial implements Serializable {
+public class BeanTypeModelByMaterial implements Serializable {
 	private static final long serialVersionUID = 4213877716842924589L;
 
-	protected MapIndex mapIndex;
+	protected MapIndex index;
 	protected Double creditCostMod;
-	protected Double effect;
-	protected Double effects;
 
-	public TypeModelByMaterial(MapIndex mapIndex, Double creditCostMod, Double effect, Double effect2) {
-		this.mapIndex = mapIndex;
+	public BeanTypeModelByMaterial(MapIndex Index, Double creditCostMod) {
+		this.index = Index;
 		this.creditCostMod = creditCostMod;
-		this.effect = effect;
-		this.effects = effect2;
 	}
 
 	public Double getCreditCostMod() { return creditCostMod; }
 
-	public MapIndex getMapIndex() { return mapIndex; }
-
-	public Double getEffect() { return effect; }
-
-	public Double getEffect2() { return effects; }
+	public MapIndex getIndex() { return index; }
 
 	public static class MapIndex {
 
@@ -81,27 +73,11 @@ public class TypeModelByMaterial implements Serializable {
 				return false;
 			return true;
 		}
-
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("TypeModelByMaterial [mapIndex=");
-		builder.append(mapIndex);
-		builder.append(", creditCostMod=");
-		builder.append(creditCostMod);
-		builder.append(", effect=");
-		builder.append(effect);
-		builder.append(", effectSecond=");
-		builder.append(effects);
-		builder.append("]");
-		return builder.toString();
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(creditCostMod, effect, effects, mapIndex);
+		return Objects.hash(creditCostMod, index);
 	}
 
 	@Override
@@ -110,11 +86,21 @@ public class TypeModelByMaterial implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof TypeModelByMaterial))
+		if (!(obj instanceof BeanTypeModelByMaterial))
 			return false;
-		TypeModelByMaterial other = (TypeModelByMaterial) obj;
-		return Objects.equals(creditCostMod, other.creditCostMod) && Objects.equals(effect, other.effect)
-				&& Objects.equals(effects, other.effects) && Objects.equals(mapIndex, other.mapIndex);
+		BeanTypeModelByMaterial other = (BeanTypeModelByMaterial) obj;
+		return Objects.equals(creditCostMod, other.creditCostMod) && Objects.equals(index, other.index);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("TypeModelByMaterial [index=");
+		builder.append(index);
+		builder.append(", creditCostMod=");
+		builder.append(creditCostMod);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

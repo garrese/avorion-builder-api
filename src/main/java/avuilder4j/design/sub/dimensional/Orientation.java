@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import avuilder4j.design.enums.Face;
 import avuilder4j.design.enums.Rotation;
 import avuilder4j.error.AvValidations;
+import avuilder4j.util.java.Chainable;
+import avuilder4j.util.java.Copyable;
 
 /**
  * Block orientation
  */
-public class Orientation implements Serializable {
+public class Orientation implements Serializable, Copyable<Orientation>, Chainable<Orientation> {
 	private static final long serialVersionUID = -7559284143961816577L;
 
 	/*
@@ -20,12 +22,12 @@ public class Orientation implements Serializable {
 	/**
 	 * Look component of the piece orientation.
 	 */
-	private Face look = Face.UZ;
+	private Face look;
 
 	/**
 	 * Up component of the piece orientation.
 	 */
-	private Face up = Face.UY;
+	private Face up;
 
 	public Orientation() {}
 
@@ -38,11 +40,12 @@ public class Orientation implements Serializable {
 		setUp(up);
 	}
 
-	public void rotate(Rotation rotation) {
+	public Orientation rotate(Rotation rotation) {
 		rotate(rotation, 1);
+		return this;
 	}
 
-	public void rotate(Rotation rotation, int times) {
+	public Orientation rotate(Rotation rotation, int times) {
 		ArrayList<Face> faces = Face.getFacesInvolvedInBlockRotation(rotation);
 
 		for (int i = 0; i < times; i++) {
@@ -63,41 +66,70 @@ public class Orientation implements Serializable {
 				up = faces.get(upPos);
 			}
 		}
-	}
-
-	public static Orientation deepCopy(Orientation typeLook) {
-		Orientation o = null;
-		if (typeLook != null) {
-			o = new Orientation(typeLook.getLook(), typeLook.getUp());
-		}
-		return o;
+		return this;
 	}
 
 	public Face getLook() { return look; }
 
-	protected void setLook(Face look) {
-		AvValidations.orientations(true, this);
+	public Orientation setLook(Face look) {
+		Face savedLook = getLook();
 		this.look = look;
+		try {
+			AvValidations.orientations(true, this);
+		} catch (IllegalArgumentException e) {
+			this.look = savedLook;
+			throw e;
+		}
+		return this;
+	}
+
+	public Orientation set(Face look, Face up) {
+		Face savedLook = getLook();
+		Face savedUp = getUp();
+		this.look = look;
+		this.up = up;
+		try {
+			AvValidations.orientations(true, this);
+		} catch (IllegalArgumentException e) {
+			this.look = savedLook;
+			this.up = savedUp;
+			throw e;
+		}
+		return this;
 	}
 
 	public Face getUp() { return up; }
 
-	protected void setUp(Face up) {
-		AvValidations.orientations(true, this);
+	public Orientation setUp(Face up) {
+		Face savedUp = getUp();
 		this.up = up;
+		try {
+			AvValidations.orientations(true, this);
+		} catch (IllegalArgumentException e) {
+			this.up = savedUp;
+			throw e;
+		}
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "[look=" + look.getIndex() + ", up=" + up.getIndex() + "]";
+		return "[look=" + look + ", up=" + up + "]";
 	}
-//
-//	public List<Face> getComponents() {
-//		List<Face> faces = new ArrayList<Face>();
-//		if (getLook() != null)
-//			faces.add(getLook());
-//		if (getUp() != null)
-//			faces.add(getUp());
-//		return faces;
-//	}
+
+	@Override
+	public Orientation getCopy() { return new Orientation().set(this.look, this.up); }
+
+	@Override
+	public Orientation chain() {
+		return this;
+	}
+
+	public static boolean isDefined(Orientation orientation) {
+		if (orientation != null && orientation.getLook() != null && orientation.getUp() != null)
+			return true;
+		else
+			return false;
+	}
+
 }

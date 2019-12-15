@@ -5,7 +5,7 @@ import avuilder4j.design.sub.dimensional.Xyz;
 public class RotationForces extends Xyz<RotationForces> {
 
 	@Override
-	public RotationForces returnThis() {
+	public RotationForces chain() {
 		return this;
 	}
 

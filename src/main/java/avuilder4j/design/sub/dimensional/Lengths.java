@@ -6,7 +6,7 @@ public class Lengths extends Xyz<Lengths> implements Serializable {
 	private static final long serialVersionUID = -3737835992118370776L;
 
 	@Override
-	public Lengths returnThis() {
+	public Lengths chain() {
 		return this;
 	}
 

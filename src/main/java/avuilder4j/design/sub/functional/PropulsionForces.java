@@ -1,9 +1,9 @@
 package avuilder4j.design.sub.functional;
 
 import avuilder4j.design.sub.dimensional.Vector;
-import avuilder4j.util.java.ReturnThis;
+import avuilder4j.util.java.Chainable;
 
-public class PropulsionForces implements ReturnThis<PropulsionForces> {
+public class PropulsionForces implements Chainable<PropulsionForces> {
 
 	protected Vector acceleration = new Vector().setXyz(0d);
 	protected Vector deceleration = new Vector().setXyz(0d);
@@ -12,18 +12,18 @@ public class PropulsionForces implements ReturnThis<PropulsionForces> {
 
 	public PropulsionForces setAcceleration(Vector acceleration) {
 		this.acceleration = acceleration;
-		return returnThis();
+		return chain();
 	}
 
 	public Vector getDeceleration() { return deceleration; }
 
 	public PropulsionForces setDeceleration(Vector deceleration) {
 		this.deceleration = deceleration;
-		return returnThis();
+		return chain();
 	}
 
 	@Override
-	public PropulsionForces returnThis() {
+	public PropulsionForces chain() {
 		return this;
 	}
 

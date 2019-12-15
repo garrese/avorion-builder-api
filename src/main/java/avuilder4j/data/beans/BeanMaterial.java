@@ -1,8 +1,8 @@
-package avuilder4j.data.dtos;
+package avuilder4j.data.beans;
 
-public class Material extends MaterialFields {
+public class BeanMaterial extends BeanMaterialFields {
 
-	public Material(MaterialParams materialParams) {
+	public BeanMaterial(BeanMaterialParams materialParams) {
 		if (materialParams != null) {
 			this.index = materialParams.getIndex();
 			this.creditCost = materialParams.getCreditCost();

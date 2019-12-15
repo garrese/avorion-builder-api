@@ -297,7 +297,13 @@ public class AxisEnds implements Serializable {
 
 	@Override
 	public String toString() {
-		return "[l=" + lowerEnd + ", u=" + upperEnd + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("AxisEnds [l=");
+		builder.append(lowerEnd);
+		builder.append(", u=");
+		builder.append(upperEnd);
+		builder.append("]");
+		return builder.toString();
 	}
 
 	public void validateAxisEnds() {

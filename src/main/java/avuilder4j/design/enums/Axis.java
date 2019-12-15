@@ -1,6 +1,8 @@
 package avuilder4j.design.enums;
 
-import avuilder4j.error.AvErrors;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public enum Axis {
 
@@ -8,43 +10,43 @@ public enum Axis {
 	Y,
 	Z;
 
-	public static Axis[] getAxesInvolvedInCuboidRotation(Rotation rotation) {
-		Axis[] axes = new Axis[2];
+	public static List<Axis> getAxesInvolvedInCuboidRotation(Rotation rotation) {
+		if (rotation != null)
+			return Arrays.stream(Axis.values()).filter((axis) -> !axis.equals(getAxisOfRotation(rotation)))
+					.collect(Collectors.toList());
+		else
+			return null;
+	}
+
+	public static Axis getAxisOfRotation(Rotation rotation) {
 		switch (rotation) {
 		case AROUND_X:
 		case AROUND_X_INVERSE:
-			axes[0] = Y;
-			axes[1] = Z;
-			break;
+			return X;
 		case AROUND_Y:
 		case AROUND_Y_INVERSE:
-			axes[0] = X;
-			axes[1] = Z;
-			break;
+			return Y;
 		case AROUND_Z:
 		case AROUND_Z_INVERSE:
-			axes[0] = Z;
-			axes[1] = Y;
-			break;
+			return Z;
 		default:
-			throw new IllegalArgumentException(AvErrors.ROTATION_NOT_RECOGNIZED);
+			return null;
 		}
-		return axes;
 	}
 
 	public static Axis getAxisByFace(Face faceId) {
 		switch (faceId) {
-		case UX:
-		case LX:
+		case XU:
+		case XL:
 			return X;
-		case UY:
-		case LY:
+		case YU:
+		case YL:
 			return Y;
-		case UZ:
-		case LZ:
+		case ZU:
+		case ZL:
 			return Z;
 		default:
-			throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
+			return null;
 		}
 	}
 

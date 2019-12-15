@@ -18,8 +18,8 @@ public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S exte
 	public B createBlock() {
 		B block = super.createBlock();
 		block.setColor(defaultColor);
-		block.setMaterial(defaultMaterial);
-		block.setType(defaultType);
+		block.setMaterialIndex(defaultMaterial);
+		block.setTypeIndex(defaultType);
 		block.setOrientation(defaultOrientation);
 		return block;
 	}
@@ -27,8 +27,8 @@ public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S exte
 	public B createBlock(Integer material, Integer type) {
 		B block = super.createBlock();
 		block.setColor(defaultColor);
-		block.setMaterial(material);
-		block.setType(type);
+		block.setMaterialIndex(material);
+		block.setTypeIndex(type);
 		block.setOrientation(defaultOrientation);
 		return block;
 	}
@@ -36,8 +36,8 @@ public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S exte
 	public B createBlock(Integer type) {
 		B block = super.createBlock();
 		block.setColor(defaultColor);
-		block.setMaterial(defaultMaterial);
-		block.setType(type);
+		block.setMaterialIndex(defaultMaterial);
+		block.setTypeIndex(type);
 		block.setOrientation(defaultOrientation);
 		return block;
 	}

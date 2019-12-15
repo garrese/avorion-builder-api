@@ -7,12 +7,12 @@ import avuilder4j.error.AvErrors;
 
 public enum Face {
 
-	LX(0),
-	UX(1),
-	LY(2),
-	UY(3),
-	LZ(4),
-	UZ(5);
+	XL(0),
+	XU(1),
+	YL(2),
+	YU(3),
+	ZL(4),
+	ZU(5);
 
 	private int index;
 
@@ -23,11 +23,11 @@ public enum Face {
 	public static Face[] getFacesByAxis(Axis axis) {
 		switch (axis) {
 		case X:
-			return new Face[] { LX, UX };
+			return new Face[] { XL, XU };
 		case Y:
-			return new Face[] { LY, UY };
+			return new Face[] { YL, YU };
 		case Z:
-			return new Face[] { LZ, UZ };
+			return new Face[] { ZL, ZU };
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
 		}
@@ -37,17 +37,17 @@ public enum Face {
 		Face[] faces;
 		switch (rotation) {
 		case AROUND_X:
-			faces = new Face[] { UY, UZ, LY, LZ };
+			faces = new Face[] { YU, ZU, YL, ZL };
 			break;
 		case AROUND_X_INVERSE:
 			return reverseFacesInvolvedInBlockRotation(Rotation.AROUND_X);
 		case AROUND_Y:
-			faces = new Face[] { UZ, UX, LZ, LX };
+			faces = new Face[] { ZU, XU, ZL, XL };
 			break;
 		case AROUND_Y_INVERSE:
 			return reverseFacesInvolvedInBlockRotation(Rotation.AROUND_Y);
 		case AROUND_Z:
-			faces = new Face[] { UY, LX, LY, UX };
+			faces = new Face[] { YU, XL, YL, XU };
 			break;
 		case AROUND_Z_INVERSE:
 			return reverseFacesInvolvedInBlockRotation(Rotation.AROUND_Z);
@@ -69,22 +69,30 @@ public enum Face {
 
 	public static Face getOpposite(Face face) {
 		switch (face) {
-		case LX:
-			return UX;
-		case UX:
-			return LX;
-		case LY:
-			return UY;
-		case UY:
-			return LY;
-		case LZ:
-			return UZ;
-		case UZ:
-			return LZ;
+		case XL:
+			return XU;
+		case XU:
+			return XL;
+		case YL:
+			return YU;
+		case YU:
+			return YL;
+		case ZL:
+			return ZU;
+		case ZU:
+			return ZL;
 
 		default:
 			throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
 		}
+	}
+
+	public static Face getByIndex(Integer index) {
+		if (index != null)
+			for (Face f : Face.values())
+				if (f.getIndex() == index.intValue())
+					return f;
+		return null;
 	}
 
 	public int getIndex() { return index; }

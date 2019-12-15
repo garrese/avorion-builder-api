@@ -1,8 +1,8 @@
-package avuilder4j.data.dtos;
+package avuilder4j.data.beans;
 
-public class TypeModelParams extends TypeModelFields {
+public class BeanTypeModelParams extends BeanTypeModelFields {
 
-	public TypeModelParams(Integer index) {
+	public BeanTypeModelParams(Integer index) {
 		this.index = index;
 	}
 

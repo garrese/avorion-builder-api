@@ -1,8 +1,8 @@
-package avuilder4j.data.dtos;
+package avuilder4j.data.beans;
 
 import java.util.Objects;
 
-public abstract class TypeModelFields {
+public abstract class BeanTypeModelFields {
 
 	protected Integer index;
 	protected String name;
@@ -30,9 +30,9 @@ public abstract class TypeModelFields {
 
 	public Double getEngineers() { return engineers; }
 
-	public Boolean isProcess() { return process; }
+	public Boolean getProcess() { return process; }
 
-	public Boolean isHasVolume() { return hasVolume; }
+	public Boolean getHasVolume() { return hasVolume; }
 
 	public Double getCollisionReduction() { return collisionReduction; }
 
@@ -97,9 +97,9 @@ public abstract class TypeModelFields {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof TypeModelFields))
+		if (!(obj instanceof BeanTypeModelFields))
 			return false;
-		TypeModelFields other = (TypeModelFields) obj;
+		BeanTypeModelFields other = (BeanTypeModelFields) obj;
 		return Objects.equals(collisionReduction, other.collisionReduction) && Objects.equals(comment, other.comment)
 				&& Objects.equals(densityMod, other.densityMod) && Objects.equals(durabilityMod, other.durabilityMod)
 				&& Objects.equals(engineers, other.engineers) && Objects.equals(index, other.index)

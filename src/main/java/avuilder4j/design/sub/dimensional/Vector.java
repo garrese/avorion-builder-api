@@ -33,7 +33,7 @@ public class Vector extends Xyz<Vector> implements Serializable {
 	public Vector getCopy() { return new Vector().copyXyz(this); }
 
 	@Override
-	public Vector returnThis() {
+	public Vector chain() {
 		return this;
 	}
 

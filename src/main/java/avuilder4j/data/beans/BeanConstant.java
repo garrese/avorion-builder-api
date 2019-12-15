@@ -1,15 +1,15 @@
-package avuilder4j.data.dtos;
+package avuilder4j.data.beans;
 
 import java.io.Serializable;
 
-public class Constant implements Serializable {
+public class BeanConstant implements Serializable {
 	private static final long serialVersionUID = -5211125129554805337L;
 
 	protected String name;
 	protected String category;
 	protected Double value;
 
-	public Constant(String name, String category, Double number) {
+	public BeanConstant(String name, String category, Double number) {
 		this.name = name;
 		this.category = category;
 		this.value = number;
@@ -50,9 +50,9 @@ public class Constant implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof Constant))
+		if (!(obj instanceof BeanConstant))
 			return false;
-		Constant other = (Constant) obj;
+		BeanConstant other = (BeanConstant) obj;
 		if (category == null) {
 			if (other.category != null)
 				return false;

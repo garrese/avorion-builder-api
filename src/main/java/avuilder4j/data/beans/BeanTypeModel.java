@@ -1,8 +1,8 @@
-package avuilder4j.data.dtos;
+package avuilder4j.data.beans;
 
-public class TypeModel extends TypeModelFields {
+public class BeanTypeModel extends BeanTypeModelFields {
 
-	public TypeModel(TypeModelParams p) {
+	public BeanTypeModel(BeanTypeModelParams p) {
 		if (p != null) {
 			this.index = p.getIndex();
 			this.name = p.getName();
@@ -11,8 +11,8 @@ public class TypeModel extends TypeModelFields {
 			this.materialCostMod = p.getMaterialCostMod();
 			this.mechanics = p.getMechanics();
 			this.engineers = p.getEngineers();
-			this.process = p.isProcess();
-			this.hasVolume = p.isHasVolume();
+			this.process = p.getProcess();
+			this.hasVolume = p.getHasVolume();
 			this.collisionReduction = p.getCollisionReduction();
 			this.comment = p.getComment();
 		}

@@ -2,6 +2,6 @@ package avuilder4j.util.java;
 
 public interface Procedure {
 
-	public void proceed();
+	public void run();
 
 }

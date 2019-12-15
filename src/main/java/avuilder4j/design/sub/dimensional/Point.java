@@ -28,7 +28,7 @@ public class Point extends Xyz<Point> implements Serializable {
 	public Point getCopy() { return new Point().copyXyz(this); }
 
 	@Override
-	public Point returnThis() {
+	public Point chain() {
 		return this;
 	}
 

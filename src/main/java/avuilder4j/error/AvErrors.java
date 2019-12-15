@@ -35,11 +35,12 @@ public class AvErrors {
 	public static final String NOT_SUFFICIENTLY_DEFINED = "Object not sufficiently defined.";
 	public static final String OBJET_CLOSED = "Unable to modify closed objects.";
 	public static final String ORIENTATION_INVALID = "Orientation values (look and up) can not refer to same or opposite faces";
-	public static final String ORIENTATION_NOT_NULLABLE = "Orientation values are not nullable.";
+	public static final String ORIENTATION_NOT_NULLABLE = "Orientation values are not nullables.";
 	public static final String POINT_NOT_RECOGNIZED = "Point ID not recognized.";
 	public static final String RATIO_NOT_POSITIVE = "Invalid ratio. Ratio must be greather than 0.";
 	public static final String ROTATION_NOT_EXISTS = "Invalid rotation ID. Rotation ID does not exist.";
-	public static final String ROTATION_NOT_RECOGNIZED = "Rotation ID not recognized.";
+	public static final String ROTATION_NOT_RECOGNIZED = "Rotation not recognized.";
 	public static final String VOLUME_NOT_POSITIVE = "Invalid volume. Volume must be greather than 0.";
+	public static final String BLOCK_ARCHETYPE_NOT_FOUND = "BlockArchetype not found for typeIndex= 1$ and materialIndex= 2$.";
 
 }

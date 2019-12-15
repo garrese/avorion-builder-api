@@ -1,22 +1,22 @@
-package avuilder4j.data.dtos;
+package avuilder4j.data.beans;
 
-public class Type {
+public class BeanType {
 
 	protected Integer index;
 	protected Integer typeModelIndex;
-	protected Integer shapeIndex;
+	protected String shape;
 
-	public Type(Integer index, Integer typeModelIndex, Integer shapeIndex) {
+	public BeanType(Integer index, Integer typeModelIndex, String shape) {
 		this.index = index;
 		this.typeModelIndex = typeModelIndex;
-		this.shapeIndex = shapeIndex;
+		this.shape = shape;
 	}
 
 	public Integer getIndex() { return index; }
 
 	public Integer getTypeModelIndex() { return typeModelIndex; }
 
-	public Integer getShapeIndex() { return shapeIndex; }
+	public String getShape() { return shape; }
 
 	@Override
 	public String toString() {
@@ -26,7 +26,7 @@ public class Type {
 		builder.append(", typeModelIndex=");
 		builder.append(typeModelIndex);
 		builder.append(", shapeIndex=");
-		builder.append(shapeIndex);
+		builder.append(shape);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -36,7 +36,7 @@ public class Type {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((index == null) ? 0 : index.hashCode());
-		result = prime * result + ((shapeIndex == null) ? 0 : shapeIndex.hashCode());
+		result = prime * result + ((shape == null) ? 0 : shape.hashCode());
 		result = prime * result + ((typeModelIndex == null) ? 0 : typeModelIndex.hashCode());
 		return result;
 	}
@@ -49,16 +49,16 @@ public class Type {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Type other = (Type) obj;
+		BeanType other = (BeanType) obj;
 		if (index == null) {
 			if (other.index != null)
 				return false;
 		} else if (!index.equals(other.index))
 			return false;
-		if (shapeIndex == null) {
-			if (other.shapeIndex != null)
+		if (shape == null) {
+			if (other.shape != null)
 				return false;
-		} else if (!shapeIndex.equals(other.shapeIndex))
+		} else if (!shape.equals(other.shape))
 			return false;
 		if (typeModelIndex == null) {
 			if (other.typeModelIndex != null)

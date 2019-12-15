@@ -6,10 +6,10 @@ import avuilder4j.design.enums.Axis;
 import avuilder4j.error.AvErrors;
 import avuilder4j.util.java.Copyable;
 import avuilder4j.util.java.NullSafe;
-import avuilder4j.util.java.ReturnThis;
+import avuilder4j.util.java.Chainable;
 
 @SuppressWarnings("rawtypes")
-public abstract class Xyz<T extends Xyz> implements Copyable<T>, ReturnThis<T> {
+public abstract class Xyz<T extends Xyz> implements Copyable<T>, Chainable<T> {
 
 	public Double x, y, z;
 
@@ -22,7 +22,7 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, ReturnThis<T> {
 	}
 
 	@Override
-	public abstract T returnThis();
+	public abstract T chain();
 
 	public T copyXyz(Xyz b) {
 		if (b != null) {
@@ -30,7 +30,7 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, ReturnThis<T> {
 				setXyzByAxis(axis, b.getXyzByAxis(axis));
 			}
 		}
-		return returnThis();
+		return chain();
 	}
 
 	@Override
@@ -89,16 +89,16 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, ReturnThis<T> {
 
 	public T negateXYZ() {
 		for (Axis axis : Axis.values()) {
-			NullSafe.go(() -> setXyzByAxis(axis, getXyzByAxis(axis) * -1));
+			NullSafe.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) * -1));
 		}
-		return returnThis();
+		return chain();
 	}
 
 	public T setXyz(Double x, Double y, Double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		return returnThis();
+		return chain();
 	}
 
 	public T setXyz(Double xyz) {
@@ -119,21 +119,21 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, ReturnThis<T> {
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
 		}
-		return returnThis();
+		return chain();
 	}
 
 	public T subXyz(Xyz b) {
 		for (Axis axis : Axis.values()) {
-			NullSafe.go(() -> setXyzByAxis(axis, getXyzByAxis(axis) - b.getXyzByAxis(axis)));
+			NullSafe.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) - b.getXyzByAxis(axis)));
 		}
-		return returnThis();
+		return chain();
 	}
 
 	public T sumXyz(Xyz b) {
 		for (Axis axis : Axis.values()) {
-			NullSafe.go(() -> setXyzByAxis(axis, getXyzByAxis(axis) + b.getXyzByAxis(axis)));
+			NullSafe.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) + b.getXyzByAxis(axis)));
 		}
-		return returnThis();
+		return chain();
 	}
 
 	@Override
@@ -157,17 +157,17 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, ReturnThis<T> {
 
 	public T setX(Double x) {
 		this.x = x;
-		return returnThis();
+		return chain();
 	}
 
 	public T setY(Double y) {
 		this.y = y;
-		return returnThis();
+		return chain();
 	}
 
 	public T setZ(Double z) {
 		this.z = z;
-		return returnThis();
+		return chain();
 	}
 
 }

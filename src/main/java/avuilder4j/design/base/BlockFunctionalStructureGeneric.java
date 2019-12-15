@@ -31,26 +31,26 @@ public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> e
 	public Double getEngineersReq() { return sumFromBlocks(B::getCrewReqEngineers); }
 
 	public double getSargeantsReq() {
-		Double dividend = NullSafe.go(() -> getMechanicsReq() + getEngineersReq());
-		Double divider = NullSafe.go(() -> DataMaps.getConstant(Cons.CREW_RATIO_CREW_PER_SERGEANT).getValue());
-		Double result = NullSafe.go(() -> dividend / divider);
+		Double dividend = NullSafe.run(() -> getMechanicsReq() + getEngineersReq());
+		Double divider = NullSafe.run(() -> DataMaps.getConstant(Cons.CREW_RATIO_CREW_PER_SERGEANT).getValue());
+		Double result = NullSafe.run(() -> dividend / divider);
 		return result;
 
 	}
 
 	public double getLieutenantsReq() {
-		return NullSafe.go(() -> getSargeantsReq()
+		return NullSafe.run(() -> getSargeantsReq()
 				/ DataMaps.getConstant(Cons.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getValue());
 	}
 
 	public double getCommandersReq() {
-		return NullSafe.go(() -> getLieutenantsReq()
+		return NullSafe.run(() -> getLieutenantsReq()
 				/ DataMaps.getConstant(Cons.CREW_RATIO_LIEUTENANTS_PER_COMMANDER).getValue());
 	}
 
 	public double getGeneralsReq() {
 		return NullSafe
-				.go(() -> getCommandersReq() / DataMaps.getConstant(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue());
+				.run(() -> getCommandersReq() / DataMaps.getConstant(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue());
 	}
 
 //	protected Double truncateIfFinal(Double v) {

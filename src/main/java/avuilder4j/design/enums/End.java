@@ -20,13 +20,13 @@ public enum End {
 
 	public static End getEndIdByFaceId(Face faceId) {
 		switch (faceId) {
-		case UX:
-		case UY:
-		case UZ:
+		case XU:
+		case YU:
+		case ZU:
 			return UPPER;
-		case LX:
-		case LY:
-		case LZ:
+		case XL:
+		case YL:
+		case ZL:
 			return LOWER;
 		default:
 			throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);

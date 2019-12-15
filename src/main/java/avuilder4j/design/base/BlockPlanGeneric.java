@@ -28,22 +28,22 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	/**
 	 * Block's color in 8 digit color hex format.
 	 */
-	protected String color;
+	private String color;
 
 	/**
 	 * Block's material.
 	 */
-	protected Integer material;
+	private Integer materialIndex;
 
 	/**
 	 * Block's orientation
 	 */
-	protected Orientation orientation = new Orientation();
+	private Orientation orientation = new Orientation();
 
 	/**
 	 * Block's type.
 	 */
-	protected Integer type;
+	private Integer typeIndex;
 
 	public BlockPlanGeneric() {}
 
@@ -61,8 +61,8 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 
 	public BlockPlanGeneric(Integer material, Integer type, Orientation typeLook) {
 		super();
-		this.material = material;
-		this.type = type;
+		this.materialIndex = material;
+		this.typeIndex = type;
 		this.orientation = typeLook;
 	}
 
@@ -80,20 +80,20 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 				return false;
 		} else if (!color.equals(other.color))
 			return false;
-		if (material == null) {
-			if (other.material != null)
+		if (materialIndex == null) {
+			if (other.materialIndex != null)
 				return false;
-		} else if (!material.equals(other.material))
+		} else if (!materialIndex.equals(other.materialIndex))
 			return false;
 		if (orientation == null) {
 			if (other.orientation != null)
 				return false;
 		} else if (!orientation.equals(other.orientation))
 			return false;
-		if (type == null) {
-			if (other.type != null)
+		if (typeIndex == null) {
+			if (other.typeIndex != null)
 				return false;
-		} else if (!type.equals(other.type))
+		} else if (!typeIndex.equals(other.typeIndex))
 			return false;
 		return true;
 	}
@@ -107,7 +107,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	public String getColor() { return color; }
 
 	@Override
-	public Integer getMaterialIndex() { return material; }
+	public Integer getMaterialIndex() { return materialIndex; }
 
 	/**
 	 * Gets the {@link #orientation}.
@@ -117,16 +117,16 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	public Orientation getOrientation() { return orientation; }
 
 	@Override
-	public Integer getTypeIndex() { return type; }
+	public Integer getTypeIndex() { return typeIndex; }
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
-		result = prime * result + ((material == null) ? 0 : material.hashCode());
+		result = prime * result + ((materialIndex == null) ? 0 : materialIndex.hashCode());
 		result = prime * result + ((orientation == null) ? 0 : orientation.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((typeIndex == null) ? 0 : typeIndex.hashCode());
 		return result;
 	}
 
@@ -134,7 +134,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	public boolean isBlockPlanDefined() {
 		if (!isCuboidDefined()) {
 			return false;
-		} else if (color == null || orientation == null || material == null || type == null) {
+		} else if (color == null || orientation == null || materialIndex == null || typeIndex == null) {
 			return false;
 		} else {
 			return true;
@@ -149,12 +149,12 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	public T setColor(String color) {
 		AvValidations.colors(true, color);
 		this.color = color;
-		return returnThis();
+		return chain();
 	}
 
-	public T setMaterial(Integer material) {
-		this.material = material;
-		return returnThis();
+	public T setMaterialIndex(Integer material) {
+		this.materialIndex = material;
+		return chain();
 	}
 
 	/**
@@ -164,43 +164,45 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	 */
 	public T setOrientation(Orientation orientation) {
 		this.orientation = orientation;
-		return returnThis();
+		return chain();
 	}
 
-	public T setType(Integer type) {
-		this.type = type;
-		return returnThis();
+	public T setTypeIndex(Integer type) {
+		this.typeIndex = type;
+		return chain();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("BlockPlan [");
+		builder.append(toStringHeader());
+		builder.append(", ");
+		builder.append(toStringBodyPlanIndexes());
+		builder.append(", ");
+		builder.append(toStringBodyPlanValues());
+		builder.append(", ");
+		builder.append(toStringBodyCuboid());
+		builder.append("]");
+		return builder.toString();
+	}
 
-		String parentSring = null;
-		if (parent != null)
-			parentSring = "[id=" + parent.getIndexInStructure() + "]";
+	public String toStringBodyPlanIndexes() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(", materialIndex=");
+		builder.append(materialIndex);
+		builder.append(", typeIndex=");
+		builder.append(typeIndex);
+		return builder.toString();
+	}
 
-		//@formatter:off
-		return "BlockPlan ["
-				+ "tags=\"" + getTagsAdministrator().getTags() + "\""
-				+ ", index=" + indexInStructure 
-				+ ", parent=" + parentSring
-				+ ", material=" + material
-				+ ", type=" + type 
-				+ ", color=" + color
-				+ ", lengths=" + getLengths()
-				+ ", volumeCuboid=" + getVolumeCuboid()
-				+ ", center=" + getCenter()
-				+ ", axisX=" + getAxisX()
-				+ ", axisY=" + getAxisY() 
-				+ ", axisZ=" + getAxisZ()
-				+ ", orientation=" + orientation
-				+ "]";
-		//@formatter:on
-
+	public String toStringBodyPlanValues() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("color=");
+		builder.append(color);
+		builder.append(", orientation=");
+		builder.append(orientation);
+		return builder.toString();
 	}
 
 	@Override
@@ -275,9 +277,9 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	}
 
 	@Override
-	public Integer getLook() { return NullSafe.go(() -> getOrientation().getLook().getIndex()); }
+	public Integer getLook() { return NullSafe.run(() -> getOrientation().getLook().getIndex()); }
 
 	@Override
-	public Integer getUp() { return NullSafe.go(() -> getOrientation().getUp().getIndex()); }
+	public Integer getUp() { return NullSafe.run(() -> getOrientation().getUp().getIndex()); }
 
 }
