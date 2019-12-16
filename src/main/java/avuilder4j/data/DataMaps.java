@@ -21,10 +21,10 @@ public class DataMaps {
 	protected static Map<BlockArchetype.MapIndex, BlockArchetype> blockArchetypesMap;
 	protected static Map<String, BeanConstant> constantsMap;
 	protected static Map<BeanCrewCommand.MapIndex, BeanCrewCommand> crewCommandMap;
-	protected static Map<String, BeanCrew> crewMap;
+	protected static Map<Integer, BeanCrew> crewMap;
 	protected static Map<BeanEffect.MapIndex, BeanEffect> effectsMap;
 	protected static Map<Integer, BeanMaterial> materialsMap;
-	protected static Map<String, BeanShape> shapesMap;
+	protected static Map<Integer, BeanShape> shapesMap;
 	protected static Map<BeanTypeModelByMaterial.MapIndex, BeanTypeModelByMaterial> typeModelsByMaterialsMap;
 	protected static Map<Integer, BeanTypeModel> typeModelsMap;
 	protected static Map<Integer, BeanType> typesMap;
@@ -61,20 +61,20 @@ public class DataMaps {
 		return NullSafe.run(() -> getConstant(constantName).getValue());
 	}
 
-	public static BeanCrew getCrew(String crew) {
-		return NullSafe.run(() -> crewMap.get(crew));
+	public static BeanCrew getCrew(Integer crewIndex) {
+		return NullSafe.run(() -> crewMap.get(crewIndex));
 	}
 
 	public static BeanCrewCommand getCrewCommand(BeanCrewCommand.MapIndex index) {
 		return NullSafe.run(() -> crewCommandMap.get(index));
 	}
 
-	public static BeanCrewCommand getCrewCommand(String commander, String commanded) {
+	public static BeanCrewCommand getCrewCommand(Integer commander, Integer commanded) {
 		BeanCrewCommand.MapIndex index = new BeanCrewCommand.MapIndex(commander, commanded);
 		return NullSafe.run(() -> crewCommandMap.get(index));
 	}
 
-	public static List<BeanCrewCommand> getCrewCommandListByCommander(String commander) {
+	public static List<BeanCrewCommand> getCrewCommandListByCommander(Integer commander) {
 		return getCrewCommandMap().values().stream()
 				.filter((c) -> NullSafe.run(() -> c.getIndex().getCommander().equals(commander), false))
 				.collect(Collectors.toList());
@@ -82,7 +82,7 @@ public class DataMaps {
 
 	public static Map<BeanCrewCommand.MapIndex, BeanCrewCommand> getCrewCommandMap() { return crewCommandMap; }
 
-	public static Map<String, BeanCrew> getCrewMap() { return crewMap; }
+	public static Map<Integer, BeanCrew> getCrewMap() { return crewMap; }
 
 	public static BeanEffect getEffect(BeanEffect.MapIndex mapIndex) {
 		return NullSafe.run(() -> getEffectsMap().get(mapIndex));
@@ -139,11 +139,11 @@ public class DataMaps {
 		return builder.toString();
 	}
 
-	public static BeanShape getShape(String shapeIndex) {
+	public static BeanShape getShape(Integer shapeIndex) {
 		return NullSafe.run(() -> getShapesMap().get(shapeIndex));
 	}
 
-	public static Map<String, BeanShape> getShapesMap() { return shapesMap; }
+	public static Map<Integer, BeanShape> getShapesMap() { return shapesMap; }
 
 	public static BeanType getType(Integer typeIndex) {
 		return NullSafe.run(() -> getTypesMap().get(typeIndex));
@@ -180,7 +180,7 @@ public class DataMaps {
 		DataMaps.crewCommandMap = crewCommandMap;
 	}
 
-	public static void setCrewMap(Map<String, BeanCrew> crewMap) { DataMaps.crewMap = crewMap; }
+	public static void setCrewMap(Map<Integer, BeanCrew> crewMap) { DataMaps.crewMap = crewMap; }
 
 	public static void setEffectsMap(Map<BeanEffect.MapIndex, BeanEffect> effectsMap) {
 		DataMaps.effectsMap = effectsMap;
@@ -188,7 +188,7 @@ public class DataMaps {
 
 	public static void setMaterialsMap(Map<Integer, BeanMaterial> materialMap) { DataMaps.materialsMap = materialMap; }
 
-	public static void setShapesMap(Map<String, BeanShape> shapeMap) { DataMaps.shapesMap = shapeMap; }
+	public static void setShapesMap(Map<Integer, BeanShape> shapeMap) { DataMaps.shapesMap = shapeMap; }
 
 	public static void setTypeModelsByMaterialsEffectsMap(
 			Map<BeanEffect.MapIndex, BeanEffect> typeModelsByMaterialsEffectsMap) {

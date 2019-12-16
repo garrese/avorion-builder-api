@@ -10,4 +10,7 @@ public class BlockPlan extends BlockPlanGeneric<BlockPlan> {
 		return this;
 	}
 
+	@Override
+	public BlockPlan getNewInstance() { return new BlockPlan(); }
+
 }

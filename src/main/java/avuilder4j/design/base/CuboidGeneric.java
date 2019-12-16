@@ -14,12 +14,13 @@ import avuilder4j.design.sub.dimensional.AxisEnds;
 import avuilder4j.design.sub.dimensional.Lengths;
 import avuilder4j.design.sub.dimensional.Point;
 import avuilder4j.design.sub.dimensional.Tagable;
-import avuilder4j.design.sub.dimensional.TagsAdministrator;
+import avuilder4j.design.sub.dimensional.Tagator;
 import avuilder4j.design.sub.dimensional.Vector;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.util.java.Chainable;
+import avuilder4j.util.java.Instantiable;
 import avuilder4j.util.java.NullSafe;
 
 /**
@@ -28,7 +29,8 @@ import avuilder4j.util.java.NullSafe;
  * The cuboid is defined by one {@link AxisEnds} in each of the three coordinate axis.
  */
 @SuppressWarnings("rawtypes")
-public abstract class CuboidGeneric<T extends CuboidGeneric> implements Serializable, Tagable, Chainable<T> {
+public abstract class CuboidGeneric<T extends CuboidGeneric>
+		implements Serializable, Tagable, Chainable<T>, Instantiable<T> {
 	private static final long serialVersionUID = -5598838939653504628L;
 
 	/**
@@ -56,7 +58,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric> implements Serializ
 	 */
 	private T parent;
 
-	protected TagsAdministrator tagsAdministrator = new TagsAdministrator();
+	protected Tagator tagsAdministrator = new Tagator();
 
 //	public static Cuboid deepCopy(Cuboid cuboid) {
 //		Cuboid c = null;
@@ -104,7 +106,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric> implements Serializ
 		moveCenterToPoint(faceDestination);
 		moveCenterByVector(centerToOwnFace);
 
-		parent = destinationCuboid;
+		setParent(destinationCuboid);
 		return chain();
 	}
 
@@ -627,11 +629,11 @@ public abstract class CuboidGeneric<T extends CuboidGeneric> implements Serializ
 
 		String parentSring = null;
 		if (parent != null)
-			parentSring = "[id=" + parent.getIndexInStructure() + "]";
+			parentSring = "[idx=" + parent.getIndexInStructure() + "]";
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("tags=");
-		builder.append(getTagsAdministrator().getTags());
+		builder.append(getTagator().getTags());
 		builder.append(", index=");
 		builder.append(getIndexInStructure());
 		builder.append(", parent=");
@@ -681,7 +683,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric> implements Serializ
 	}
 
 	@Override
-	public TagsAdministrator getTagsAdministrator() { return tagsAdministrator; }
+	public Tagator getTagator() { return tagsAdministrator; }
 
 	@Override
 	public abstract T chain();

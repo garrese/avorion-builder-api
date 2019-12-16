@@ -41,6 +41,6 @@ public class AvErrors {
 	public static final String ROTATION_NOT_EXISTS = "Invalid rotation ID. Rotation ID does not exist.";
 	public static final String ROTATION_NOT_RECOGNIZED = "Rotation not recognized.";
 	public static final String VOLUME_NOT_POSITIVE = "Invalid volume. Volume must be greather than 0.";
-	public static final String BLOCK_ARCHETYPE_NOT_FOUND = "BlockArchetype not found for typeIndex= 1$ and materialIndex= 2$.";
+	public static final String BLOCK_ARCHETYPE_NOT_FOUND = "BlockArchetype not found for typeIndex= %s and materialIndex= %s.";
 
 }

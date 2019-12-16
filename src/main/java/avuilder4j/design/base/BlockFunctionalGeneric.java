@@ -28,7 +28,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 
 	public String getBlockName() { return NullSafe.run(() -> getBlockArchetype().toStringBlockName()); }
 
-	public Double getCreditCost() { return NullSafe.run(() -> blockArchetype.getCreditCost()); }
+	public Double getCreditCost() { return NullSafe.run(() -> getBlockArchetype().getCreditCost() * getVolumeBlock()); }
 
 	private Double getCrewReqCommanders() {
 		return NullSafe.run(() -> getCrewReqLieutenants()
@@ -41,7 +41,6 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 
 	private Double getCrewReqEngineers() {
 		return null;// NullSafe.run(() -> getVolumeBlock() * typeModel.getEngineers());
-
 	}
 
 	private Double getCrewReqGenerals() {
@@ -54,7 +53,9 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 				/ DataMaps.getConstantsMap().get(Cons.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getValue());
 	}
 
-	private Double getCrewReqMechanics() { return NullSafe.run(() -> blockArchetype.getMechanics()); };
+	private Double getCrewReqMechanics() {
+		return NullSafe.run(() -> getBlockArchetype().getMechanics() * getVolumeBlock());
+	};
 
 	private Double getCrewSergeantsReq() {
 		return NullSafe.run(() -> {
@@ -64,9 +65,9 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 		});
 	}
 
-	public Double getDensity() { return NullSafe.run(() -> blockArchetype.getDensity()); }
+	public Double getDensity() { return NullSafe.run(() -> getBlockArchetype().getDensity() * getVolumeBlock()); }
 
-	public Double getDurability() { return NullSafe.run(() -> blockArchetype.getDurability()); }
+	public Double getDurability() { return NullSafe.run(() -> getBlockArchetype().getDurability() * getVolumeBlock()); }
 
 	public Double getEffAcademyCap() { return getEffectByVolumeIfType(Types.ACADEMY); }
 
@@ -236,7 +237,9 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 
 	public Double getMass() { return NullSafe.run(() -> getDensity() * getVolumeBlock()); }
 
-	public Double getMaterialCost() { return NullSafe.run(() -> getBlockArchetype().getMaterialCost()); }
+	public Double getMaterialCost() {
+		return NullSafe.run(() -> getBlockArchetype().getMaterialCost() * getVolumeBlock());
+	}
 
 	@Override
 	public Integer getMaterialIndex() { return NullSafe.run(() -> getBlockArchetype().getMaterialIndex()); }
@@ -270,32 +273,53 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 		return NullSafe.run(() -> Arrays.stream(indexes).anyMatch(getBlockArchetype().getTypeIndex()::equals), false);
 	}
 
-	public void setBlockArchetype(BlockArchetype blockArchetype) { this.blockArchetype = blockArchetype; }
+	public T setBlockArchetype(BlockArchetype blockArchetype) {
+		this.blockArchetype = blockArchetype;
+		return chain();
+	}
 
 	public T setBlockArchetype(Integer typeIndex, Integer materialIndex) {
 		BlockArchetype a = DataMaps.getBlockArchetype(typeIndex, materialIndex);
 		if (a == null)
 			throw new Avuilder4jRuntimeException(
 					String.format(AvErrors.BLOCK_ARCHETYPE_NOT_FOUND, typeIndex, materialIndex));
-		return chain();
+		return setBlockArchetype(a);
 	}
 
 	@Override
 	public T setMaterialIndex(Integer materialIndex) {
-		setBlockArchetype(getBlockArchetype().getTypeIndex(), materialIndex);
+		if (getBlockArchetype() == null) {
+			Integer savedType = super.getTypeIndex();
+			if (savedType == null) {
+				super.setMaterialIndex(materialIndex);
+			} else {
+				setBlockArchetype(savedType, materialIndex);
+			}
+		} else {
+			setBlockArchetype(getBlockArchetype().getTypeIndex(), materialIndex);
+		}
 		return chain();
 	}
 
 	@Override
 	public T setTypeIndex(Integer typeIndex) {
-		setBlockArchetype(typeIndex, getBlockArchetype().getMaterialIndex());
+		if (getBlockArchetype() == null) {
+			Integer savedMaterial = super.getMaterialIndex();
+			if (savedMaterial == null) {
+				super.setTypeIndex(typeIndex);
+			} else {
+				setBlockArchetype(typeIndex, savedMaterial);
+			}
+		} else {
+			setBlockArchetype(typeIndex, getBlockArchetype().getMaterialIndex());
+		}
 		return chain();
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("BlockPlan [");
+		builder.append("Block [");
 		builder.append(toStringHeader());
 		builder.append(", ");
 		builder.append(toStringBodyFunctionalNames());

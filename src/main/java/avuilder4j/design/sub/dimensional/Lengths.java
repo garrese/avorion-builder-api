@@ -17,10 +17,6 @@ public class Lengths extends Xyz<Lengths> implements Serializable {
 		super();
 	}
 
-	public Lengths(double x, double y, double z) {
-		super(x, y, z);
-	}
-
 	public Lengths(Double x, Double y, Double z) {
 		super(x, y, z);
 	}

@@ -4,19 +4,19 @@ public class BeanType {
 
 	protected Integer index;
 	protected Integer typeModelIndex;
-	protected String shape;
+	protected Integer shapeIdx;
 
-	public BeanType(Integer index, Integer typeModelIndex, String shape) {
+	public BeanType(Integer index, Integer typeModelIndex, Integer shape) {
 		this.index = index;
 		this.typeModelIndex = typeModelIndex;
-		this.shape = shape;
+		this.shapeIdx = shape;
 	}
 
 	public Integer getIndex() { return index; }
 
 	public Integer getTypeModelIndex() { return typeModelIndex; }
 
-	public String getShape() { return shape; }
+	public Integer getShapeIdx() { return shapeIdx; }
 
 	@Override
 	public String toString() {
@@ -26,7 +26,7 @@ public class BeanType {
 		builder.append(", typeModelIndex=");
 		builder.append(typeModelIndex);
 		builder.append(", shapeIndex=");
-		builder.append(shape);
+		builder.append(shapeIdx);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -36,7 +36,7 @@ public class BeanType {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((index == null) ? 0 : index.hashCode());
-		result = prime * result + ((shape == null) ? 0 : shape.hashCode());
+		result = prime * result + ((shapeIdx == null) ? 0 : shapeIdx.hashCode());
 		result = prime * result + ((typeModelIndex == null) ? 0 : typeModelIndex.hashCode());
 		return result;
 	}
@@ -55,10 +55,10 @@ public class BeanType {
 				return false;
 		} else if (!index.equals(other.index))
 			return false;
-		if (shape == null) {
-			if (other.shape != null)
+		if (shapeIdx == null) {
+			if (other.shapeIdx != null)
 				return false;
-		} else if (!shape.equals(other.shape))
+		} else if (!shapeIdx.equals(other.shapeIdx))
 			return false;
 		if (typeModelIndex == null) {
 			if (other.typeModelIndex != null)

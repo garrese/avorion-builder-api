@@ -8,14 +8,6 @@ import avuilder4j.util.keys.Cons;
 public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> extends BlockPlanStructureGeneric<B> {
 	private static final long serialVersionUID = 8757900473268467596L;
 
-//	protected boolean retrieveFinalStats = false;
-//
-//	public boolean isRetrieveFinalStats() { return retrieveFinalStats; }
-//
-//	public void setRetrieveFinalStats(boolean retrieveFinalStructureData) {
-//		this.retrieveFinalStats = retrieveFinalStructureData;
-//	}
-
 	public double getVolumeBlock() { return sumFromBlocks(B::getVolumeBlock); }
 
 	public double getVolumeStat() { return sumFromBlocks(B::getVolumeStat); }
@@ -26,9 +18,13 @@ public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> e
 
 	public double getMass() { return sumFromBlocks(B::getMass); }
 
-	public Double getMechanicsReq() { return sumFromBlocks(B::getCrewReqMechanics); }
+	private Double getMechanicsReq() {
+		return null;// sumFromBlocks(B::getCrewReqMechanics);
+	}
 
-	public Double getEngineersReq() { return sumFromBlocks(B::getCrewReqEngineers); }
+	private Double getEngineersReq() {
+		return null;// sumFromBlocks(B::getCrewReqEngineers);
+	}
 
 	public double getSargeantsReq() {
 		Double dividend = NullSafe.run(() -> getMechanicsReq() + getEngineersReq());
@@ -49,8 +45,8 @@ public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> e
 	}
 
 	public double getGeneralsReq() {
-		return NullSafe
-				.run(() -> getCommandersReq() / DataMaps.getConstant(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue());
+		return NullSafe.run(() -> getCommandersReq()
+				/ DataMaps.getConstant(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue());
 	}
 
 //	protected Double truncateIfFinal(Double v) {

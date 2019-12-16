@@ -94,19 +94,20 @@ public class SqliteDataLoader extends DataLoader {
 	@Override
 	public void loadCrew() throws Avuilder4jException {
 		DataMaps.setCrewMap(connectAndSelect("Select * from Crew", (r) -> {
+			Integer idx = getWrapper(r, "idx");
 			String name = r.getString("name");
 			Double salary = getWrapper(r, "salary");
 //
-			BeanCrew b = new BeanCrew(name, salary);
-			return new SimpleEntry<String, BeanCrew>(b.getName(), b);
+			BeanCrew b = new BeanCrew(idx, name, salary);
+			return new SimpleEntry<Integer, BeanCrew>(b.getIndex(), b);
 		}));
 	}
 
 	@Override
 	public void loadCrewCommands() throws Avuilder4jException {
 		DataMaps.setCrewCommandMap(connectAndSelect("Select * from CrewCommand", (r) -> {
-			String commander = r.getString("commander");
-			String commanded = r.getString("commanded");
+			Integer commander = getWrapper(r, "commander");
+			Integer commanded = getWrapper(r, "commanded");
 			Double commandRatio = getWrapper(r, "commandRatio");
 
 			BeanCrewCommand.MapIndex idx = new BeanCrewCommand.MapIndex(commander, commanded);
@@ -146,11 +147,12 @@ public class SqliteDataLoader extends DataLoader {
 	@Override
 	public void loadShapes() throws Avuilder4jException {
 		DataMaps.setShapesMap(connectAndSelect("Select * from Shape", (r) -> {
+			Integer i = getWrapper(r, "idx");
 			String n = r.getString("name");
 			Double v = getWrapper(r, "cuboidFilledIn");
 			String s = r.getString("symmetricIdx");
-			BeanShape shape = new BeanShape(n, v, s);
-			return new SimpleEntry<String, BeanShape>(shape.getName(), shape);
+			BeanShape shape = new BeanShape(i, n, v, s);
+			return new SimpleEntry<Integer, BeanShape>(shape.getIndex(), shape);
 		}));
 	}
 
@@ -192,7 +194,7 @@ public class SqliteDataLoader extends DataLoader {
 		DataMaps.setTypesMap(connectAndSelect("Select * from Type", (r) -> {
 			Integer idx = getWrapper(r, "idx");
 			Integer typeModelIndex = getWrapper(r, "typeModelIdx");
-			String shape = getWrapper(r, "shape");
+			Integer shape = getWrapper(r, "shapeIdx");
 			BeanType type = new BeanType(idx, typeModelIndex, shape);
 			return new SimpleEntry<Integer, BeanType>(type.getIndex(), type);
 		}));

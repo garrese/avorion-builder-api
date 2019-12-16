@@ -1,6 +1,7 @@
 package avuilder4j.data.dtos;
 
 public class BlockArchetype extends BlockArchetypeFields {
+	private static final long serialVersionUID = -4304846556756622481L;
 
 	public BlockArchetype(BlockArchetypeParams params) {
 		this.materialIndex = params.getMaterialIndex();
@@ -8,7 +9,7 @@ public class BlockArchetype extends BlockArchetypeFields {
 
 		this.typeIndex = params.getTypeIndex();
 		this.typeModelIndex = params.getTypeModelIndex();
-		this.shape = params.getShapeIndex();
+		this.shapeIdx = params.getShapeIndex();
 
 		this.collisionReduction = params.getCollisionReduction();
 		this.typeModelName = params.getTypeModelName();
@@ -17,6 +18,7 @@ public class BlockArchetype extends BlockArchetypeFields {
 		this.process = params.getProcess();
 		this.hasVolume = params.getHasVolume();
 
+		this.shapeName = params.getShapeName();
 		this.cuboidFilledIn = params.getCuboidFilledIn();
 		this.symmetricShape = params.getSymmetricShapeIndex();
 

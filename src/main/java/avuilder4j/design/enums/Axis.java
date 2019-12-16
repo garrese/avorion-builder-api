@@ -34,8 +34,8 @@ public enum Axis {
 		}
 	}
 
-	public static Axis getAxisByFace(Face faceId) {
-		switch (faceId) {
+	public static Axis getAxisByFace(Face face) {
+		switch (face) {
 		case XU:
 		case XL:
 			return X;

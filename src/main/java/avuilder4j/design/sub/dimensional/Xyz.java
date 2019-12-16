@@ -4,9 +4,9 @@ import java.util.Objects;
 
 import avuilder4j.design.enums.Axis;
 import avuilder4j.error.AvErrors;
+import avuilder4j.util.java.Chainable;
 import avuilder4j.util.java.Copyable;
 import avuilder4j.util.java.NullSafe;
-import avuilder4j.util.java.Chainable;
 
 @SuppressWarnings("rawtypes")
 public abstract class Xyz<T extends Xyz> implements Copyable<T>, Chainable<T> {
@@ -132,6 +132,13 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, Chainable<T> {
 	public T sumXyz(Xyz b) {
 		for (Axis axis : Axis.values()) {
 			NullSafe.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) + b.getXyzByAxis(axis)));
+		}
+		return chain();
+	}
+
+	public T multiply(Double factor) {
+		for (Axis axis : Axis.values()) {
+			NullSafe.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) * factor));
 		}
 		return chain();
 	}

@@ -1,16 +1,18 @@
 package avuilder4j.data.dtos;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class BlockArchetypeFields {
+public class BlockArchetypeFields implements Serializable {
+	private static final long serialVersionUID = 4213562623926154457L;
 
 	protected Integer materialIndex;
 	protected String materialName;
 
 	protected Integer typeIndex;
 	protected Integer typeModelIndex;
-	protected String shape;
+	protected Integer shapeIdx;
 
 	protected Double collisionReduction;
 	protected String typeModelName;
@@ -19,6 +21,7 @@ public class BlockArchetypeFields {
 	protected Boolean process;
 	protected Boolean hasVolume;
 
+	protected String shapeName;
 	protected Double cuboidFilledIn;
 	protected String symmetricShape;
 
@@ -48,7 +51,9 @@ public class BlockArchetypeFields {
 
 	public Boolean getHasVolume() { return hasVolume; }
 
-	public String getShapeIndex() { return shape; }
+	public Integer getShapeIndex() { return shapeIdx; }
+
+	public String getShapeName() { return shapeName; }
 
 	public Double getCuboidFilledIn() { return cuboidFilledIn; }
 
@@ -65,9 +70,54 @@ public class BlockArchetypeFields {
 	public List<Double> getEffects() { return effects; }
 
 	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("BlockArchetype [materialIndex=");
+		builder.append(materialIndex);
+		builder.append(", materialName=");
+		builder.append(materialName);
+		builder.append(", typeIndex=");
+		builder.append(typeIndex);
+		builder.append(", typeModelIndex=");
+		builder.append(typeModelIndex);
+		builder.append(", shapeIdx=");
+		builder.append(shapeIdx);
+		builder.append(", collisionReduction=");
+		builder.append(collisionReduction);
+		builder.append(", typeModelName=");
+		builder.append(typeModelName);
+		builder.append(", mechanics=");
+		builder.append(mechanics);
+		builder.append(", engineers=");
+		builder.append(engineers);
+		builder.append(", process=");
+		builder.append(process);
+		builder.append(", hasVolume=");
+		builder.append(hasVolume);
+		builder.append(", shapeName=");
+		builder.append(shapeName);
+		builder.append(", cuboidFilledIn=");
+		builder.append(cuboidFilledIn);
+		builder.append(", symmetricShape=");
+		builder.append(symmetricShape);
+		builder.append(", density=");
+		builder.append(density);
+		builder.append(", durability=");
+		builder.append(durability);
+		builder.append(", materialCost=");
+		builder.append(materialCost);
+		builder.append(", creditCost=");
+		builder.append(creditCost);
+		builder.append(", effects=");
+		builder.append(effects);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	@Override
 	public int hashCode() {
 		return Objects
-				.hash(collisionReduction, creditCost, cuboidFilledIn, density, durability, engineers, hasVolume, materialCost, materialIndex, materialName, mechanics, process, shape, symmetricShape, typeIndex, typeModelIndex, typeModelName);
+				.hash(collisionReduction, creditCost, cuboidFilledIn, density, durability, effects, engineers, hasVolume, materialCost, materialIndex, materialName, mechanics, process, shapeIdx, shapeName, symmetricShape, typeIndex, typeModelIndex, typeModelName);
 	}
 
 	@Override
@@ -82,62 +132,22 @@ public class BlockArchetypeFields {
 		return Objects.equals(collisionReduction, other.collisionReduction)
 				&& Objects.equals(creditCost, other.creditCost) && Objects.equals(cuboidFilledIn, other.cuboidFilledIn)
 				&& Objects.equals(density, other.density) && Objects.equals(durability, other.durability)
-				&& Objects.equals(engineers, other.engineers) && Objects.equals(hasVolume, other.hasVolume)
-				&& Objects.equals(materialCost, other.materialCost)
+				&& Objects.equals(effects, other.effects) && Objects.equals(engineers, other.engineers)
+				&& Objects.equals(hasVolume, other.hasVolume) && Objects.equals(materialCost, other.materialCost)
 				&& Objects.equals(materialIndex, other.materialIndex)
 				&& Objects.equals(materialName, other.materialName) && Objects.equals(mechanics, other.mechanics)
-				&& Objects.equals(process, other.process) && Objects.equals(shape, other.shape)
-				&& Objects.equals(symmetricShape, other.symmetricShape) && Objects.equals(typeIndex, other.typeIndex)
-				&& Objects.equals(typeModelIndex, other.typeModelIndex)
+				&& Objects.equals(process, other.process) && Objects.equals(shapeIdx, other.shapeIdx)
+				&& Objects.equals(shapeName, other.shapeName) && Objects.equals(symmetricShape, other.symmetricShape)
+				&& Objects.equals(typeIndex, other.typeIndex) && Objects.equals(typeModelIndex, other.typeModelIndex)
 				&& Objects.equals(typeModelName, other.typeModelName);
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("BlockArchetype [");
-		builder.append("materialName=");
-		builder.append(materialName);
-		builder.append(", typeIndex=");
-		builder.append(typeIndex);
-		builder.append(", collisionReduction=");
-		builder.append(collisionReduction);
-		builder.append(", typeModelName=");
-		builder.append(typeModelName);
-		builder.append(", typeModelIndex=");
-		builder.append(typeModelIndex);
-		builder.append(", mechanics=");
-		builder.append(mechanics);
-		builder.append(", engineers=");
-		builder.append(engineers);
-		builder.append(", process=");
-		builder.append(process);
-		builder.append(", hasVolume=");
-		builder.append(hasVolume);
-		builder.append(", shape=");
-		builder.append(shape);
-		builder.append(", cuboidFilledIn=");
-		builder.append(cuboidFilledIn);
-		builder.append(", symmetricShapeIndex=");
-		builder.append(symmetricShape);
-		builder.append(", density=");
-		builder.append(density);
-		builder.append(", durability=");
-		builder.append(durability);
-		builder.append(", materialCost=");
-		builder.append(materialCost);
-		builder.append(", creditCost=");
-		builder.append(creditCost);
-		builder.append("]");
-		return builder.toString();
 	}
 
 	public String toStringBlockName() {
 		if (typeModelName != null) {
 			StringBuilder typeName = new StringBuilder();
 			typeName.append(typeModelName);
-			if (shape != null && !shape.trim().isEmpty()) {
-				typeName.append(" ").append(shape);
+			if (shapeName != null && !shapeName.trim().isEmpty()) {
+				typeName.append(" ").append(shapeName);
 			}
 			return typeName.toString();
 		} else {

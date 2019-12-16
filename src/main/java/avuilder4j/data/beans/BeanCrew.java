@@ -4,13 +4,17 @@ import java.util.Objects;
 
 public class BeanCrew {
 
+	protected Integer index;
 	protected String name;
 	protected Double salary;
 
-	public BeanCrew(String name, Double salary) {
+	public BeanCrew(Integer index, String name, Double salary) {
+		this.index = index;
 		this.name = name;
 		this.salary = salary;
 	}
+
+	public Integer getIndex() { return index; }
 
 	public String getName() { return name; }
 
@@ -18,7 +22,7 @@ public class BeanCrew {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, salary);
+		return Objects.hash(index, name, salary);
 	}
 
 	@Override
@@ -30,14 +34,16 @@ public class BeanCrew {
 		if (!(obj instanceof BeanCrew))
 			return false;
 		BeanCrew other = (BeanCrew) obj;
-		return Objects.equals(name, other.name) && Objects.equals(salary, other.salary);
+		return Objects.equals(index, other.index) && Objects.equals(name, other.name)
+				&& Objects.equals(salary, other.salary);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Crew [");
-		builder.append("name=");
+		builder.append("Crew [index=");
+		builder.append(index);
+		builder.append(", name=");
 		builder.append(name);
 		builder.append(", salary=");
 		builder.append(salary);

@@ -9,16 +9,17 @@ import avuilder4j.design.enums.Axis;
 import avuilder4j.design.enums.Rotation;
 import avuilder4j.design.sub.dimensional.AxisEnds;
 import avuilder4j.design.sub.dimensional.Tagable;
-import avuilder4j.design.sub.dimensional.TagsAdministrator;
+import avuilder4j.design.sub.dimensional.Tagator;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
+import avuilder4j.util.java.NullSafe;
 
 @SuppressWarnings("rawtypes")
-public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B> implements Serializable, Tagable {
+public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T> implements Serializable, Tagable {
 	private static final long serialVersionUID = 3084475335938461639L;
 
-	protected TagsAdministrator tagsAdministrator = new TagsAdministrator();
+	protected Tagator tagsAdministrator = new Tagator();
 
 	public void escalate(double ratio) {
 		escalate(ratio, (Axis[]) null);
@@ -27,11 +28,11 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 	public void escalate(double ratioX, double ratioY, double ratioZ) {
 		AvValidations.ratios(ratioX, ratioY, ratioZ);
 
-		for (B cuboid : this) {
+		for (T cuboid : this) {
 			cuboid.validateCuboid();
 		}
 
-		for (B cuboid : this) {
+		for (T cuboid : this) {
 			cuboid.getAxisX().escalateRelative(ratioX);
 			cuboid.getAxisY().escalateRelative(ratioY);
 			cuboid.getAxisZ().escalateRelative(ratioZ);
@@ -45,11 +46,11 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 		AvValidations.ratios(ratio);
 		AvValidations.validateAxesRepetition(axesIds);
 
-		for (B cuboid : this) {
+		for (T cuboid : this) {
 			cuboid.validateCuboid();
 		}
 
-		for (B cuboid : this) {
+		for (T cuboid : this) {
 			for (Axis axisId : axesIds) {
 				cuboid.getAxis(axisId).escalateRelative(ratio);
 			}
@@ -67,11 +68,11 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 			axesIds = Axis.values();
 		}
 
-		for (B cuboid : this) {
+		for (T cuboid : this) {
 			cuboid.validateCuboid();
 		}
 		double currentVol = 0;
-		for (B cuboid : this) {
+		for (T cuboid : this) {
 			currentVol += cuboid.getVolumeCuboid();
 		}
 
@@ -93,6 +94,11 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 		escalate(ratio, axesIds);
 	}
 
+	public T findByIndex(Integer index) {
+		return this.stream().filter(b -> NullSafe.run(() -> b.getIndexInStructure().equals(index), false)).findFirst()
+				.orElse(null);
+	}
+
 	public void rotate(Rotation rotationId) {
 		rotate(rotationId, 1);
 	}
@@ -104,7 +110,7 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 		List<Axis> axesIds = Axis.getAxesInvolvedInCuboidRotation(rotationId);
 		try {
 			for (int i = 0; i < times; i++) {
-				for (B cuboid : this) {
+				for (T cuboid : this) {
 					AxisEnds axis0 = cuboid.getAxis(axesIds.get(0));
 					AxisEnds axis1 = cuboid.getAxis(axesIds.get(1));
 					axis0.validateAxisEnds();
@@ -121,18 +127,18 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 		}
 	}
 
-	public List<B> getBlocks() { return this; }
+	public List<T> getBlocks() { return this; }
 
 	@Override
-	public TagsAdministrator getTagsAdministrator() { return tagsAdministrator; }
+	public Tagator getTagator() { return tagsAdministrator; }
 
 	public double getVolumeCuboid(List<? extends CuboidGeneric> blocks) {
-		return sumFromBlocks(B::getVolumeCuboid);
+		return sumFromBlocks(T::getVolumeCuboid);
 	}
 
-	public double sumFromBlocks(Function<B, Double> getAttributeFunction) {
+	public double sumFromBlocks(Function<T, Double> getAttributeFunction) {
 		double r = 0;
-		for (B block : this) {
+		for (T block : this) {
 			if (getAttributeFunction.apply(block) != null)
 				r += getAttributeFunction.apply(block);
 		}
@@ -142,7 +148,7 @@ public class CuboidStructureGeneric<B extends CuboidGeneric> extends ArrayList<B
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("CuboidStructureGeneric [tags=");
+		builder.append("Structure [tags=");
 		builder.append(tagsAdministrator.getTags());
 		for (CuboidGeneric cuboid : this) {
 			builder.append("\n\t").append(cuboid);

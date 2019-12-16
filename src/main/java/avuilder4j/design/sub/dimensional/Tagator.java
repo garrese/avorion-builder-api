@@ -6,25 +6,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class TagsAdministrator implements Serializable {
+public class Tagator implements Serializable {
 	private static final long serialVersionUID = 6484808937248013851L;
 
 	protected List<String> tagList = new ArrayList<>();
 
-	public TagsAdministrator() {}
+	public Tagator() {}
 
-	public TagsAdministrator(String tags) {
+	public Tagator(String tags) {
 		addTags(tags);
 	}
 
-	public TagsAdministrator(List<String> tags) {
+	public Tagator(List<String> tags) {
 		addTags(tags);
 	}
 
 	public static <T extends Tagable> List<T> findInList(List<T> list, List<String> tags) {
 		List<T> r = new ArrayList<>();
 		for (T t : list) {
-			if (t.getTagsAdministrator().hasTags(tags)) {
+			if (t.getTagator().hasTags(tags)) {
 				r.add(t);
 			}
 		}
@@ -37,7 +37,7 @@ public class TagsAdministrator implements Serializable {
 
 	public static <T extends Tagable> T findFirstInList(List<T> list, String tags) {
 		for (T t : list) {
-			if (t.getTagsAdministrator().hasTags(tags))
+			if (t.getTagator().hasTags(tags))
 				return t;
 		}
 		return null;
@@ -67,9 +67,9 @@ public class TagsAdministrator implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof TagsAdministrator))
+		if (!(obj instanceof Tagator))
 			return false;
-		TagsAdministrator other = (TagsAdministrator) obj;
+		Tagator other = (Tagator) obj;
 		return Objects.equals(tagList, other.tagList);
 	}
 

@@ -15,6 +15,7 @@ import avuilder4j.data.dtos.BlockArchetype;
 import avuilder4j.data.dtos.BlockArchetypeParams;
 import avuilder4j.error.Avuilder4jException;
 import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Utils;
 
 public abstract class DataLoader {
 
@@ -36,7 +37,7 @@ public abstract class DataLoader {
 
 	public abstract void loadTypes() throws Avuilder4jException;
 
-	public void loadAllAndCompose() throws Avuilder4jException {
+	public void loadAll() throws Avuilder4jException {
 		loadConstants();
 		loadCrew();
 		loadCrewCommands();
@@ -55,7 +56,7 @@ public abstract class DataLoader {
 			Map<BlockArchetype.MapIndex, BlockArchetype> map = new HashMap<BlockArchetype.MapIndex, BlockArchetype>();
 			for (BeanType t : DataMaps.getTypesMap().values()) {
 				for (BeanMaterial m : DataMaps.getMaterialsMap().values()) {
-					BeanTypeModel tm = DataMaps.getTypeModel(t.getIndex());
+					BeanTypeModel tm = DataMaps.getTypeModel(t.getTypeModelIndex());
 					if (tm != null) {
 						BeanTypeModelByMaterial tmbm = DataMaps.getTypeModelByMaterial(tm.getIndex(), m.getIndex());
 						if (tmbm != null) {
@@ -65,7 +66,7 @@ public abstract class DataLoader {
 							p.setMaterialName(m.getName());
 
 							p.setTypeIndex(t.getIndex());
-							p.setShape(t.getShape());
+							p.setShapeIndex(t.getShapeIdx());
 							p.setTypeModelIndex(t.getTypeModelIndex());
 
 							p.setCollisionReduction(tm.getCollisionReduction());
@@ -75,7 +76,8 @@ public abstract class DataLoader {
 							p.setHasVolume(tm.getHasVolume());
 							p.setProcess(tm.getProcess());
 
-							BeanShape s = DataMaps.getShape(t.getShape());
+							BeanShape s = DataMaps.getShape(t.getShapeIdx());
+							p.setShapeName(s.getName());
 							p.setCuboidFilledIn(s.getCuboidFilledIn());
 							p.setSymmetricShape(s.getSymmetric());
 
@@ -83,13 +85,13 @@ public abstract class DataLoader {
 							p.setEffects(Collections.unmodifiableList(es));
 
 							Double cCost = NullSafe.run(() -> tmbm.getCreditCostMod() * m.getCreditCost());
-							p.setCreditCost(cCost);
+							p.setCreditCost(Utils.round(cCost, 6));
 							Double mCost = NullSafe.run(() -> tm.getMaterialCostMod() * m.getMaterialCost());
-							p.setMaterialCost(mCost);
+							p.setMaterialCost(Utils.round(mCost, 6));
 							Double dur = NullSafe.run(() -> tm.getDurabilityMod() * m.getDurability());
-							p.setDurability(dur);
+							p.setDurability(Utils.round(dur, 6));
 							Double dens = NullSafe.run(() -> tm.getDensityMod() * m.getDensity());
-							p.setDensity(dens);
+							p.setDensity(Utils.round(dens, 6));
 
 							BlockArchetype a = new BlockArchetype(p);
 							BlockArchetype.MapIndex i = new BlockArchetype.MapIndex(t.getIndex(), m.getIndex());

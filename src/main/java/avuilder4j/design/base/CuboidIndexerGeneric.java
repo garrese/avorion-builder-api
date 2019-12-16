@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import avuilder4j.design.sub.dimensional.Lengths;
+import avuilder4j.util.java.NullSafe;
 
 @SuppressWarnings("rawtypes")
 public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric<B>> {
@@ -13,7 +14,7 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 	protected S structure;
 	protected int indexCount;
 
-	protected Lengths defaultLengths = new Lengths(2, 2, 2);
+	protected Lengths defaultLengths = new Lengths(2.0, 2.0, 2.0);
 
 	public CuboidIndexerGeneric() {
 		setStructure(getStructureInstance());
@@ -39,6 +40,12 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 		B cuboid = createBlanckBlock();
 		cuboid.setLengths(getDefaultLengths());
 		return cuboid;
+	}
+
+	public B createBlock(String tags) {
+		B b = createBlock();
+		b.getTagator().addTags(tags);
+		return b;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -112,18 +119,8 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 		}
 	}
 
-	/**
-	 * Gets the {@link #defaultLengths}.
-	 * 
-	 * @return the {@link #defaultLengths}.
-	 */
-	public Lengths getDefaultLengths() { return defaultLengths; }
+	public Lengths getDefaultLengths() { return NullSafe.run(() -> defaultLengths.getCopy()); }
 
-	/**
-	 * Sets the {@link #defaultLengths}.
-	 * 
-	 * @param defaultLengths the {@link #defaultLengths} to set.
-	 */
 	public void setDefaultLengths(Lengths defaultLengths) { this.defaultLengths = defaultLengths; }
 
 }

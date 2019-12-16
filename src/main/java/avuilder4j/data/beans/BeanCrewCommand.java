@@ -46,36 +46,21 @@ public class BeanCrewCommand {
 
 	public static class MapIndex {
 
-		protected String commander;
-		protected String commanded;
+		protected Integer commander;
+		protected Integer commanded;
 
-		public MapIndex(String commander, String commanded) {
+		public MapIndex(Integer commander, Integer commanded) {
 			this.commander = commander;
 			this.commanded = commanded;
 		}
 
-		public String getCommander() { return commander; }
+		public Integer getCommander() { return commander; }
 
-		public String getCommanded() { return commanded; }
-
-		@Override
-		public String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append("[commander=");
-			builder.append(commander);
-			builder.append(", commanded=");
-			builder.append(commanded);
-			builder.append("]");
-			return builder.toString();
-		}
+		public Integer getCommanded() { return commanded; }
 
 		@Override
 		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((commanded == null) ? 0 : commanded.hashCode());
-			result = prime * result + ((commander == null) ? 0 : commander.hashCode());
-			return result;
+			return Objects.hash(commanded, commander);
 		}
 
 		@Override
@@ -84,21 +69,24 @@ public class BeanCrewCommand {
 				return true;
 			if (obj == null)
 				return false;
-			if (getClass() != obj.getClass())
+			if (!(obj instanceof MapIndex))
 				return false;
 			MapIndex other = (MapIndex) obj;
-			if (commanded == null) {
-				if (other.commanded != null)
-					return false;
-			} else if (!commanded.equals(other.commanded))
-				return false;
-			if (commander == null) {
-				if (other.commander != null)
-					return false;
-			} else if (!commander.equals(other.commander))
-				return false;
-			return true;
+			return Objects.equals(commanded, other.commanded) && Objects.equals(commander, other.commander);
 		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("MapIndex [");
+			builder.append("commander=");
+			builder.append(commander);
+			builder.append(", commanded=");
+			builder.append(commanded);
+			builder.append("]");
+			return builder.toString();
+		}
+
 	}
 
 }

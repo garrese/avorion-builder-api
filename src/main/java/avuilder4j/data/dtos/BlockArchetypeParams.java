@@ -3,12 +3,15 @@ package avuilder4j.data.dtos;
 import java.util.List;
 
 public class BlockArchetypeParams extends BlockArchetypeFields {
+	private static final long serialVersionUID = 8855727454299191955L;
 
 	public void setMaterialIndex(Integer materialIndex) { this.materialIndex = materialIndex; }
 
 	public void setMaterialName(String materialName) { this.materialName = materialName; }
 
 	public void setTypeIndex(Integer typeIndex) { this.typeIndex = typeIndex; }
+
+	public void setShapeIndex(Integer shapeIndex) { this.shapeIdx = shapeIndex; }
 
 	public void setCollisionReduction(Double collisionReduction) { this.collisionReduction = collisionReduction; }
 
@@ -24,7 +27,7 @@ public class BlockArchetypeParams extends BlockArchetypeFields {
 
 	public void setHasVolume(Boolean hasVolume) { this.hasVolume = hasVolume; }
 
-	public void setShape(String shape) { this.shape = shape; }
+	public void setShapeName(String shapeName) { this.shapeName = shapeName; }
 
 	public void setCuboidFilledIn(Double cuboidFilledIn) { this.cuboidFilledIn = cuboidFilledIn; }
 

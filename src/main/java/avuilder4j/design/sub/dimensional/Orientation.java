@@ -36,8 +36,17 @@ public class Orientation implements Serializable, Copyable<Orientation>, Chainab
 	 * @param up   the {@link #up}
 	 */
 	public Orientation(Face look, Face up) {
-		setLook(look);
-		setUp(up);
+		set(look, up);
+	}
+
+	public Orientation(Integer look, Integer up) {
+		set(look, up);
+	}
+
+	public Orientation set(Integer look, Integer up) {
+		setLook(Face.getByIndex(look));
+		setUp(Face.getByIndex(up));
+		return chain();
 	}
 
 	public Orientation rotate(Rotation rotation) {

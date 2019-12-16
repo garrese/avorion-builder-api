@@ -1,9 +1,11 @@
 package avuilder4j.design.base;
 
 import avuilder4j.design.sub.dimensional.Orientation;
+import avuilder4j.util.java.NullSafe;
 import avuilder4j.util.keys.Mats;
 import avuilder4j.util.keys.Types;
 import avuilder4j.util.values.Colors;
+import avuilder4j.util.values.Orients;
 
 @SuppressWarnings("rawtypes")
 public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S extends BlockPlanStructureGeneric<B>>
@@ -11,8 +13,8 @@ public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S exte
 
 	protected String defaultColor = Colors.MATERIAL_00_IRON;
 	protected Integer defaultMaterial = Mats.IRON;
-	protected Integer defaultType = Types.BLANK_HULL;
-	protected Orientation defaultOrientation = new Orientation();
+	protected Integer defaultType = Types.HULL;
+	protected Orientation defaultOrientation = Orients.getDefault();
 
 	@Override
 	public B createBlock() {
@@ -89,7 +91,7 @@ public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S exte
 	 * 
 	 * @return the {@link #defaultOrientation}.
 	 */
-	public Orientation getDefaultOrientation() { return defaultOrientation; }
+	public Orientation getDefaultOrientation() { return NullSafe.run(() -> defaultOrientation.getCopy()); }
 
 	/**
 	 * Sets the {@link #defaultOrientation}.

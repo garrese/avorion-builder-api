@@ -10,4 +10,7 @@ public class Block extends BlockFunctionalGeneric<Block> {
 		return this;
 	}
 
+	@Override
+	public Block getNewInstance() { return new Block(); }
+
 }
