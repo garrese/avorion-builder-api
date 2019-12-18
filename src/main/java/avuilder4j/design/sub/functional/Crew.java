@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import avuilder4j.data.beans.BeanCrewCommand;
 import avuilder4j.util.java.Chainable;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Nullable;
 
 public class Crew extends TreeMap<String, Double> implements Chainable<Crew> {
 	private static final long serialVersionUID = 8783727114370701807L;
@@ -61,7 +61,7 @@ public class Crew extends TreeMap<String, Double> implements Chainable<Crew> {
 					for (BeanCrewCommand c : comands) {
 						String commanded = null; // c.getIndex().getCommanded();
 						if (!allCommanders.contains(commanded) || calculated.contains(commanded)) {
-							Double toAdd = NullSafe.run(() -> copy.get(commanded) / c.getCommandRatio());
+							Double toAdd = Nullable.run(() -> copy.get(commanded) / c.getCommandRatio());
 							copy.addCrew(actual, toAdd);
 							calculated.add(actual);
 //							operatedSome = true;

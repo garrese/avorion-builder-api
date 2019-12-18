@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class BlockArchetypeFields implements Serializable {
+public abstract class BlockArchetypeFields implements Serializable {
 	private static final long serialVersionUID = 4213562623926154457L;
 
 	protected Integer materialIndex;
@@ -142,7 +142,7 @@ public class BlockArchetypeFields implements Serializable {
 				&& Objects.equals(typeModelName, other.typeModelName);
 	}
 
-	public String toStringBlockName() {
+	public String getTypeName() {
 		if (typeModelName != null) {
 			StringBuilder typeName = new StringBuilder();
 			typeName.append(typeModelName);

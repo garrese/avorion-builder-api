@@ -1,32 +1,36 @@
 package avuilder4j.data.dtos;
 
+import java.util.Objects;
+
 public class BlockArchetype extends BlockArchetypeFields {
 	private static final long serialVersionUID = -4304846556756622481L;
 
 	public BlockArchetype(BlockArchetypeParams params) {
-		this.materialIndex = params.getMaterialIndex();
-		this.materialName = params.getMaterialName();
+		if (params != null) {
+			this.materialIndex = params.getMaterialIndex();
+			this.materialName = params.getMaterialName();
 
-		this.typeIndex = params.getTypeIndex();
-		this.typeModelIndex = params.getTypeModelIndex();
-		this.shapeIdx = params.getShapeIndex();
+			this.typeIndex = params.getTypeIndex();
+			this.typeModelIndex = params.getTypeModelIndex();
+			this.shapeIdx = params.getShapeIndex();
 
-		this.collisionReduction = params.getCollisionReduction();
-		this.typeModelName = params.getTypeModelName();
-		this.mechanics = params.getMechanics();
-		this.engineers = params.getEngineers();
-		this.process = params.getProcess();
-		this.hasVolume = params.getHasVolume();
+			this.collisionReduction = params.getCollisionReduction();
+			this.typeModelName = params.getTypeModelName();
+			this.mechanics = params.getMechanics();
+			this.engineers = params.getEngineers();
+			this.process = params.getProcess();
+			this.hasVolume = params.getHasVolume();
 
-		this.shapeName = params.getShapeName();
-		this.cuboidFilledIn = params.getCuboidFilledIn();
-		this.symmetricShape = params.getSymmetricShapeIndex();
+			this.shapeName = params.getShapeName();
+			this.cuboidFilledIn = params.getCuboidFilledIn();
+			this.symmetricShape = params.getSymmetricShapeIndex();
 
-		this.density = params.getDensity();
-		this.durability = params.getDurability();
-		this.materialCost = params.getMaterialCost();
-		this.creditCost = params.getCreditCost();
-		this.effects = params.getEffects();
+			this.density = params.getDensity();
+			this.durability = params.getDurability();
+			this.materialCost = params.getMaterialCost();
+			this.creditCost = params.getCreditCost();
+			this.effects = params.getEffects();
+		}
 	}
 
 	public static class MapIndex {
@@ -56,11 +60,7 @@ public class BlockArchetype extends BlockArchetypeFields {
 
 		@Override
 		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((materialIndex == null) ? 0 : materialIndex.hashCode());
-			result = prime * result + ((typeIndex == null) ? 0 : typeIndex.hashCode());
-			return result;
+			return Objects.hash(materialIndex, typeIndex);
 		}
 
 		@Override
@@ -69,21 +69,12 @@ public class BlockArchetype extends BlockArchetypeFields {
 				return true;
 			if (obj == null)
 				return false;
-			if (getClass() != obj.getClass())
+			if (!(obj instanceof MapIndex))
 				return false;
 			MapIndex other = (MapIndex) obj;
-			if (materialIndex == null) {
-				if (other.materialIndex != null)
-					return false;
-			} else if (!materialIndex.equals(other.materialIndex))
-				return false;
-			if (typeIndex == null) {
-				if (other.typeIndex != null)
-					return false;
-			} else if (!typeIndex.equals(other.typeIndex))
-				return false;
-			return true;
+			return Objects.equals(materialIndex, other.materialIndex) && Objects.equals(typeIndex, other.typeIndex);
 		}
+
 	}
 
 }

@@ -1,7 +1,7 @@
 package avuilder4j.design.sub.functional;
 
 import avuilder4j.data.DataMaps;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Nullable;
 import avuilder4j.util.java.Chainable;
 import avuilder4j.util.keys.Cons;
 
@@ -16,14 +16,14 @@ public class HangarSpace implements Chainable<HangarSpace> {
 	}
 
 	public HangarSpace addHangarSpace(Double hangarSpace) {
-		NullSafe.run(() -> setHangarSpace(getHangarSpace() + hangarSpace));
+		Nullable.run(() -> setHangarSpace(getHangarSpace() + hangarSpace));
 		return chain();
 	}
 
-	public Integer getMaxFighters() { return NullSafe.run(() -> getHangarSpace().intValue()); }
+	public Integer getMaxFighters() { return Nullable.run(() -> getHangarSpace().intValue()); }
 
 	public Integer getMinFighters() {
-		return NullSafe.run(() -> getMaxFighters() / DataMaps.getConstantValue(Cons.MAX_FIGHTER_SIZE).intValue());
+		return Nullable.run(() -> getMaxFighters() / DataMaps.getConstantValue(Cons.MAX_FIGHTER_SIZE).intValue());
 	}
 
 	public Double getHangarSpace() { return hangarSpace; }

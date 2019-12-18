@@ -121,7 +121,7 @@ public class Tagator implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Tags [tagList=");
+		builder.append("Tagator [tagList=");
 		builder.append(tagList);
 		builder.append("]");
 		return builder.toString();

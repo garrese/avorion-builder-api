@@ -6,7 +6,7 @@ import avuilder4j.design.enums.Axis;
 import avuilder4j.error.AvErrors;
 import avuilder4j.util.java.Chainable;
 import avuilder4j.util.java.Copyable;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Nullable;
 
 @SuppressWarnings("rawtypes")
 public abstract class Xyz<T extends Xyz> implements Copyable<T>, Chainable<T> {
@@ -89,7 +89,7 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, Chainable<T> {
 
 	public T negateXYZ() {
 		for (Axis axis : Axis.values()) {
-			NullSafe.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) * -1));
+			Nullable.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) * -1));
 		}
 		return chain();
 	}
@@ -124,21 +124,21 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, Chainable<T> {
 
 	public T subXyz(Xyz b) {
 		for (Axis axis : Axis.values()) {
-			NullSafe.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) - b.getXyzByAxis(axis)));
+			Nullable.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) - b.getXyzByAxis(axis)));
 		}
 		return chain();
 	}
 
 	public T sumXyz(Xyz b) {
 		for (Axis axis : Axis.values()) {
-			NullSafe.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) + b.getXyzByAxis(axis)));
+			Nullable.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) + b.getXyzByAxis(axis)));
 		}
 		return chain();
 	}
 
 	public T multiply(Double factor) {
 		for (Axis axis : Axis.values()) {
-			NullSafe.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) * factor));
+			Nullable.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) * factor));
 		}
 		return chain();
 	}

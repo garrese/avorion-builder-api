@@ -2,6 +2,7 @@ package avuilder4j.design.base;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
@@ -13,13 +14,27 @@ import avuilder4j.design.sub.dimensional.Tagator;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Chainable;
+import avuilder4j.util.java.Nullable;
 
 @SuppressWarnings("rawtypes")
-public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T> implements Serializable, Tagable {
+public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric>
+		extends ArrayList<B> implements Serializable, Tagable, Chainable<S> {
 	private static final long serialVersionUID = 3084475335938461639L;
 
 	protected Tagator tagsAdministrator = new Tagator();
+
+	public CuboidStructureGeneric() {
+		super();
+	}
+
+	public CuboidStructureGeneric(Collection<? extends B> c) {
+		super(c);
+	}
+
+	public CuboidStructureGeneric(int initialCapacity) {
+		super(initialCapacity);
+	}
 
 	public void escalate(double ratio) {
 		escalate(ratio, (Axis[]) null);
@@ -28,11 +43,11 @@ public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T
 	public void escalate(double ratioX, double ratioY, double ratioZ) {
 		AvValidations.ratios(ratioX, ratioY, ratioZ);
 
-		for (T cuboid : this) {
+		for (B cuboid : this) {
 			cuboid.validateCuboid();
 		}
 
-		for (T cuboid : this) {
+		for (B cuboid : this) {
 			cuboid.getAxisX().escalateRelative(ratioX);
 			cuboid.getAxisY().escalateRelative(ratioY);
 			cuboid.getAxisZ().escalateRelative(ratioZ);
@@ -46,11 +61,11 @@ public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T
 		AvValidations.ratios(ratio);
 		AvValidations.validateAxesRepetition(axesIds);
 
-		for (T cuboid : this) {
+		for (B cuboid : this) {
 			cuboid.validateCuboid();
 		}
 
-		for (T cuboid : this) {
+		for (B cuboid : this) {
 			for (Axis axisId : axesIds) {
 				cuboid.getAxis(axisId).escalateRelative(ratio);
 			}
@@ -68,11 +83,11 @@ public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T
 			axesIds = Axis.values();
 		}
 
-		for (T cuboid : this) {
+		for (B cuboid : this) {
 			cuboid.validateCuboid();
 		}
 		double currentVol = 0;
-		for (T cuboid : this) {
+		for (B cuboid : this) {
 			currentVol += cuboid.getVolumeCuboid();
 		}
 
@@ -94,8 +109,8 @@ public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T
 		escalate(ratio, axesIds);
 	}
 
-	public T findByIndex(Integer index) {
-		return this.stream().filter(b -> NullSafe.run(() -> b.getIndexInStructure().equals(index), false)).findFirst()
+	public B findByIndex(Integer index) {
+		return this.stream().filter(b -> Nullable.run(() -> b.getIndex().equals(index), false)).findFirst()
 				.orElse(null);
 	}
 
@@ -110,7 +125,7 @@ public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T
 		List<Axis> axesIds = Axis.getAxesInvolvedInCuboidRotation(rotationId);
 		try {
 			for (int i = 0; i < times; i++) {
-				for (T cuboid : this) {
+				for (B cuboid : this) {
 					AxisEnds axis0 = cuboid.getAxis(axesIds.get(0));
 					AxisEnds axis1 = cuboid.getAxis(axesIds.get(1));
 					axis0.validateAxisEnds();
@@ -127,18 +142,18 @@ public class CuboidStructureGeneric<T extends CuboidGeneric> extends ArrayList<T
 		}
 	}
 
-	public List<T> getBlocks() { return this; }
+	public List<B> getBlocks() { return this; }
 
 	@Override
 	public Tagator getTagator() { return tagsAdministrator; }
 
 	public double getVolumeCuboid(List<? extends CuboidGeneric> blocks) {
-		return sumFromBlocks(T::getVolumeCuboid);
+		return sumFromBlocks(B::getVolumeCuboid);
 	}
 
-	public double sumFromBlocks(Function<T, Double> getAttributeFunction) {
+	public double sumFromBlocks(Function<B, Double> getAttributeFunction) {
 		double r = 0;
-		for (T block : this) {
+		for (B block : this) {
 			if (getAttributeFunction.apply(block) != null)
 				r += getAttributeFunction.apply(block);
 		}

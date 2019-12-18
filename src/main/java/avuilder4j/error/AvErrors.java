@@ -20,7 +20,7 @@ public class AvErrors {
 	public static final String FACE_FIXED_AXES = "Can not be more than one fixed face in the same axis";
 	public static final String FACE_FIXED_MAX_NUMBER = "Invalid fixed faces ammount. Maximum is "
 			+ AvValidations.MAX_FIXED_FACES + ".";
-	public static final String FACE_NOT_EXISTS = "Invalid face. Face ID does not exist.";
+	public static final String FACE_NOT_EXISTS = "Invalid face. Face ID does not exist: %s.";
 	public static final String FACE_NOT_RECOGNIZED = "Face ID not recognized.";
 	public static final String FACE_REPEATED = "Invalid faces. Some face is repeated.";
 	public static final String INDEX_NEGATIVE = "Index values must be greather than 0.";

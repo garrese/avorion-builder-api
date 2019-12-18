@@ -21,7 +21,7 @@ import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.util.java.Chainable;
 import avuilder4j.util.java.Instantiable;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Nullable;
 
 /**
  * Represents a cuboid in a Cartesian coordinate system.
@@ -332,7 +332,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 	 * 
 	 * @return the {@link #indexInStructure}.
 	 */
-	public Integer getIndexInStructure() { return indexInStructure; }
+	public Integer getIndex() { return indexInStructure; }
 
 	public Lengths getLengths() {
 		Double lenX = null;
@@ -363,7 +363,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 	}
 
 	public Double getSurfaceArea() {
-		return NullSafe.run(() -> {
+		return Nullable.run(() -> {
 			Double face1 = axisX.getLength() * axisY.getLength();
 			Double face2 = axisX.getLength() * axisZ.getLength();
 			Double face3 = axisY.getLength() * axisZ.getLength();
@@ -543,10 +543,14 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 	 * 
 	 * @param index the {@link #indexInStructure} to set.
 	 */
-	public T setIndexInStructure(Integer index) {
+	public T setIndex(Integer index) {
 		AvValidations.indexes(true, index);
 		this.indexInStructure = index;
 		return chain();
+	}
+
+	public T setLengths(Double x, Double y, Double z) {
+		return setLengths(new Lengths(x, y, z));
 	}
 
 	public T setLengths(Lengths lengths) {
@@ -614,7 +618,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 
 		String parentSring = null;
 		if (parent != null)
-			parentSring = "[id=" + parent.getIndexInStructure() + "]";
+			parentSring = "[id=" + parent.getIndex() + "]";
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("Cuboid [");
@@ -625,27 +629,23 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 		return builder.toString();
 	}
 
-	public String toStringHeader() {
-
-		String parentSring = null;
-		if (parent != null)
-			parentSring = "[idx=" + parent.getIndexInStructure() + "]";
+	protected String toStringHeader() {
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("tags=");
 		builder.append(getTagator().getTags());
 		builder.append(", index=");
-		builder.append(getIndexInStructure());
+		builder.append(getIndex());
 		builder.append(", parent=");
-		builder.append(parentSring);
+		builder.append(Nullable.run(() -> parent.getIndex()));
 		return builder.toString();
 	}
 
-	public String toStringBodyCuboid() {
+	protected String toStringBodyCuboid() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("lengths=");
 		builder.append(getLengths());
-		builder.append(", volumeCuboid=");
+		builder.append(", volCuboid=");
 		builder.append(getVolumeCuboid());
 		builder.append(", center=");
 		builder.append(getCenter());
@@ -687,5 +687,35 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 
 	@Override
 	public abstract T chain();
+
+	public T setXL(Double XL) {
+		getAxisX().setLowerEnd(XL);
+		return chain();
+	}
+
+	public T setXU(Double XU) {
+		getAxisX().setUpperEnd(XU);
+		return chain();
+	}
+
+	public T setYL(Double YL) {
+		getAxisY().setLowerEnd(YL);
+		return chain();
+	}
+
+	public T setYU(Double YU) {
+		getAxisY().setUpperEnd(YU);
+		return chain();
+	}
+
+	public T setZL(Double ZL) {
+		getAxisZ().setLowerEnd(ZL);
+		return chain();
+	}
+
+	public T setZU(Double ZU) {
+		getAxisZ().setUpperEnd(ZU);
+		return chain();
+	}
 
 }

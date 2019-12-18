@@ -14,7 +14,7 @@ import avuilder4j.data.beans.BeanType;
 import avuilder4j.data.beans.BeanTypeModel;
 import avuilder4j.data.beans.BeanTypeModelByMaterial;
 import avuilder4j.data.dtos.BlockArchetype;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Nullable;
 
 public class DataMaps {
 
@@ -46,37 +46,37 @@ public class DataMaps {
 
 	public static BlockArchetype getBlockArchetype(Integer typeIndex, Integer materialIndex) {
 		BlockArchetype.MapIndex index = new BlockArchetype.MapIndex(typeIndex, materialIndex);
-		return NullSafe.run(() -> getBlockArchetypesMap().get(index));
+		return Nullable.run(() -> getBlockArchetypesMap().get(index));
 	}
 
 	public static Map<BlockArchetype.MapIndex, BlockArchetype> getBlockArchetypesMap() { return blockArchetypesMap; }
 
 	public static BeanConstant getConstant(String constantName) {
-		return NullSafe.run(() -> getConstantsMap().get(constantName));
+		return Nullable.run(() -> getConstantsMap().get(constantName));
 	}
 
 	public static Map<String, BeanConstant> getConstantsMap() { return constantsMap; }
 
 	public static Double getConstantValue(String constantName) {
-		return NullSafe.run(() -> getConstant(constantName).getValue());
+		return Nullable.run(() -> getConstant(constantName).getValue());
 	}
 
 	public static BeanCrew getCrew(Integer crewIndex) {
-		return NullSafe.run(() -> crewMap.get(crewIndex));
+		return Nullable.run(() -> crewMap.get(crewIndex));
 	}
 
 	public static BeanCrewCommand getCrewCommand(BeanCrewCommand.MapIndex index) {
-		return NullSafe.run(() -> crewCommandMap.get(index));
+		return Nullable.run(() -> crewCommandMap.get(index));
 	}
 
 	public static BeanCrewCommand getCrewCommand(Integer commander, Integer commanded) {
 		BeanCrewCommand.MapIndex index = new BeanCrewCommand.MapIndex(commander, commanded);
-		return NullSafe.run(() -> crewCommandMap.get(index));
+		return Nullable.run(() -> crewCommandMap.get(index));
 	}
 
 	public static List<BeanCrewCommand> getCrewCommandListByCommander(Integer commander) {
 		return getCrewCommandMap().values().stream()
-				.filter((c) -> NullSafe.run(() -> c.getIndex().getCommander().equals(commander), false))
+				.filter((c) -> Nullable.run(() -> c.getIndex().getCommander().equals(commander), false))
 				.collect(Collectors.toList());
 	}
 
@@ -85,7 +85,7 @@ public class DataMaps {
 	public static Map<Integer, BeanCrew> getCrewMap() { return crewMap; }
 
 	public static BeanEffect getEffect(BeanEffect.MapIndex mapIndex) {
-		return NullSafe.run(() -> getEffectsMap().get(mapIndex));
+		return Nullable.run(() -> getEffectsMap().get(mapIndex));
 	}
 
 	public static BeanEffect getEffect(Integer typeModelIndex, Integer materialIndex, Integer n) {
@@ -94,7 +94,7 @@ public class DataMaps {
 	}
 
 	public static List<BeanEffect> getEffects(Integer typeModelIndex, Integer materialIndex) {
-		return getEffectsMap().values().stream().filter((e) -> NullSafe.run(() -> {
+		return getEffectsMap().values().stream().filter((e) -> Nullable.run(() -> {
 			boolean type = e.getIndex().getTypeModelIndex().equals(typeModelIndex);
 			boolean material = e.getIndex().getMaterialIndex().equals(materialIndex);
 			return type && material;
@@ -109,15 +109,15 @@ public class DataMaps {
 	}
 
 	public static Double getEffectValue(BeanEffect.MapIndex mapIndex) {
-		return NullSafe.run(() -> getEffectsMap().get(mapIndex).getValue());
+		return Nullable.run(() -> getEffectsMap().get(mapIndex).getValue());
 	}
 
 	public static Double getEffectValue(Integer typeModelIndex, Integer materialIndex, Integer n) {
-		return NullSafe.run(() -> getEffect(typeModelIndex, materialIndex, n).getValue());
+		return Nullable.run(() -> getEffect(typeModelIndex, materialIndex, n).getValue());
 	}
 
 	public static BeanMaterial getMaterial(Integer materialIndex) {
-		return NullSafe.run(() -> getMaterialsMap().get(materialIndex));
+		return Nullable.run(() -> getMaterialsMap().get(materialIndex));
 	}
 
 	public static Map<Integer, BeanMaterial> getMaterialsMap() { return materialsMap; }
@@ -140,21 +140,21 @@ public class DataMaps {
 	}
 
 	public static BeanShape getShape(Integer shapeIndex) {
-		return NullSafe.run(() -> getShapesMap().get(shapeIndex));
+		return Nullable.run(() -> getShapesMap().get(shapeIndex));
 	}
 
 	public static Map<Integer, BeanShape> getShapesMap() { return shapesMap; }
 
 	public static BeanType getType(Integer typeIndex) {
-		return NullSafe.run(() -> getTypesMap().get(typeIndex));
+		return Nullable.run(() -> getTypesMap().get(typeIndex));
 	}
 
 	public static BeanTypeModel getTypeModel(Integer typeModelIndex) {
-		return NullSafe.run(() -> getTypeModelsMap().get(typeModelIndex));
+		return Nullable.run(() -> getTypeModelsMap().get(typeModelIndex));
 	}
 
 	public static BeanTypeModelByMaterial getTypeModelByMaterial(BeanTypeModelByMaterial.MapIndex mapIndex) {
-		return NullSafe.run(() -> getTypeModelsByMaterialsMap().get(mapIndex));
+		return Nullable.run(() -> getTypeModelsByMaterialsMap().get(mapIndex));
 	}
 
 	public static BeanTypeModelByMaterial getTypeModelByMaterial(Integer typeModelIndex, Integer materialIndex) {

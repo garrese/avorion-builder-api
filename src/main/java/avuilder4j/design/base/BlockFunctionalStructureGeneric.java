@@ -1,22 +1,37 @@
 package avuilder4j.design.base;
 
+import java.util.Collection;
+
 import avuilder4j.data.DataMaps;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Nullable;
 import avuilder4j.util.keys.Cons;
 
 @SuppressWarnings("rawtypes")
-public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> extends BlockPlanStructureGeneric<B> {
+public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric, S extends BlockFunctionalStructureGeneric>
+		extends BlockPlanStructureGeneric<B, S> {
 	private static final long serialVersionUID = 8757900473268467596L;
 
-	public double getVolumeBlock() { return sumFromBlocks(B::getVolumeBlock); }
+//	public double getVolumeBlock() { return sumFromBlocks(B::getVolumeBlock); }
+//
+//	public double getVolumeStat() { return sumFromBlocks(B::getVolumeStat); }
+//
+//	public double getDurability() { return sumFromBlocks(B::getDurability); }
+//
+//	public double getDensity() { return sumFromBlocks(B::getDensity); }
+//
+//	public double getMass() { return sumFromBlocks(B::getMass); }
 
-	public double getVolumeStat() { return sumFromBlocks(B::getVolumeStat); }
+	public BlockFunctionalStructureGeneric() {
+		super();
+	}
 
-	public double getDurability() { return sumFromBlocks(B::getDurability); }
+	public BlockFunctionalStructureGeneric(Collection<? extends B> c) {
+		super(c);
+	}
 
-	public double getDensity() { return sumFromBlocks(B::getDensity); }
-
-	public double getMass() { return sumFromBlocks(B::getMass); }
+	public BlockFunctionalStructureGeneric(int initialCapacity) {
+		super(initialCapacity);
+	}
 
 	private Double getMechanicsReq() {
 		return null;// sumFromBlocks(B::getCrewReqMechanics);
@@ -27,25 +42,25 @@ public class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric> e
 	}
 
 	public double getSargeantsReq() {
-		Double dividend = NullSafe.run(() -> getMechanicsReq() + getEngineersReq());
-		Double divider = NullSafe.run(() -> DataMaps.getConstant(Cons.CREW_RATIO_CREW_PER_SERGEANT).getValue());
-		Double result = NullSafe.run(() -> dividend / divider);
+		Double dividend = Nullable.run(() -> getMechanicsReq() + getEngineersReq());
+		Double divider = Nullable.run(() -> DataMaps.getConstant(Cons.CREW_RATIO_CREW_PER_SERGEANT).getValue());
+		Double result = Nullable.run(() -> dividend / divider);
 		return result;
 
 	}
 
 	public double getLieutenantsReq() {
-		return NullSafe.run(() -> getSargeantsReq()
+		return Nullable.run(() -> getSargeantsReq()
 				/ DataMaps.getConstant(Cons.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getValue());
 	}
 
 	public double getCommandersReq() {
-		return NullSafe.run(() -> getLieutenantsReq()
+		return Nullable.run(() -> getLieutenantsReq()
 				/ DataMaps.getConstant(Cons.CREW_RATIO_LIEUTENANTS_PER_COMMANDER).getValue());
 	}
 
 	public double getGeneralsReq() {
-		return NullSafe.run(() -> getCommandersReq()
+		return Nullable.run(() -> getCommandersReq()
 				/ DataMaps.getConstant(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue());
 	}
 

@@ -2,7 +2,7 @@ package avuilder4j.util.java;
 
 import java.util.function.Supplier;
 
-public class NullSafe {
+public class Nullable {
 
 	public static <T> T run(Supplier<T> supplier, T defaultValue) {
 		try {
@@ -16,13 +16,13 @@ public class NullSafe {
 		return run(supplier, null);
 	}
 
-	public static void run(Procedure procedure) {
+	public static void run(Runnable procedure) {
 		run(procedure, null);
 	}
 
-	public static void run(Procedure procedure, Procedure exceptionAction) {
+	public static void run(Runnable runnable, Runnable exceptionAction) {
 		try {
-			procedure.run();
+			runnable.run();
 		} catch (NullPointerException e) {
 			if (exceptionAction != null)
 				exceptionAction.run();

@@ -24,7 +24,7 @@ import avuilder4j.data.beans.BeanTypeModelByMaterial;
 import avuilder4j.data.beans.BeanTypeModelByMaterial.MapIndex;
 import avuilder4j.data.beans.BeanTypeModelParams;
 import avuilder4j.error.Avuilder4jException;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Nullable;
 import avuilder4j.util.java.SqlFunction;
 
 public class SqliteDataLoader extends DataLoader {
@@ -76,7 +76,7 @@ public class SqliteDataLoader extends DataLoader {
 
 	public static Boolean getBoolean(ResultSet r, String columnName) throws SQLException {
 		Integer i = getWrapper(r, columnName);
-		return NullSafe.run(() -> i == 1 ? true : false, null);
+		return Nullable.run(() -> i == 1 ? true : false, null);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import java.util.Random;
 public class Utils {
 
 	public static Double round(Double v, int zeros) {
-		return NullSafe.run(() -> {
+		return Nullable.run(() -> {
 			Double rounding = 1d;
 			for (int i = 0; i < zeros; i++) {
 				rounding *= 10;
@@ -22,7 +22,7 @@ public class Utils {
 	}
 
 	public static String formatDecimal(Double v, int zeros) {
-		return NullSafe.run(() -> {
+		return Nullable.run(() -> {
 			String formula = "#";
 			for (int i = 0; i < zeros; i++) {
 				if (i == 0)

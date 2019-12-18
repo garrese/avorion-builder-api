@@ -3,14 +3,14 @@ package avuilder4j.design.base;
 import avuilder4j.design.sub.dimensional.Lengths;
 import avuilder4j.design.sub.dimensional.Orientation;
 import avuilder4j.error.AvValidations;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Nullable;
 
 /**
  * Represents an Avorion full functional block in a structure.
  */
 @SuppressWarnings("rawtypes")
 public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends CuboidGeneric<T>
-		implements BlockPlanInterface {
+		implements BlockPlanInterfaceExporter, BlockPlanInterfaceImporter<T> {
 	private static final long serialVersionUID = -1896528590585386376L;
 
 //	public static Block deepCopy(Block bb) {
@@ -146,14 +146,16 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	 * 
 	 * @param color the {@link #color} to set.
 	 */
+	@Override
 	public T setColor(String color) {
 		AvValidations.colors(true, color);
 		this.color = color;
 		return chain();
 	}
 
-	public T setMaterialIndex(Integer material) {
-		this.materialIndex = material;
+	@Override
+	public T setMaterialIndex(Integer materialIndex) {
+		this.materialIndex = materialIndex;
 		return chain();
 	}
 
@@ -167,8 +169,9 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 		return chain();
 	}
 
-	public T setTypeIndex(Integer type) {
-		this.typeIndex = type;
+	@Override
+	public T setTypeIndex(Integer typeIndex) {
+		this.typeIndex = typeIndex;
 		return chain();
 	}
 
@@ -187,16 +190,16 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 		return builder.toString();
 	}
 
-	public String toStringBodyPlanIndexes() {
+	protected String toStringBodyPlanIndexes() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(", materialIndex=");
+		builder.append("materialIndex=");
 		builder.append(materialIndex);
 		builder.append(", typeIndex=");
 		builder.append(typeIndex);
 		return builder.toString();
 	}
 
-	public String toStringBodyPlanValues() {
+	protected String toStringBodyPlanValues() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("color=");
 		builder.append(color);
@@ -208,28 +211,28 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	@Override
 	public void validateBlockPlan() {
 		validateCuboid();
-		AvValidations.indexes(false, getIndexInStructure());
+		AvValidations.indexes(false, getIndex());
 		if (getParentIndex() != null && !getParentIndex().equals(-1))
 			AvValidations.indexes(true, getParentIndex());
 		AvValidations.notNull(getMaterialIndex(), "Material");
 		AvValidations.notNull(getTypeIndex(), "Type");
 		AvValidations.orientations(false, getOrientation());
 		AvValidations.colors(false, getColor());
-		AvValidations.ends(false, getLX(), getUX());
-		AvValidations.ends(false, getLY(), getUY());
-		AvValidations.ends(false, getLZ(), getUZ());
+		AvValidations.ends(false, getXL(), getXU());
+		AvValidations.ends(false, getYL(), getYU());
+		AvValidations.ends(false, getZL(), getZU());
 	}
 
 	@Override
 	public Integer getParentIndex() {
 		if (getParent() != null)
-			return getParent().getIndexInStructure();
+			return getParent().getIndex();
 		else
 			return null;
 	}
 
 	@Override
-	public Double getLX() {
+	public Double getXL() {
 		if (getAxisX() != null)
 			return getAxisX().getLowerEnd();
 		else
@@ -237,7 +240,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	}
 
 	@Override
-	public Double getLY() {
+	public Double getYL() {
 		if (getAxisY() != null)
 			return getAxisY().getLowerEnd();
 		else
@@ -245,7 +248,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	}
 
 	@Override
-	public Double getLZ() {
+	public Double getZL() {
 		if (getAxisZ() != null)
 			return getAxisZ().getLowerEnd();
 		else
@@ -253,7 +256,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	}
 
 	@Override
-	public Double getUX() {
+	public Double getXU() {
 		if (getAxisX() != null)
 			return getAxisX().getUpperEnd();
 		else
@@ -261,7 +264,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	}
 
 	@Override
-	public Double getUY() {
+	public Double getYU() {
 		if (getAxisY() != null)
 			return getAxisY().getUpperEnd();
 		else
@@ -269,7 +272,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	}
 
 	@Override
-	public Double getUZ() {
+	public Double getZU() {
 		if (getAxisZ() != null)
 			return getAxisZ().getUpperEnd();
 		else
@@ -277,9 +280,21 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric> extends Cuboi
 	}
 
 	@Override
-	public Integer getLook() { return NullSafe.run(() -> getOrientation().getLook().getIndex()); }
+	public Integer getLook() { return Nullable.run(() -> getOrientation().getLook().getIndex()); }
 
 	@Override
-	public Integer getUp() { return NullSafe.run(() -> getOrientation().getUp().getIndex()); }
+	public Integer getUp() { return Nullable.run(() -> getOrientation().getUp().getIndex()); }
+
+	@Override
+	public T setLook(Integer look) {
+		Nullable.run(() -> getOrientation().setLook(look));
+		return chain();
+	}
+
+	@Override
+	public T setUp(Integer up) {
+		Nullable.run(() -> getOrientation().setUp(up));
+		return chain();
+	}
 
 }

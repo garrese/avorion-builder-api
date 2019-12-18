@@ -10,9 +10,7 @@ import avuilder4j.design.sub.functional.HangarSpace;
 import avuilder4j.design.sub.functional.IFGAura;
 import avuilder4j.design.sub.functional.PropulsionForces;
 import avuilder4j.design.sub.functional.RotationForces;
-import avuilder4j.error.AvErrors;
-import avuilder4j.error.Avuilder4jRuntimeException;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Nullable;
 import avuilder4j.util.java.RunAndReturn;
 import avuilder4j.util.keys.Cons;
 import avuilder4j.util.keys.Types;
@@ -26,12 +24,10 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 
 	public BlockArchetype getBlockArchetype() { return blockArchetype; }
 
-	public String getBlockName() { return NullSafe.run(() -> getBlockArchetype().toStringBlockName()); }
-
-	public Double getCreditCost() { return NullSafe.run(() -> getBlockArchetype().getCreditCost() * getVolumeBlock()); }
+	public Double getCreditCost() { return Nullable.run(() -> getBlockArchetype().getCreditCost() * getVolumeBlock()); }
 
 	private Double getCrewReqCommanders() {
-		return NullSafe.run(() -> getCrewReqLieutenants()
+		return Nullable.run(() -> getCrewReqLieutenants()
 				/ DataMaps.getConstantValue(Cons.CREW_RATIO_LIEUTENANTS_PER_COMMANDER));
 	}
 
@@ -44,30 +40,30 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 	}
 
 	private Double getCrewReqGenerals() {
-		return NullSafe.run(() -> getCrewReqCommanders()
+		return Nullable.run(() -> getCrewReqCommanders()
 				/ DataMaps.getConstantsMap().get(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue());
 	}
 
 	private Double getCrewReqLieutenants() {
-		return NullSafe.run(() -> getCrewSergeantsReq()
+		return Nullable.run(() -> getCrewSergeantsReq()
 				/ DataMaps.getConstantsMap().get(Cons.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getValue());
 	}
 
 	private Double getCrewReqMechanics() {
-		return NullSafe.run(() -> getBlockArchetype().getMechanics() * getVolumeBlock());
+		return Nullable.run(() -> getBlockArchetype().getMechanics() * getVolumeBlock());
 	};
 
 	private Double getCrewSergeantsReq() {
-		return NullSafe.run(() -> {
+		return Nullable.run(() -> {
 			Double crew = (getCrewReqMechanics() + getCrewReqEngineers());
 			Double ratio = DataMaps.getConstantsMap().get(Cons.CREW_RATIO_CREW_PER_SERGEANT).getValue();
 			return crew / ratio;
 		});
 	}
 
-	public Double getDensity() { return NullSafe.run(() -> getBlockArchetype().getDensity() * getVolumeBlock()); }
+	public Double getDensity() { return Nullable.run(() -> getBlockArchetype().getDensity() * getVolumeBlock()); }
 
-	public Double getDurability() { return NullSafe.run(() -> getBlockArchetype().getDurability() * getVolumeBlock()); }
+	public Double getDurability() { return Nullable.run(() -> getBlockArchetype().getDurability() * getVolumeBlock()); }
 
 	public Double getEffAcademyCap() { return getEffectByVolumeIfType(Types.ACADEMY); }
 
@@ -102,7 +98,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 	}
 
 	protected Double getEffectByVolumeIfType(Integer typeIndexFilter) {
-		return NullSafe.run(() -> {
+		return Nullable.run(() -> {
 			if (isTypeOf(typeIndexFilter)) {
 				return getVolumeBlock() * getBlockArchetype().getEffects().get(1);
 			} else {
@@ -112,7 +108,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 	}
 
 	protected Double getEffectStorageIfType(Integer typeIndexFilter) {
-		return NullSafe.run(() -> {
+		return Nullable.run(() -> {
 			if (isTypeOf(typeIndexFilter)) {
 				return getBlockArchetype().getEffects().get(1) * getEffectStorageVolume();
 			} else {
@@ -122,7 +118,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 	}
 
 	protected Double getEffectStorageVolume() {
-		return NullSafe.run(() -> {
+		return Nullable.run(() -> {
 			Double vol = 1d;
 			for (AxisEnds ends : getAllAxes()) {
 				vol *= ends.getLength() - DataMaps.getConstantValue(Cons.CONTAINERS_WALL_THICKNESS);
@@ -181,7 +177,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 	}
 
 	public IFGAura getEffIntegrityFieldGenerator() {
-		return NullSafe.run(() -> {
+		return Nullable.run(() -> {
 			Double effect = getBlockArchetype().getEffects().get(1);
 			IFGAura aura = new IFGAura();
 			for (Axis axis : Axis.values()) {
@@ -194,7 +190,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 	public PropulsionForces getEffPropulsionForces() { return getEffPropulsionForces((Integer[]) null); }
 
 	public PropulsionForces getEffPropulsionForces(Integer... typeFilter) {
-		Integer typeIndex = NullSafe.run(() -> getBlockArchetype().getTypeIndex());
+		Integer typeIndex = Nullable.run(() -> getBlockArchetype().getTypeIndex());
 		if (typeIndex != null && (typeFilter == null || isTypeOf(typeFilter))) {
 
 			switch (typeIndex) {
@@ -214,7 +210,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 	public Double getEffShieldGenerated() { return getEffectByVolumeIfType(Types.SHIELD_GENERATOR); }
 
 	public Double getEffSolarPanelGeneratedE() {
-		return NullSafe.run(() -> {
+		return Nullable.run(() -> {
 			if (isTypeOf(Types.SOLAR_PANEL)) {
 				return getSurfaceArea() * getBlockArchetype().getEffects().get(1);
 			} else
@@ -235,42 +231,36 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 
 	public Double getEffTorpedoStorage() { return getEffectStorageIfType(Types.TORPEDO_STORAGE); };
 
-	public Double getMass() { return NullSafe.run(() -> getDensity() * getVolumeBlock()); }
+	public Double getMass() { return Nullable.run(() -> getDensity() * getVolumeBlock()); }
 
 	public Double getMaterialCost() {
-		return NullSafe.run(() -> getBlockArchetype().getMaterialCost() * getVolumeBlock());
+		return Nullable.run(() -> getBlockArchetype().getMaterialCost() * getVolumeBlock());
 	}
 
-	@Override
-	public Integer getMaterialIndex() { return NullSafe.run(() -> getBlockArchetype().getMaterialIndex()); }
-
 	public Double getProcessingPowerBase() {
-		if (NullSafe.run(() -> getBlockArchetype().getProcess(), false)) {
+		if (Nullable.run(() -> getBlockArchetype().getProcess(), false)) {
 			return getVolumeBlock();
 		} else
 			return 0d;
 	}
 
-	@Override
-	public Integer getTypeIndex() { return NullSafe.run(() -> getBlockArchetype().getTypeIndex()); }
-
 	public Double getVolumeBlock() {
-		return NullSafe.run(() -> getVolumeCuboid() * getBlockArchetype().getCuboidFilledIn());
+		return Nullable.run(() -> getVolumeCuboid() * getBlockArchetype().getCuboidFilledIn());
 	}
 
 	public Double getVolumeStat() {
-		if (NullSafe.run(() -> getBlockArchetype().getHasVolume(), false)) {
+		if (Nullable.run(() -> getBlockArchetype().getHasVolume(), false)) {
 			return getVolumeBlock();
 		} else
 			return 0d;
 	}
 
 	public boolean isTypeOf(Integer index) {
-		return NullSafe.run(() -> getBlockArchetype().getTypeIndex().equals(index), false);
+		return Nullable.run(() -> getBlockArchetype().getTypeIndex().equals(index), false);
 	}
 
 	public boolean isTypeOf(Integer[] indexes) {
-		return NullSafe.run(() -> Arrays.stream(indexes).anyMatch(getBlockArchetype().getTypeIndex()::equals), false);
+		return Nullable.run(() -> Arrays.stream(indexes).anyMatch(getBlockArchetype().getTypeIndex()::equals), false);
 	}
 
 	public T setBlockArchetype(BlockArchetype blockArchetype) {
@@ -279,41 +269,20 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 	}
 
 	public T setBlockArchetype(Integer typeIndex, Integer materialIndex) {
+		super.setTypeIndex(typeIndex);
+		super.setMaterialIndex(materialIndex);
 		BlockArchetype a = DataMaps.getBlockArchetype(typeIndex, materialIndex);
-		if (a == null)
-			throw new Avuilder4jRuntimeException(
-					String.format(AvErrors.BLOCK_ARCHETYPE_NOT_FOUND, typeIndex, materialIndex));
 		return setBlockArchetype(a);
 	}
 
 	@Override
 	public T setMaterialIndex(Integer materialIndex) {
-		if (getBlockArchetype() == null) {
-			Integer savedType = super.getTypeIndex();
-			if (savedType == null) {
-				super.setMaterialIndex(materialIndex);
-			} else {
-				setBlockArchetype(savedType, materialIndex);
-			}
-		} else {
-			setBlockArchetype(getBlockArchetype().getTypeIndex(), materialIndex);
-		}
-		return chain();
+		return setBlockArchetype(getTypeIndex(), materialIndex);
 	}
 
 	@Override
 	public T setTypeIndex(Integer typeIndex) {
-		if (getBlockArchetype() == null) {
-			Integer savedMaterial = super.getMaterialIndex();
-			if (savedMaterial == null) {
-				super.setTypeIndex(typeIndex);
-			} else {
-				setBlockArchetype(typeIndex, savedMaterial);
-			}
-		} else {
-			setBlockArchetype(typeIndex, getBlockArchetype().getMaterialIndex());
-		}
-		return chain();
+		return setBlockArchetype(typeIndex, super.getMaterialIndex());
 	}
 
 	@Override
@@ -321,6 +290,8 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 		StringBuilder builder = new StringBuilder();
 		builder.append("Block [");
 		builder.append(toStringHeader());
+		builder.append(", ");
+		builder.append(toStringBodyPlanIndexes());
 		builder.append(", ");
 		builder.append(toStringBodyFunctionalNames());
 		builder.append(", ");
@@ -333,31 +304,31 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 		return builder.toString();
 	}
 
-	public String toStringBodyFunctionalNames() {
+	protected String toStringBodyFunctionalNames() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("block=");
-		builder.append(getBlockName());
+		builder.append(Nullable.run(() -> getBlockArchetype().getTypeName()));
 		builder.append(", material=");
-		builder.append(NullSafe.run(() -> blockArchetype.getMaterialName()));
+		builder.append(Nullable.run(() -> blockArchetype.getMaterialName()));
 		return builder.toString();
 	}
 
-	public String toStringBodyFunctionalValues() {
+	protected String toStringBodyFunctionalValues() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("mass=");
 		builder.append(getMass());
-		builder.append(", volumeBlock=");
+		builder.append(", volBlock=");
 		builder.append(getVolumeBlock());
-		builder.append(", materialCost=");
+		builder.append(", MCost=");
 		builder.append(getMaterialCost());
-		builder.append(", creditCost=");
+		builder.append(", CCost=");
 		builder.append(getCreditCost());
-		builder.append(", durability=");
+		builder.append(", dur=");
 		builder.append(getDurability());
-		builder.append(", processingPowerBase=");
+		builder.append(", PPB=");
 		builder.append(getProcessingPowerBase());
-		builder.append(", colissionReduction=");
-		builder.append(NullSafe.run(() -> getBlockArchetype().getCollisionReduction()));
+		builder.append(", CR=");
+		builder.append(Nullable.run(() -> getBlockArchetype().getCollisionReduction()));
 		return builder.toString();
 	}
 

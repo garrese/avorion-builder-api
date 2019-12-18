@@ -5,7 +5,7 @@ import avuilder4j.design.enums.Face;
 import avuilder4j.design.enums.Rotation;
 import avuilder4j.design.sub.dimensional.Orientation;
 import avuilder4j.error.AvErrors;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Nullable;
 
 public class Orients {
 
@@ -62,7 +62,7 @@ public class Orients {
 	}
 
 	protected static Axis getDefaultAxisOfEffectByOrientation(Orientation orientation) {
-		return NullSafe.run(() -> {
+		return Nullable.run(() -> {
 			return Axis.getAxisByFace(orientation.getLook());
 		});
 	}

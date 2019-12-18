@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import avuilder4j.error.AvErrors;
+import avuilder4j.error.Avuilder4jRuntimeException;
 
 public enum Face {
 
@@ -88,11 +89,14 @@ public enum Face {
 	}
 
 	public static Face getByIndex(Integer index) {
-		if (index != null)
-			for (Face f : Face.values())
+		if (index != null) {
+			for (Face f : Face.values()) {
 				if (f.getIndex() == index.intValue())
 					return f;
-		return null;
+			}
+			throw new Avuilder4jRuntimeException(String.format(AvErrors.FACE_NOT_EXISTS, index));
+		} else
+			return null;
 	}
 
 	public int getIndex() { return index; }

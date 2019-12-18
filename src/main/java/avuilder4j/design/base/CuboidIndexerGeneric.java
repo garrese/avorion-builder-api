@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import avuilder4j.design.sub.dimensional.Lengths;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Nullable;
 
 @SuppressWarnings("rawtypes")
-public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric<B>> {
+public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric<B, S>> {
 
 	protected S structure;
 	protected int indexCount;
@@ -22,7 +22,7 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 
 	public void indexBlock(B block) {
 		indexCount++;
-		block.setIndexInStructure(indexCount);
+		block.setIndex(indexCount);
 		structure.add(block);
 	}
 
@@ -56,7 +56,7 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 	}
 
 	public void importBlocks(List<B> blocks) {
-		Collections.sort(blocks, (o1, o2) -> o1.getIndexInStructure().compareTo(o2.getIndexInStructure()));
+		Collections.sort(blocks, (o1, o2) -> o1.getIndex().compareTo(o2.getIndex()));
 		for (B block : blocks) {
 			indexImportedBlock(block);
 		}
@@ -86,10 +86,10 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 
 	protected void indexImportedBlock(B block) {
 		if (block != null) {
-			if (block.getIndexInStructure() == null || block.getIndexInStructure() <= indexCount) {
+			if (block.getIndex() == null || block.getIndex() <= indexCount) {
 				indexBlock(block);
 			} else {
-				indexCount = block.getIndexInStructure();
+				indexCount = block.getIndex();
 				structure.add(block);
 			}
 		}
@@ -113,13 +113,13 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 	public void getIndexesMap() {
 		Map<Integer, Integer> indexes = new HashMap<>();
 		for (B block : structure) {
-			Integer index = block.getIndexInStructure();
+			Integer index = block.getIndex();
 			if (index != null)
 				indexes.put(index, index);
 		}
 	}
 
-	public Lengths getDefaultLengths() { return NullSafe.run(() -> defaultLengths.getCopy()); }
+	public Lengths getDefaultLengths() { return Nullable.run(() -> defaultLengths.getCopy()); }
 
 	public void setDefaultLengths(Lengths defaultLengths) { this.defaultLengths = defaultLengths; }
 

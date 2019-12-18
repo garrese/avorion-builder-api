@@ -16,7 +16,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import avuilder4j.design.base.BlockPlanInterface;
+import avuilder4j.design.base.BlockPlanInterfaceExporter;
 import avuilder4j.error.Avuilder4jException;
 
 public class DesignExporter {
@@ -25,7 +25,7 @@ public class DesignExporter {
 
 	protected String exportRoute = "ships/";
 
-	public void export(List<? extends BlockPlanInterface> blocks, String shipName) throws Avuilder4jException {
+	public void exportDesign(List<? extends BlockPlanInterfaceExporter> blocks, String shipName) throws Avuilder4jException {
 
 		if (shipName == null || shipName.equals("")) {
 			throw new IllegalArgumentException("Ship's name can't be empty or null");
@@ -50,7 +50,7 @@ public class DesignExporter {
 			addAttribute(doc, planE, "convex", "false");
 
 			// ( item > block )*
-			for (BlockPlanInterface block : blocks) {
+			for (BlockPlanInterfaceExporter block : blocks) {
 
 				// item
 				Element itemE = doc.createElement("item");
@@ -62,18 +62,18 @@ public class DesignExporter {
 				}
 				addAttribute(doc, itemE, "parent", String.valueOf(parentIndex));
 
-				addAttribute(doc, itemE, "index", String.valueOf(block.getIndexInStructure()));
+				addAttribute(doc, itemE, "index", String.valueOf(block.getIndex()));
 
 				// block
 				Element blockE = doc.createElement("block");
 				itemE.appendChild(blockE);
 
-				String lx = String.valueOf(block.getLX());
-				String ly = String.valueOf(block.getLY());
-				String lz = String.valueOf(block.getLZ());
-				String ux = String.valueOf(block.getUX());
-				String uy = String.valueOf(block.getUY());
-				String uz = String.valueOf(block.getUZ());
+				String lx = String.valueOf(block.getXL());
+				String ly = String.valueOf(block.getYL());
+				String lz = String.valueOf(block.getZL());
+				String ux = String.valueOf(block.getXU());
+				String uy = String.valueOf(block.getYU());
+				String uz = String.valueOf(block.getZU());
 				addAttribute(doc, blockE, "lx", lx);
 				addAttribute(doc, blockE, "ly", ly);
 				addAttribute(doc, blockE, "lz", lz);
@@ -113,10 +113,10 @@ public class DesignExporter {
 		element.setAttributeNode(materialIndexAtt);
 	}
 
-	public static void validateBlockPlanList(List<? extends BlockPlanInterface> blocks) throws Avuilder4jException {
+	public static void validateBlockPlanList(List<? extends BlockPlanInterfaceExporter> blocks) throws Avuilder4jException {
 
-		ArrayList<BlockPlanInterface> roots = new ArrayList<BlockPlanInterface>();
-		for (BlockPlanInterface block : blocks) {
+		ArrayList<BlockPlanInterfaceExporter> roots = new ArrayList<BlockPlanInterfaceExporter>();
+		for (BlockPlanInterfaceExporter block : blocks) {
 			block.validateBlockPlan();
 			if (block.getParentIndex() == null || block.getParentIndex().equals(-1)) {
 				roots.add(block);

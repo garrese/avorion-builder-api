@@ -1,6 +1,12 @@
 package avuilder4j.util;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -9,18 +15,20 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import avuilder4j.design.BlockPlan;
-import avuilder4j.design.StructurePlan;
-import avuilder4j.design.sub.dimensional.Orientation;
+import avuilder4j.design.base.BlockPlanInterfaceImporter;
 import avuilder4j.error.Avuilder4jException;
 
 public class DesignImporter {
 
 	protected String exportRoute = "ships/";
 
-	public StructurePlan export(String shipName) throws Avuilder4jException {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public <B extends BlockPlanInterfaceImporter> List<B> importDesign(String shipName, Supplier<B> supplier)
+			throws Avuilder4jException {
 
-		StructurePlan s = new StructurePlan();
+		HashMap<Integer, BlockPlanInterfaceImporter> blocksMap = new LinkedHashMap<>();
+		HashMap<Integer, Integer> parentsMap = new HashMap<>();
+
 		try {
 			File fXmlFile = new File(exportRoute + shipName);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -32,36 +40,43 @@ public class DesignImporter {
 
 			NodeList items = plan.getElementsByTagName("item");
 			for (int i = 0; i < items.getLength(); i++) {
+
 				Element item = (Element) items.item(i);
-				Element block = (Element) item.getElementsByTagName("block").item(0);
-
-				BlockPlan b = new BlockPlan();
-				b.setIndexInStructure(getIntegerAtt(item, "index"));
-				b.getAxisX().setLowerEnd(getDoubleAttRounded(block, "lx"));
-				b.getAxisX().setUpperEnd(getDoubleAttRounded(block, "ux"));
-				b.getAxisY().setLowerEnd(getDoubleAttRounded(block, "ly"));
-				b.getAxisY().setUpperEnd(getDoubleAttRounded(block, "uy"));
-				b.getAxisZ().setLowerEnd(getDoubleAttRounded(block, "lz"));
-				b.getAxisZ().setUpperEnd(getDoubleAttRounded(block, "uz"));
-				b.setTypeIndex(getIntegerAtt(block, "index"));
-				b.setMaterialIndex(getIntegerAtt(block, "material"));
-				b.setOrientation(new Orientation(getIntegerAtt(block, "look"), getIntegerAtt(block, "up")));
-				b.setColor(block.getAttribute("color"));
-				s.add(b);
-			}
-
-			for (int i = 0; i < items.getLength(); i++) {
-				Element item = (Element) items.item(i);
-
 				Integer index = getIntegerAtt(item, "index");
-				Integer parent = getIntegerAtt(item, "parent");
-				s.findByIndex(index).setParent(s.findByIndex(parent));
+				Integer parentIndex = getIntegerAtt(item, "parent");
+
+				Element xmlBlock = (Element) item.getElementsByTagName("block").item(0);
+				BlockPlanInterfaceImporter importer = supplier.get();
+
+				importer.setIndex(index);
+				importer.setXL(getDoubleAttRounded(xmlBlock, "lx"));
+				importer.setXU(getDoubleAttRounded(xmlBlock, "ux"));
+				importer.setYL(getDoubleAttRounded(xmlBlock, "ly"));
+				importer.setYU(getDoubleAttRounded(xmlBlock, "uy"));
+				importer.setZL(getDoubleAttRounded(xmlBlock, "lz"));
+				importer.setZU(getDoubleAttRounded(xmlBlock, "uz"));
+				importer.setTypeIndex(getIntegerAtt(xmlBlock, "index"));
+				importer.setMaterialIndex(getIntegerAtt(xmlBlock, "material"));
+				importer.setLook(getIntegerAtt(xmlBlock, "look"));
+				importer.setUp(getIntegerAtt(xmlBlock, "up"));
+				importer.setColor(xmlBlock.getAttribute("color"));
+
+				parentsMap.put(index, parentIndex);
+				blocksMap.put(index, importer);
 			}
+
+			for (Map.Entry<Integer, Integer> parentRegistry : parentsMap.entrySet()) {
+
+				BlockPlanInterfaceImporter block = blocksMap.get(parentRegistry.getKey());
+				BlockPlanInterfaceImporter parent = blocksMap.get(parentRegistry.getValue());
+				block.setParent(parent);
+			}
+
 		} catch (Exception e) {
 			throw new Avuilder4jException(e);
 		}
 
-		return s;
+		return blocksMap.values().stream().collect(Collectors.toList());
 	}
 
 	public Integer getIntegerAtt(Element e, String att) {

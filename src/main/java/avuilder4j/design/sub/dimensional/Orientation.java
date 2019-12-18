@@ -80,6 +80,10 @@ public class Orientation implements Serializable, Copyable<Orientation>, Chainab
 
 	public Face getLook() { return look; }
 
+	public Orientation setLook(Integer look) {
+		return setLook(Face.getByIndex(look));
+	}
+
 	public Orientation setLook(Face look) {
 		Face savedLook = getLook();
 		this.look = look;
@@ -108,6 +112,10 @@ public class Orientation implements Serializable, Copyable<Orientation>, Chainab
 	}
 
 	public Face getUp() { return up; }
+
+	public Orientation setUp(Integer up) {
+		return setUp(Face.getByIndex(up));
+	}
 
 	public Orientation setUp(Face up) {
 		Face savedUp = getUp();

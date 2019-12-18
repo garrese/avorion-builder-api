@@ -14,7 +14,7 @@ import avuilder4j.data.beans.BeanTypeModelByMaterial;
 import avuilder4j.data.dtos.BlockArchetype;
 import avuilder4j.data.dtos.BlockArchetypeParams;
 import avuilder4j.error.Avuilder4jException;
-import avuilder4j.util.java.NullSafe;
+import avuilder4j.util.java.Nullable;
 import avuilder4j.util.java.Utils;
 
 public abstract class DataLoader {
@@ -84,13 +84,13 @@ public abstract class DataLoader {
 							List<Double> es = DataMaps.getEffectsValue(tm.getIndex(), m.getIndex());
 							p.setEffects(Collections.unmodifiableList(es));
 
-							Double cCost = NullSafe.run(() -> tmbm.getCreditCostMod() * m.getCreditCost());
+							Double cCost = Nullable.run(() -> tmbm.getCreditCostMod() * m.getCreditCost());
 							p.setCreditCost(Utils.round(cCost, 6));
-							Double mCost = NullSafe.run(() -> tm.getMaterialCostMod() * m.getMaterialCost());
+							Double mCost = Nullable.run(() -> tm.getMaterialCostMod() * m.getMaterialCost());
 							p.setMaterialCost(Utils.round(mCost, 6));
-							Double dur = NullSafe.run(() -> tm.getDurabilityMod() * m.getDurability());
+							Double dur = Nullable.run(() -> tm.getDurabilityMod() * m.getDurability());
 							p.setDurability(Utils.round(dur, 6));
-							Double dens = NullSafe.run(() -> tm.getDensityMod() * m.getDensity());
+							Double dens = Nullable.run(() -> tm.getDensityMod() * m.getDensity());
 							p.setDensity(Utils.round(dens, 6));
 
 							BlockArchetype a = new BlockArchetype(p);
@@ -104,7 +104,6 @@ public abstract class DataLoader {
 		} catch (Exception e) {
 			throw new Avuilder4jException(e);
 		}
-
 	}
 
 }
