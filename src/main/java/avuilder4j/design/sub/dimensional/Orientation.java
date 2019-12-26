@@ -43,11 +43,31 @@ public class Orientation implements Serializable, Copyable<Orientation>, Chainab
 		set(look, up);
 	}
 
-	public Orientation set(Integer look, Integer up) {
-		setLook(Face.getByIndex(look));
-		setUp(Face.getByIndex(up));
-		return chain();
+	public static Orientation copy(Orientation copyFrom, Orientation copyTo) {
+		if (copyFrom != null && copyTo != null) {
+			copyTo.set(copyFrom.getLook(), copyFrom.getUp());
+		}
+		return copyTo;
 	}
+
+	public static boolean isDefined(Orientation orientation) {
+		if (orientation != null && orientation.getLook() != null && orientation.getUp() != null)
+			return true;
+		else
+			return false;
+	}
+
+	@Override
+	public Orientation chain() {
+		return this;
+	}
+
+	@Override
+	public Orientation getCopy() { return Orientation.copy(this, new Orientation()); }
+
+	public Face getLook() { return look; }
+
+	public Face getUp() { return up; }
 
 	public Orientation rotate(Rotation rotation) {
 		rotate(rotation, 1);
@@ -55,7 +75,7 @@ public class Orientation implements Serializable, Copyable<Orientation>, Chainab
 	}
 
 	public Orientation rotate(Rotation rotation, int times) {
-		ArrayList<Face> faces = Face.getFacesInvolvedInBlockRotation(rotation);
+		ArrayList<Face> faces = Face.getFacesInvolvedInRotation(rotation);
 
 		for (int i = 0; i < times; i++) {
 			int lookPos = faces.indexOf(getLook());
@@ -78,24 +98,6 @@ public class Orientation implements Serializable, Copyable<Orientation>, Chainab
 		return this;
 	}
 
-	public Face getLook() { return look; }
-
-	public Orientation setLook(Integer look) {
-		return setLook(Face.getByIndex(look));
-	}
-
-	public Orientation setLook(Face look) {
-		Face savedLook = getLook();
-		this.look = look;
-		try {
-			AvValidations.orientations(true, this);
-		} catch (IllegalArgumentException e) {
-			this.look = savedLook;
-			throw e;
-		}
-		return this;
-	}
-
 	public Orientation set(Face look, Face up) {
 		Face savedLook = getLook();
 		Face savedUp = getUp();
@@ -111,10 +113,26 @@ public class Orientation implements Serializable, Copyable<Orientation>, Chainab
 		return this;
 	}
 
-	public Face getUp() { return up; }
+	public Orientation set(Integer look, Integer up) {
+		setLook(Face.getByIndex(look));
+		setUp(Face.getByIndex(up));
+		return chain();
+	}
 
-	public Orientation setUp(Integer up) {
-		return setUp(Face.getByIndex(up));
+	public Orientation setLook(Face look) {
+		Face savedLook = getLook();
+		this.look = look;
+		try {
+			AvValidations.orientations(true, this);
+		} catch (IllegalArgumentException e) {
+			this.look = savedLook;
+			throw e;
+		}
+		return this;
+	}
+
+	public Orientation setLook(Integer look) {
+		return setLook(Face.getByIndex(look));
 	}
 
 	public Orientation setUp(Face up) {
@@ -129,24 +147,13 @@ public class Orientation implements Serializable, Copyable<Orientation>, Chainab
 		return this;
 	}
 
+	public Orientation setUp(Integer up) {
+		return setUp(Face.getByIndex(up));
+	}
+
 	@Override
 	public String toString() {
 		return "[look=" + look + ", up=" + up + "]";
-	}
-
-	@Override
-	public Orientation getCopy() { return new Orientation().set(this.look, this.up); }
-
-	@Override
-	public Orientation chain() {
-		return this;
-	}
-
-	public static boolean isDefined(Orientation orientation) {
-		if (orientation != null && orientation.getLook() != null && orientation.getUp() != null)
-			return true;
-		else
-			return false;
 	}
 
 }

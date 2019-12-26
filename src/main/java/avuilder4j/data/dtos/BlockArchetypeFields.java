@@ -12,7 +12,7 @@ public abstract class BlockArchetypeFields implements Serializable {
 
 	protected Integer typeIndex;
 	protected Integer typeModelIndex;
-	protected Integer shapeIdx;
+	protected Integer shapeIndex;
 
 	protected Double collisionReduction;
 	protected String typeModelName;
@@ -23,7 +23,7 @@ public abstract class BlockArchetypeFields implements Serializable {
 
 	protected String shapeName;
 	protected Double cuboidFilledIn;
-	protected String symmetricShape;
+	protected Integer symmetricTypeIndex;
 
 	protected Double density;
 	protected Double durability;
@@ -51,13 +51,13 @@ public abstract class BlockArchetypeFields implements Serializable {
 
 	public Boolean getHasVolume() { return hasVolume; }
 
-	public Integer getShapeIndex() { return shapeIdx; }
+	public Integer getShapeIndex() { return shapeIndex; }
 
 	public String getShapeName() { return shapeName; }
 
 	public Double getCuboidFilledIn() { return cuboidFilledIn; }
 
-	public String getSymmetricShapeIndex() { return symmetricShape; }
+	public Integer getSymmetricTypeIndex() { return symmetricTypeIndex; }
 
 	public Double getDensity() { return density; }
 
@@ -81,7 +81,7 @@ public abstract class BlockArchetypeFields implements Serializable {
 		builder.append(", typeModelIndex=");
 		builder.append(typeModelIndex);
 		builder.append(", shapeIdx=");
-		builder.append(shapeIdx);
+		builder.append(shapeIndex);
 		builder.append(", collisionReduction=");
 		builder.append(collisionReduction);
 		builder.append(", typeModelName=");
@@ -98,8 +98,8 @@ public abstract class BlockArchetypeFields implements Serializable {
 		builder.append(shapeName);
 		builder.append(", cuboidFilledIn=");
 		builder.append(cuboidFilledIn);
-		builder.append(", symmetricShape=");
-		builder.append(symmetricShape);
+		builder.append(", symmetricTypeIndex=");
+		builder.append(symmetricTypeIndex);
 		builder.append(", density=");
 		builder.append(density);
 		builder.append(", durability=");
@@ -117,7 +117,7 @@ public abstract class BlockArchetypeFields implements Serializable {
 	@Override
 	public int hashCode() {
 		return Objects
-				.hash(collisionReduction, creditCost, cuboidFilledIn, density, durability, effects, engineers, hasVolume, materialCost, materialIndex, materialName, mechanics, process, shapeIdx, shapeName, symmetricShape, typeIndex, typeModelIndex, typeModelName);
+				.hash(collisionReduction, creditCost, cuboidFilledIn, density, durability, effects, engineers, hasVolume, materialCost, materialIndex, materialName, mechanics, process, shapeIndex, shapeName, symmetricTypeIndex, typeIndex, typeModelIndex, typeModelName);
 	}
 
 	@Override
@@ -136,8 +136,9 @@ public abstract class BlockArchetypeFields implements Serializable {
 				&& Objects.equals(hasVolume, other.hasVolume) && Objects.equals(materialCost, other.materialCost)
 				&& Objects.equals(materialIndex, other.materialIndex)
 				&& Objects.equals(materialName, other.materialName) && Objects.equals(mechanics, other.mechanics)
-				&& Objects.equals(process, other.process) && Objects.equals(shapeIdx, other.shapeIdx)
-				&& Objects.equals(shapeName, other.shapeName) && Objects.equals(symmetricShape, other.symmetricShape)
+				&& Objects.equals(process, other.process) && Objects.equals(shapeIndex, other.shapeIndex)
+				&& Objects.equals(shapeName, other.shapeName)
+				&& Objects.equals(symmetricTypeIndex, other.symmetricTypeIndex)
 				&& Objects.equals(typeIndex, other.typeIndex) && Objects.equals(typeModelIndex, other.typeModelIndex)
 				&& Objects.equals(typeModelName, other.typeModelName);
 	}

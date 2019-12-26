@@ -1,15 +1,15 @@
 package avuilder4j.design.base;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import avuilder4j.design.sub.dimensional.Lengths;
+import avuilder4j.util.java.Chainable;
 import avuilder4j.util.java.Nullable;
 
 @SuppressWarnings("rawtypes")
-public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric<B, S>> {
+public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric<B, S>, I extends CuboidIndexerGeneric>
+		implements Chainable<I> {
 
 	protected S structure;
 	protected int indexCount;
@@ -20,11 +20,15 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 		setStructure(getStructureInstance());
 	}
 
-	public void indexBlock(B block) {
+	protected I indexBlock(B block) {
 		indexCount++;
 		block.setIndex(indexCount);
 		structure.add(block);
+		return chain();
 	}
+
+	@Override
+	public abstract I chain();
 
 	public B createBlanckBlock() {
 		B b = getBlockInstance();
@@ -38,7 +42,7 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 
 	public B createBlock() {
 		B cuboid = createBlanckBlock();
-		cuboid.setLengths(getDefaultLengths());
+		cuboid.setLengths(Nullable.run(() -> getDefaultLengths().getCopy()));
 		return cuboid;
 	}
 
@@ -55,15 +59,17 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 		return b;
 	}
 
-	public void importBlocks(List<B> blocks) {
+	public I importBlocks(List<B> blocks) {
 		Collections.sort(blocks, (o1, o2) -> o1.getIndex().compareTo(o2.getIndex()));
 		for (B block : blocks) {
 			indexImportedBlock(block);
 		}
+		return chain();
 	}
 
-	public void importBlock(B block) {
+	public B importBlock(B block) {
 		indexImportedBlock(block);
+		return block;
 	}
 
 	public boolean remove(B block) {
@@ -79,12 +85,13 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 		return removed;
 	}
 
-	public void clearBlocks() {
+	public I clearBlocks() {
 		structure.clear();
 		indexCount = 0;
+		return chain();
 	}
 
-	protected void indexImportedBlock(B block) {
+	protected I indexImportedBlock(B block) {
 		if (block != null) {
 			if (block.getIndex() == null || block.getIndex() <= indexCount) {
 				indexBlock(block);
@@ -93,11 +100,15 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 				structure.add(block);
 			}
 		}
+		return chain();
 	}
 
 	public S getStructure() { return structure; }
 
-	protected void setStructure(S structure) { this.structure = structure; }
+	protected I setStructure(S structure) {
+		this.structure = structure;
+		return chain();
+	}
 
 	public int getIndexCount() { return indexCount; }
 
@@ -110,17 +121,16 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 		return report;
 	}
 
-	public void getIndexesMap() {
-		Map<Integer, Integer> indexes = new HashMap<>();
-		for (B block : structure) {
-			Integer index = block.getIndex();
-			if (index != null)
-				indexes.put(index, index);
-		}
+	public Lengths getDefaultLengths() { return defaultLengths; }
+
+	public I setDefaultLengths(Double x, Double y, Double z) {
+		setDefaultLengths(new Lengths(x, y, z));
+		return chain();
 	}
 
-	public Lengths getDefaultLengths() { return Nullable.run(() -> defaultLengths.getCopy()); }
-
-	public void setDefaultLengths(Lengths defaultLengths) { this.defaultLengths = defaultLengths; }
+	public I setDefaultLengths(Lengths defaultLengths) {
+		this.defaultLengths = defaultLengths;
+		return chain();
+	}
 
 }

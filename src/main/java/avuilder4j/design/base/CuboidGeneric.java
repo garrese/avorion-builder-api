@@ -13,15 +13,15 @@ import avuilder4j.design.enums.Rotation;
 import avuilder4j.design.sub.dimensional.AxisEnds;
 import avuilder4j.design.sub.dimensional.Lengths;
 import avuilder4j.design.sub.dimensional.Point;
-import avuilder4j.design.sub.dimensional.Tagable;
-import avuilder4j.design.sub.dimensional.Tagator;
 import avuilder4j.design.sub.dimensional.Vector;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.util.java.Chainable;
-import avuilder4j.util.java.Instantiable;
+import avuilder4j.util.java.Copyable;
 import avuilder4j.util.java.Nullable;
+import avuilder4j.util.java.Tagable;
+import avuilder4j.util.java.Tagator;
 
 /**
  * Represents a cuboid in a Cartesian coordinate system.
@@ -29,8 +29,8 @@ import avuilder4j.util.java.Nullable;
  * The cuboid is defined by one {@link AxisEnds} in each of the three coordinate axis.
  */
 @SuppressWarnings("rawtypes")
-public abstract class CuboidGeneric<T extends CuboidGeneric>
-		implements Serializable, Tagable, Chainable<T>, Instantiable<T> {
+public abstract class CuboidGeneric<T extends CuboidGeneric<T>>
+		implements Serializable, Tagable, Chainable<T>, Copyable<T> {
 	private static final long serialVersionUID = -5598838939653504628L;
 
 	/**
@@ -58,20 +58,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 	 */
 	private T parent;
 
-	protected Tagator tagsAdministrator = new Tagator();
-
-//	public static Cuboid deepCopy(Cuboid cuboid) {
-//		Cuboid c = null;
-//		if (cuboid != null) {
-//			c = new Cuboid();
-//			c.setIndex(cuboid.getIndex());
-//			c.setParent(Cuboid.deepCopy(cuboid.getParent()));
-//			c.setAxisX(AxisEnds.deepCopy(cuboid.getAxisX()));
-//			c.setAxisY(AxisEnds.deepCopy(cuboid.getAxisY()));
-//			c.setAxisZ(AxisEnds.deepCopy(cuboid.getAxisZ()));
-//		}
-//		return c;
-//	}
+	protected Tagator tagator = new Tagator();
 
 	public CuboidGeneric() {}
 
@@ -90,24 +77,53 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 		setLengths(lengths);
 	}
 
-	public T attachTo(T destinationCuboid, Face destinationFace) {
-		Point faceOrigin = null;
-		Point faceDestination = null;
+	public static <T extends CuboidGeneric> T copy(T copyFrom, T copyTo) {
+		if (copyFrom != null && copyTo != null) {
+			for (Axis axis : Axis.values()) {
+				copyTo.setAxis(axis, Nullable.run(() -> copyFrom.getAxis(axis).getCopy()));
+			}
+			Tagator.copy(copyFrom.getTagator(), copyTo.getTagator());
+		}
+		return copyTo;
+	}
 
+	public T addTags(String tags) {
+		if (tags != null)
+			getTagator().addTags(tags);
+		return chain();
+	}
+
+	public T attachTo(T destinationCuboid, Face destinationFace) {
 		if (this == destinationCuboid)
 			throw new IllegalArgumentException("The destination cuboid can not be the cuboid itself.");
-		validateCuboid();
+		this.validateCuboid();
 		destinationCuboid.validateCuboid();
 
-		faceDestination = destinationCuboid.getFaceCenter(destinationFace);
-		faceOrigin = getFaceCenter(Face.getOpposite(destinationFace));
-		Vector centerToOwnFace = Vector.pointDiff(getCenter(), faceOrigin);
+		Point destinationFacePoint = destinationCuboid.getFaceCenter(destinationFace);
+		Point originFacePoint = this.getFaceCenter(Face.getOpposite(destinationFace));
 
-		moveCenterToPoint(faceDestination);
-		moveCenterByVector(centerToOwnFace);
+		Vector vector = Vector.pointDiff(destinationFacePoint, originFacePoint);
+		this.moveCenterByVector(vector);
 
 		setParent(destinationCuboid);
 		return chain();
+	}
+
+	@Override
+	public abstract T chain();
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof CuboidGeneric))
+			return false;
+		CuboidGeneric other = (CuboidGeneric) obj;
+		return Objects.equals(axisX, other.axisX) && Objects.equals(axisY, other.axisY)
+				&& Objects.equals(axisZ, other.axisZ) && Objects.equals(indexInStructure, other.indexInStructure)
+				&& Objects.equals(parent, other.parent) && Objects.equals(tagator, other.tagator);
 	}
 
 	public T escalate(double ratio) {
@@ -183,11 +199,11 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 		return chain();
 	}
 
-	public ArrayList<AxisEnds> getAllAxes() {
+	public List<AxisEnds> getAllAxes() {
 		ArrayList<AxisEnds> list = new ArrayList<AxisEnds>();
-		list.add(axisX);
-		list.add(axisY);
-		list.add(axisZ);
+		list.add(getAxisX());
+		list.add(getAxisY());
+		list.add(getAxisZ());
 		return list;
 	}
 
@@ -354,12 +370,37 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 	 */
 	public T getParent() { return parent; }
 
-	public Double getVolumeCuboid() {
-		if (isCuboidDefined()) {
-			return axisX.getLength() * axisY.getLength() * axisZ.getLength();
-		} else {
-			return null;
-		}
+	public T getRoot() {
+		List<T> chain = getRootChain();
+		return chain.get(chain.size() - 1);
+	}
+
+	/**
+	 * Si no es circular: result.get(result.size()-1).getParent() == null; si no, no es nulo.
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> getRootChain() {
+		List<T> parents = new ArrayList<>();
+		boolean terminate = false;
+
+		parents.add((T) this);
+		T checking = parents.get(0);
+		T lastParent = null;
+		do {
+			lastParent = checking.getParent();
+			final T lastParentAuxFinal = lastParent;
+			if (lastParent == null || parents.stream().anyMatch(x -> x == lastParentAuxFinal)) {
+				terminate = true;
+			} else {
+				lastParent = checking.getParent();
+				parents.add(lastParent);
+			}
+			checking = lastParent;
+		} while (!terminate);
+
+		return parents;
 	}
 
 	public Double getSurfaceArea() {
@@ -369,6 +410,22 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 			Double face3 = axisY.getLength() * axisZ.getLength();
 			return 2 * (face1 + face2 + face3);
 		});
+	}
+
+	@Override
+	public Tagator getTagator() { return tagator; }
+
+	public Double getVolumeCuboid() {
+		if (isCuboidDefined()) {
+			return axisX.getLength() * axisY.getLength() * axisZ.getLength();
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(axisX, axisY, axisZ, indexInStructure, parent, tagator);
 	}
 
 	public boolean isCuboidDefined() {
@@ -381,6 +438,8 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 		}
 		return true;
 	}
+
+	public boolean isRooted() { return getRoot() != null ? true : false; }
 
 	public T matchToFace(T reference, Face faceMatching) {
 		return matchToFace(reference, faceMatching, true);
@@ -455,15 +514,15 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 		return chain();
 	}
 
-	public T rotate(int rotationId) {
-		return rotate(rotationId);
+	public T rotateCuboid(Rotation rotation) {
+		return rotateCuboid(rotation, new Face[0]);
 	}
 
-	public T rotate(Rotation rotationId, Face... fixedFacesIds) {
+	public T rotateCuboid(Rotation rotation, Face... fixedFacesIds) {
 		AvValidations.validateFixedFacesMaxNumber(fixedFacesIds);
 		AvValidations.validateFixedFacesAxes(fixedFacesIds);
 
-		List<Axis> axesIds = Axis.getAxesInvolvedInCuboidRotation(rotationId);
+		List<Axis> axesIds = Axis.getAxesInvolvedInCuboidRotation(rotation);
 		try {
 			AxisEnds axis0 = getAxis(axesIds.get(0));
 			AxisEnds axis1 = getAxis(axesIds.get(1));
@@ -549,6 +608,10 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 		return chain();
 	}
 
+	public T setLengths(Double xyz) {
+		return setLengths(new Lengths().setXyz(xyz));
+	}
+
 	public T setLengths(Double x, Double y, Double z) {
 		return setLengths(new Lengths(x, y, z));
 	}
@@ -609,84 +672,29 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 	 * @param parent the {@link #parent} to set.
 	 */
 	public T setParent(T parent) {
+		return setParent(parent, false);
+	}
+
+	public T setParent(T parent, boolean checkRoots) {
+
+		if (parent == this) {
+			throw new Avuilder4jRuntimeException("A cuboid cannot be its own parent.");
+		}
+
+		if (checkRoots && parent != null) {
+			List<T> rootChain = getRootChain();
+			T thisRoot = rootChain.get(rootChain.size() - 1);
+
+			if (thisRoot != parent.getRoot()) {
+				for (int i = rootChain.size() - 1; i > 0; i--) {
+					rootChain.get(i).setParent(rootChain.get(i - 1));
+				}
+			}
+		}
+
 		this.parent = parent;
 		return chain();
 	}
-
-	@Override
-	public String toString() {
-
-		String parentSring = null;
-		if (parent != null)
-			parentSring = "[id=" + parent.getIndex() + "]";
-
-		StringBuilder builder = new StringBuilder();
-		builder.append("Cuboid [");
-		builder.append(toStringHeader());
-		builder.append(", ");
-		builder.append(toStringBodyCuboid());
-		builder.append("]");
-		return builder.toString();
-	}
-
-	protected String toStringHeader() {
-
-		StringBuilder builder = new StringBuilder();
-		builder.append("tags=");
-		builder.append(getTagator().getTags());
-		builder.append(", index=");
-		builder.append(getIndex());
-		builder.append(", parent=");
-		builder.append(Nullable.run(() -> parent.getIndex()));
-		return builder.toString();
-	}
-
-	protected String toStringBodyCuboid() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("lengths=");
-		builder.append(getLengths());
-		builder.append(", volCuboid=");
-		builder.append(getVolumeCuboid());
-		builder.append(", center=");
-		builder.append(getCenter());
-		builder.append(", axisX=");
-		builder.append(getAxisX());
-		builder.append(", axisY=");
-		builder.append(getAxisY());
-		builder.append(", axisZ=");
-		builder.append(getAxisZ());
-		return builder.toString();
-	}
-
-	public void validateCuboid() {
-		if (!isCuboidDefined())
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(axisX, axisY, axisZ, indexInStructure, parent, tagsAdministrator);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof CuboidGeneric))
-			return false;
-		CuboidGeneric other = (CuboidGeneric) obj;
-		return Objects.equals(axisX, other.axisX) && Objects.equals(axisY, other.axisY)
-				&& Objects.equals(axisZ, other.axisZ) && Objects.equals(indexInStructure, other.indexInStructure)
-				&& Objects.equals(parent, other.parent) && Objects.equals(tagsAdministrator, other.tagsAdministrator);
-	}
-
-	@Override
-	public Tagator getTagator() { return tagsAdministrator; }
-
-	@Override
-	public abstract T chain();
 
 	public T setXL(Double XL) {
 		getAxisX().setLowerEnd(XL);
@@ -716,6 +724,56 @@ public abstract class CuboidGeneric<T extends CuboidGeneric>
 	public T setZU(Double ZU) {
 		getAxisZ().setUpperEnd(ZU);
 		return chain();
+	}
+
+	@Override
+	public String toString() {
+
+		String parentSring = null;
+		if (parent != null)
+			parentSring = "[id=" + parent.getIndex() + "]";
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("Cuboid [");
+		builder.append(toStringHeader());
+		builder.append(", ");
+		builder.append(toStringBodyCuboid());
+		builder.append("]");
+		return builder.toString();
+	}
+
+	protected String toStringBodyCuboid() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("lengths=");
+		builder.append(getLengths());
+		builder.append(", volCuboid=");
+		builder.append(getVolumeCuboid());
+		builder.append(", center=");
+		builder.append(getCenter());
+		builder.append(", axisX=");
+		builder.append(getAxisX());
+		builder.append(", axisY=");
+		builder.append(getAxisY());
+		builder.append(", axisZ=");
+		builder.append(getAxisZ());
+		return builder.toString();
+	}
+
+	protected String toStringHeader() {
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("tags=");
+		builder.append(getTagator().getTagList());
+		builder.append(", index=");
+		builder.append(getIndex());
+		builder.append(", parent=");
+		builder.append(Nullable.run(() -> parent.getIndex()));
+		return builder.toString();
+	}
+
+	public void validateCuboid() {
+		if (!isCuboidDefined())
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
 	}
 
 }

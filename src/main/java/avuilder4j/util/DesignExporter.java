@@ -1,6 +1,5 @@
 package avuilder4j.util;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import avuilder4j.design.base.BlockPlanInterfaceExporter;
+import avuilder4j.design.base.BlockInterfaceExporter;
 import avuilder4j.error.Avuilder4jException;
 
 public class DesignExporter {
@@ -25,7 +24,8 @@ public class DesignExporter {
 
 	protected String exportRoute = "ships/";
 
-	public void exportDesign(List<? extends BlockPlanInterfaceExporter> blocks, String shipName) throws Avuilder4jException {
+	public void exportDesign(List<? extends BlockInterfaceExporter> blocks, String shipName)
+			throws Avuilder4jException {
 
 		if (shipName == null || shipName.equals("")) {
 			throw new IllegalArgumentException("Ship's name can't be empty or null");
@@ -50,7 +50,7 @@ public class DesignExporter {
 			addAttribute(doc, planE, "convex", "false");
 
 			// ( item > block )*
-			for (BlockPlanInterfaceExporter block : blocks) {
+			for (BlockInterfaceExporter block : blocks) {
 
 				// item
 				Element itemE = doc.createElement("item");
@@ -99,8 +99,10 @@ public class DesignExporter {
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(exportRoute + shipName + ".xml"));
+			String finalExportPath = exportRoute + shipName + ".xml";
+			StreamResult result = new StreamResult(finalExportPath);
 			transformer.transform(source, result);
+			System.out.println("exported " + finalExportPath);
 
 		} catch (Exception e) {
 			throw new Avuilder4jException("Error exporting ship design.", e);
@@ -113,11 +115,28 @@ public class DesignExporter {
 		element.setAttributeNode(materialIndexAtt);
 	}
 
-	public static void validateBlockPlanList(List<? extends BlockPlanInterfaceExporter> blocks) throws Avuilder4jException {
+	public static void validateBlockPlanList(List<? extends BlockInterfaceExporter> blocks)
+			throws Avuilder4jException {
+		validateBlockPlanList(blocks, false);
+	}
 
-		ArrayList<BlockPlanInterfaceExporter> roots = new ArrayList<BlockPlanInterfaceExporter>();
-		for (BlockPlanInterfaceExporter block : blocks) {
-			block.validateBlockPlan();
+	public static List<BlockInterfaceExporter> findRoots(List<? extends BlockInterfaceExporter> blocks) {
+		ArrayList<BlockInterfaceExporter> roots = new ArrayList<BlockInterfaceExporter>();
+		for (BlockInterfaceExporter block : blocks) {
+			if (block.getParentIndex() == null || block.getParentIndex().equals(-1)) {
+				roots.add(block);
+			}
+		}
+		return roots;
+	}
+
+	public static void validateBlockPlanList(List<? extends BlockInterfaceExporter> blocks,
+			boolean validateRootOnly) throws Avuilder4jException {
+
+		ArrayList<BlockInterfaceExporter> roots = new ArrayList<BlockInterfaceExporter>();
+		for (BlockInterfaceExporter block : blocks) {
+			if (validateRootOnly)
+				block.validateBlockPlan();
 			if (block.getParentIndex() == null || block.getParentIndex().equals(-1)) {
 				roots.add(block);
 				if (roots.size() > 1) {

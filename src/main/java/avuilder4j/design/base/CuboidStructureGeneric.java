@@ -7,15 +7,18 @@ import java.util.List;
 import java.util.function.Function;
 
 import avuilder4j.design.enums.Axis;
+import avuilder4j.design.enums.Face;
 import avuilder4j.design.enums.Rotation;
 import avuilder4j.design.sub.dimensional.AxisEnds;
-import avuilder4j.design.sub.dimensional.Tagable;
-import avuilder4j.design.sub.dimensional.Tagator;
+import avuilder4j.design.sub.dimensional.Point;
+import avuilder4j.design.sub.dimensional.Vector;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.util.java.Chainable;
 import avuilder4j.util.java.Nullable;
+import avuilder4j.util.java.Tagable;
+import avuilder4j.util.java.Tagator;
 
 @SuppressWarnings("rawtypes")
 public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric>
@@ -52,6 +55,20 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 			cuboid.getAxisY().escalateRelative(ratioY);
 			cuboid.getAxisZ().escalateRelative(ratioZ);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public S add(B... blocks) {
+		if (blocks != null)
+			for (B b : blocks) {
+				add(b);
+			}
+		return chain();
+	}
+
+	public S add(Collection<B> blocks) {
+		super.addAll(blocks);
+		return chain();
 	}
 
 	public void escalate(double ratio, Axis... axesIds) {
@@ -119,8 +136,8 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 	}
 
 	public void rotate(Rotation rotationId, int times) {
-		if (times <= 0)
-			throw new IllegalArgumentException("'times' argument can not be lower than 1.");
+		if (times < 0)
+			throw new IllegalArgumentException("Rotation times cannot be lower than 0.");
 
 		List<Axis> axesIds = Axis.getAxesInvolvedInCuboidRotation(rotationId);
 		try {
@@ -140,6 +157,25 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		} catch (Exception e) {
 			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED, e);
 		}
+	}
+
+	public void attachTo(B attacher, B destinationCuboid, Face destinationFace) {
+
+		if (attacher == destinationCuboid)
+			throw new IllegalArgumentException("The destination cuboid can not be the cuboid itself.");
+		attacher.validateCuboid();
+		destinationCuboid.validateCuboid();
+
+		Point destinationFacePoint = destinationCuboid.getFaceCenter(destinationFace);
+		Point originFacePoint = attacher.getFaceCenter(Face.getOpposite(destinationFace));
+
+		Vector vector = Vector.pointDiff(destinationFacePoint, originFacePoint);
+		for (B b : this) {
+			b.validateCuboid();
+			b.moveCenterByVector(vector);
+		}
+
+		attacher.setParent(destinationCuboid, true);
 	}
 
 	public List<B> getBlocks() { return this; }
@@ -164,7 +200,7 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Structure [tags=");
-		builder.append(tagsAdministrator.getTags());
+		builder.append(tagsAdministrator.getTagsString());
 		for (CuboidGeneric cuboid : this) {
 			builder.append("\n\t").append(cuboid);
 		}

@@ -1,5 +1,8 @@
 package avuilder4j.util.keys;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Types {
 
 	public static final int HULL = 1;
@@ -103,5 +106,24 @@ public class Types {
 	public static final int SUPER_RICH_STONE_CORNER_3 = 524;
 	public static final int SUPER_RICH_STONE_TWISTED_CORNER_1 = 525;
 	public static final int SUPER_RICH_STONE_TWISTED_CORNER_2 = 526;
+
+	public static List<Integer> getFunctionalTypes() {
+		ArrayList<Integer> list = new ArrayList<>();
+		list.add(ENGINE);
+		list.add(CARGO_BAY);
+		list.add(CREW_QUARTERS);
+		list.add(THRUSTER);
+		list.add(HANGAR);
+		list.add(DIRECTIONAL_THRUSTER);
+		list.add(GYRO_ARRAY);
+		list.add(INERTIA_DAMPENER);
+		list.add(ASSEMBLY);
+		list.add(TORPEDO_STORAGE);
+		list.add(ENGINE);
+		list.add(ENGINE);
+		list.add(ENGINE);
+
+		return list;
+	}
 
 }

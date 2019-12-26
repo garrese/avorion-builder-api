@@ -15,22 +15,22 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import avuilder4j.design.base.BlockPlanInterfaceImporter;
+import avuilder4j.design.base.BlockInterfaceImporter;
 import avuilder4j.error.Avuilder4jException;
 
 public class DesignImporter {
 
-	protected String exportRoute = "ships/";
+	protected String importRoute = "ships/";
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public <B extends BlockPlanInterfaceImporter> List<B> importDesign(String shipName, Supplier<B> supplier)
+	public <B extends BlockInterfaceImporter> List<B> importDesign(String shipName, Supplier<B> supplier)
 			throws Avuilder4jException {
 
-		HashMap<Integer, BlockPlanInterfaceImporter> blocksMap = new LinkedHashMap<>();
+		HashMap<Integer, BlockInterfaceImporter> blocksMap = new LinkedHashMap<>();
 		HashMap<Integer, Integer> parentsMap = new HashMap<>();
 
 		try {
-			File fXmlFile = new File(exportRoute + shipName);
+			File fXmlFile = new File(importRoute + shipName);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(fXmlFile);
@@ -46,7 +46,7 @@ public class DesignImporter {
 				Integer parentIndex = getIntegerAtt(item, "parent");
 
 				Element xmlBlock = (Element) item.getElementsByTagName("block").item(0);
-				BlockPlanInterfaceImporter importer = supplier.get();
+				BlockInterfaceImporter importer = supplier.get();
 
 				importer.setIndex(index);
 				importer.setXL(getDoubleAttRounded(xmlBlock, "lx"));
@@ -67,8 +67,8 @@ public class DesignImporter {
 
 			for (Map.Entry<Integer, Integer> parentRegistry : parentsMap.entrySet()) {
 
-				BlockPlanInterfaceImporter block = blocksMap.get(parentRegistry.getKey());
-				BlockPlanInterfaceImporter parent = blocksMap.get(parentRegistry.getValue());
+				BlockInterfaceImporter block = blocksMap.get(parentRegistry.getKey());
+				BlockInterfaceImporter parent = blocksMap.get(parentRegistry.getValue());
 				block.setParent(parent);
 			}
 
@@ -88,5 +88,9 @@ public class DesignImporter {
 		String value = e.getAttribute(att);
 		return Math.round(Double.valueOf(value) * 1000) / 1000d;
 	}
+
+	public String getImportRoute() { return importRoute; }
+
+	public void setImportRoute(String importRoute) { this.importRoute = importRoute; }
 
 }

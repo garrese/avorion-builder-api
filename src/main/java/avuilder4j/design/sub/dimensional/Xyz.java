@@ -94,6 +94,11 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, Chainable<T> {
 		return chain();
 	}
 
+	public T set(Double xyz) {
+		setXyz(xyz, xyz, xyz);
+		return chain();
+	}
+
 	public T setXyz(Double x, Double y, Double z) {
 		this.x = x;
 		this.y = y;

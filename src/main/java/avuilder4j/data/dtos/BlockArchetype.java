@@ -12,7 +12,7 @@ public class BlockArchetype extends BlockArchetypeFields {
 
 			this.typeIndex = params.getTypeIndex();
 			this.typeModelIndex = params.getTypeModelIndex();
-			this.shapeIdx = params.getShapeIndex();
+			this.shapeIndex = params.getShapeIndex();
 
 			this.collisionReduction = params.getCollisionReduction();
 			this.typeModelName = params.getTypeModelName();
@@ -23,7 +23,7 @@ public class BlockArchetype extends BlockArchetypeFields {
 
 			this.shapeName = params.getShapeName();
 			this.cuboidFilledIn = params.getCuboidFilledIn();
-			this.symmetricShape = params.getSymmetricShapeIndex();
+			this.symmetricTypeIndex = params.getSymmetricTypeIndex();
 
 			this.density = params.getDensity();
 			this.durability = params.getDurability();

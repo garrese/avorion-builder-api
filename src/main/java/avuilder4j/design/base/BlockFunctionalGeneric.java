@@ -17,7 +17,7 @@ import avuilder4j.util.keys.Types;
 import avuilder4j.util.values.Orients;
 
 @SuppressWarnings("rawtypes")
-public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> extends BlockPlanGeneric<T> {
+public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>> extends BlockPlanGeneric<T> {
 	private static final long serialVersionUID = -7276801719926846539L;
 
 	private BlockArchetype blockArchetype;
@@ -100,7 +100,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 	protected Double getEffectByVolumeIfType(Integer typeIndexFilter) {
 		return Nullable.run(() -> {
 			if (isTypeOf(typeIndexFilter)) {
-				return getVolumeBlock() * getBlockArchetype().getEffects().get(1);
+				return getVolumeBlock() * getBlockArchetype().getEffects().get(0);
 			} else {
 				return null;
 			}
@@ -110,7 +110,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 	protected Double getEffectStorageIfType(Integer typeIndexFilter) {
 		return Nullable.run(() -> {
 			if (isTypeOf(typeIndexFilter)) {
-				return getBlockArchetype().getEffects().get(1) * getEffectStorageVolume();
+				return getBlockArchetype().getEffects().get(0) * getEffectStorageVolume();
 			} else {
 				return null;
 			}
@@ -137,7 +137,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 			return null;
 	}
 
-	public Double getEffGeneratorGeneratedE() { return getEffectByVolumeIfType(Types.GENERATOR); }
+	public Double getEffGeneratorGeneratedEnergy() { return getEffectByVolumeIfType(Types.GENERATOR); }
 
 	protected Axis getEffGyroArrayAxis() {
 		if (isTypeOf(Types.GYRO_ARRAY))
@@ -178,7 +178,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 
 	public IFGAura getEffIntegrityFieldGenerator() {
 		return Nullable.run(() -> {
-			Double effect = getBlockArchetype().getEffects().get(1);
+			Double effect = getBlockArchetype().getEffects().get(0);
 			IFGAura aura = new IFGAura();
 			for (Axis axis : Axis.values()) {
 				aura.setXyzByAxis(axis, getAxis(axis).getLength() * effect);
@@ -212,7 +212,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 	public Double getEffSolarPanelGeneratedE() {
 		return Nullable.run(() -> {
 			if (isTypeOf(Types.SOLAR_PANEL)) {
-				return getSurfaceArea() * getBlockArchetype().getEffects().get(1);
+				return getSurfaceArea() * getBlockArchetype().getEffects().get(0);
 			} else
 				return null;
 		});
@@ -265,6 +265,10 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric> e
 
 	public T setBlockArchetype(BlockArchetype blockArchetype) {
 		this.blockArchetype = blockArchetype;
+		if (blockArchetype != null) {
+			super.setMaterialIndex(getBlockArchetype().getMaterialIndex());
+			super.setTypeIndex(getBlockArchetype().getTypeIndex());
+		}
 		return chain();
 	}
 

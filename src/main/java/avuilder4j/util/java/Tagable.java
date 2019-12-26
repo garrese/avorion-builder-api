@@ -1,4 +1,4 @@
-package avuilder4j.design.sub.dimensional;
+package avuilder4j.util.java;
 
 public interface Tagable {
 

@@ -6,13 +6,14 @@ import avuilder4j.design.enums.End;
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
+import avuilder4j.util.java.Copyable;
 
 /**
  * Represents a line in a single coordinate axis.
  * <p>
  * The line is defined by an upper and a lower point in the coordinate axis.
  */
-public class AxisEnds implements Serializable {
+public class AxisEnds implements Serializable, Copyable<AxisEnds> {
 	private static final long serialVersionUID = 1186136799589694838L;
 
 	/**
@@ -23,16 +24,6 @@ public class AxisEnds implements Serializable {
 	 * Upper point of the line in the coordinate axis.
 	 */
 	protected Double upperEnd;
-
-	public static AxisEnds deepCopy(AxisEnds line) {
-		AxisEnds l = null;
-		if (line != null) {
-			l = new AxisEnds();
-			l.setLowerEnd(line.getLowerEnd());
-			l.setUpperEnd(line.getUpperEnd());
-		}
-		return line;
-	}
 
 	public AxisEnds() {}
 
@@ -45,28 +36,17 @@ public class AxisEnds implements Serializable {
 		setLowerEnd(lP);
 	}
 
+	public static AxisEnds copy(AxisEnds copyFrom, AxisEnds copyTo) {
+		if (copyFrom != null && copyTo != null) {
+			copyTo.setLowerEnd(copyFrom.getLowerEnd());
+			copyTo.setUpperEnd(copyFrom.getUpperEnd());
+		}
+		return copyTo;
+	}
+
 	public void cleanEnds() {
 		lowerEnd = null;
 		upperEnd = null;
-	}
-
-	public void sumToLowerEnd(double value) {
-		if (lowerEnd == null)
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-		setLowerEnd(lowerEnd + value);
-	}
-
-	public void sumToUpperEnd(double value) {
-		if (upperEnd == null)
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-		setUpperEnd(lowerEnd + value);
-	}
-
-	public void sumToEnd(End end, double value) {
-		Double endValue = getEnd(end);
-		if (endValue == null)
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
-		setEnd(end, endValue + value);
 	}
 
 	@Override
@@ -116,6 +96,9 @@ public class AxisEnds implements Serializable {
 		else
 			return null;
 	}
+
+	@Override
+	public AxisEnds getCopy() { return AxisEnds.copy(this, new AxisEnds()); }
 
 	public Double getEnd(End end) {
 		switch (end) {
@@ -191,6 +174,21 @@ public class AxisEnds implements Serializable {
 		moveCenterByVector(vector);
 	}
 
+	public void setByEndAndLength(End end, double value, double length) {
+		AvValidations.lengths(length);
+
+		switch (end) {
+		case UPPER:
+			setByUpperEndAndLength(value, length);
+			break;
+		case LOWER:
+			setByLowerEndAndLength(value, length);
+			break;
+		default:
+			throw new IllegalArgumentException(AvErrors.END_NOT_RECOGNIZED);
+		}
+	}
+
 	public void setByLowerEndAndLength(double lowerEnd, double length) {
 		AvValidations.lengths(length);
 
@@ -205,21 +203,6 @@ public class AxisEnds implements Serializable {
 		lowerEnd = null;
 		setUpperEnd(upperEnd);
 		setLowerEnd(upperEnd - length);
-	}
-
-	public void setByEndAndLength(End end, double value, double length) {
-		AvValidations.lengths(length);
-
-		switch (end) {
-		case UPPER:
-			setByUpperEndAndLength(value, length);
-			break;
-		case LOWER:
-			setByLowerEndAndLength(value, length);
-			break;
-		default:
-			throw new IllegalArgumentException(AvErrors.END_NOT_RECOGNIZED);
-		}
 	}
 
 	public void setEnd(End end, Double value) {
@@ -293,6 +276,25 @@ public class AxisEnds implements Serializable {
 		if (uP != null && lowerEnd != null && uP <= lowerEnd)
 			throw new IllegalArgumentException(AvErrors.END_NOT_UPPER);
 		this.upperEnd = uP;
+	}
+
+	public void sumToEnd(End end, double value) {
+		Double endValue = getEnd(end);
+		if (endValue == null)
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
+		setEnd(end, endValue + value);
+	}
+
+	public void sumToLowerEnd(double value) {
+		if (lowerEnd == null)
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
+		setLowerEnd(lowerEnd + value);
+	}
+
+	public void sumToUpperEnd(double value) {
+		if (upperEnd == null)
+			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
+		setUpperEnd(lowerEnd + value);
 	}
 
 	@Override

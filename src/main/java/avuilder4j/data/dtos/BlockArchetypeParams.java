@@ -11,7 +11,7 @@ public class BlockArchetypeParams extends BlockArchetypeFields {
 
 	public void setTypeIndex(Integer typeIndex) { this.typeIndex = typeIndex; }
 
-	public void setShapeIndex(Integer shapeIndex) { this.shapeIdx = shapeIndex; }
+	public void setShapeIndex(Integer shapeIndex) { this.shapeIndex = shapeIndex; }
 
 	public void setCollisionReduction(Double collisionReduction) { this.collisionReduction = collisionReduction; }
 
@@ -31,7 +31,7 @@ public class BlockArchetypeParams extends BlockArchetypeFields {
 
 	public void setCuboidFilledIn(Double cuboidFilledIn) { this.cuboidFilledIn = cuboidFilledIn; }
 
-	public void setSymmetricShape(String symmetricShape) { this.symmetricShape = symmetricShape; }
+	public void setSymmetricTypeIndex(Integer symmetricTypeIndex) { this.symmetricTypeIndex = symmetricTypeIndex; }
 
 	public void setDensity(Double density) { this.density = density; }
 

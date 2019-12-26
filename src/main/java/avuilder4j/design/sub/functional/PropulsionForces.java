@@ -27,4 +27,15 @@ public class PropulsionForces implements Chainable<PropulsionForces> {
 		return this;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("PropulsionForces [acceleration=");
+		builder.append(acceleration);
+		builder.append(", deceleration=");
+		builder.append(deceleration);
+		builder.append("]");
+		return builder.toString();
+	}
+
 }

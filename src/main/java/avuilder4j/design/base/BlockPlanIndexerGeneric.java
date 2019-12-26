@@ -8,8 +8,8 @@ import avuilder4j.util.values.Colors;
 import avuilder4j.util.values.Orients;
 
 @SuppressWarnings("rawtypes")
-public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S extends BlockPlanStructureGeneric<B, S>>
-		extends CuboidIndexerGeneric<B, S> {
+public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S extends BlockPlanStructureGeneric<B, S>, I extends BlockPlanIndexerGeneric>
+		extends CuboidIndexerGeneric<B, S, I> {
 
 	protected String defaultColor = Colors.MATERIAL_00_IRON;
 	protected Integer defaultMaterial = Mats.IRON;

@@ -54,47 +54,53 @@ public abstract class DataLoader {
 	public void composeBlockArchetypes() throws Avuilder4jException {
 		try {
 			Map<BlockArchetype.MapIndex, BlockArchetype> map = new HashMap<BlockArchetype.MapIndex, BlockArchetype>();
-			for (BeanType t : DataMaps.getTypesMap().values()) {
-				for (BeanMaterial m : DataMaps.getMaterialsMap().values()) {
-					BeanTypeModel tm = DataMaps.getTypeModel(t.getTypeModelIndex());
-					if (tm != null) {
-						BeanTypeModelByMaterial tmbm = DataMaps.getTypeModelByMaterial(tm.getIndex(), m.getIndex());
+			for (BeanType type : DataMaps.getTypesMap().values()) {
+				for (BeanMaterial mat : DataMaps.getMaterialsMap().values()) {
+					BeanTypeModel typeModel = DataMaps.getTypeModel(type.getTypeModelIndex());
+					if (typeModel != null) {
+						BeanTypeModelByMaterial tmbm = DataMaps
+								.getTypeModelByMaterial(typeModel.getIndex(), mat.getIndex());
 						if (tmbm != null) {
 							BlockArchetypeParams p = new BlockArchetypeParams();
 
-							p.setMaterialIndex(m.getIndex());
-							p.setMaterialName(m.getName());
+							p.setMaterialIndex(mat.getIndex());
+							p.setMaterialName(mat.getName());
 
-							p.setTypeIndex(t.getIndex());
-							p.setShapeIndex(t.getShapeIdx());
-							p.setTypeModelIndex(t.getTypeModelIndex());
+							p.setTypeIndex(type.getIndex());
+							p.setShapeIndex(type.getShapeIdx());
+							p.setTypeModelIndex(type.getTypeModelIndex());
 
-							p.setCollisionReduction(tm.getCollisionReduction());
-							p.setEngineers(tm.getEngineers());
-							p.setMechanics(tm.getMechanics());
-							p.setTypeModelName(tm.getName());
-							p.setHasVolume(tm.getHasVolume());
-							p.setProcess(tm.getProcess());
+							p.setCollisionReduction(typeModel.getCollisionReduction());
+							p.setEngineers(typeModel.getEngineers());
+							p.setMechanics(typeModel.getMechanics());
+							p.setTypeModelName(typeModel.getName());
+							p.setHasVolume(typeModel.getHasVolume());
+							p.setProcess(typeModel.getProcess());
 
-							BeanShape s = DataMaps.getShape(t.getShapeIdx());
-							p.setShapeName(s.getName());
-							p.setCuboidFilledIn(s.getCuboidFilledIn());
-							p.setSymmetricShape(s.getSymmetric());
+							BeanShape shape = DataMaps.getShape(type.getShapeIdx());
+							p.setShapeName(shape.getName());
+							p.setCuboidFilledIn(shape.getCuboidFilledIn());
+							p.setSymmetricTypeIndex(DataMaps.getTypesMap().values().stream()
+									.filter(t -> Nullable.run(() -> {
+										boolean modelFound = t.getTypeModelIndex().equals(type.getTypeModelIndex());
+										boolean shapeFound = t.getShapeIdx().equals(shape.getSymmetricIndex());
+										return modelFound && shapeFound;
+									}, false)).map(t -> t.getIndex()).findFirst().orElse(null));
 
-							List<Double> es = DataMaps.getEffectsValue(tm.getIndex(), m.getIndex());
+							List<Double> es = DataMaps.getEffectsValue(typeModel.getIndex(), mat.getIndex());
 							p.setEffects(Collections.unmodifiableList(es));
 
-							Double cCost = Nullable.run(() -> tmbm.getCreditCostMod() * m.getCreditCost());
+							Double cCost = Nullable.run(() -> tmbm.getCreditCostMod() * mat.getCreditCost());
 							p.setCreditCost(Utils.round(cCost, 6));
-							Double mCost = Nullable.run(() -> tm.getMaterialCostMod() * m.getMaterialCost());
+							Double mCost = Nullable.run(() -> typeModel.getMaterialCostMod() * mat.getMaterialCost());
 							p.setMaterialCost(Utils.round(mCost, 6));
-							Double dur = Nullable.run(() -> tm.getDurabilityMod() * m.getDurability());
+							Double dur = Nullable.run(() -> typeModel.getDurabilityMod() * mat.getDurability());
 							p.setDurability(Utils.round(dur, 6));
-							Double dens = Nullable.run(() -> tm.getDensityMod() * m.getDensity());
+							Double dens = Nullable.run(() -> typeModel.getDensityMod() * mat.getDensity());
 							p.setDensity(Utils.round(dens, 6));
 
 							BlockArchetype a = new BlockArchetype(p);
-							BlockArchetype.MapIndex i = new BlockArchetype.MapIndex(t.getIndex(), m.getIndex());
+							BlockArchetype.MapIndex i = new BlockArchetype.MapIndex(type.getIndex(), mat.getIndex());
 							map.put(i, a);
 						}
 					}

@@ -11,6 +11,5 @@ public class BlockPlan extends BlockPlanGeneric<BlockPlan> {
 	}
 
 	@Override
-	public BlockPlan getNewInstance() { return new BlockPlan(); }
-
+	public BlockPlan getCopy() { return BlockPlan.copy(this, new BlockPlan()); }
 }

@@ -7,20 +7,20 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import avuilder4j.design.base.BlockPlanInterfaceExporter;
-import avuilder4j.design.base.BlockPlanInterfaceImporter;
+import avuilder4j.design.base.BlockInterfaceExporter;
+import avuilder4j.design.base.BlockInterfaceImporter;
 
 public class BlockPlanParser {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static <T extends BlockPlanInterfaceImporter> List<T> parse(
-			List<? extends BlockPlanInterfaceExporter> listToParse, Supplier<T> supplier) {
+	public static <T extends BlockInterfaceImporter> List<T> parse(
+			List<? extends BlockInterfaceExporter> listToParse, Supplier<T> supplier) {
 
-		HashMap<Integer, BlockPlanInterfaceImporter> blocksMap = new LinkedHashMap<>();
+		HashMap<Integer, BlockInterfaceImporter> blocksMap = new LinkedHashMap<>();
 		HashMap<Integer, Integer> parentsMap = new HashMap<>();
 
-		for (BlockPlanInterfaceExporter exporter : listToParse) {
-			BlockPlanInterfaceImporter importer = supplier.get();
+		for (BlockInterfaceExporter exporter : listToParse) {
+			BlockInterfaceImporter importer = supplier.get();
 
 			importer.setIndex(exporter.getIndex());
 			importer.setXL(exporter.getXL());
@@ -41,8 +41,8 @@ public class BlockPlanParser {
 
 		for (Map.Entry<Integer, Integer> parentRegistry : parentsMap.entrySet()) {
 
-			BlockPlanInterfaceImporter block = blocksMap.get(parentRegistry.getKey());
-			BlockPlanInterfaceImporter parent = blocksMap.get(parentRegistry.getValue());
+			BlockInterfaceImporter block = blocksMap.get(parentRegistry.getKey());
+			BlockInterfaceImporter parent = blocksMap.get(parentRegistry.getValue());
 			block.setParent(parent);
 		}
 

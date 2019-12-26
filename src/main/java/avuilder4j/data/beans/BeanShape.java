@@ -9,9 +9,9 @@ public class BeanShape {
 
 	protected Double cuboidFilledIn;
 
-	protected String symmetricIdx;
+	protected Integer symmetricIdx;
 
-	public BeanShape(Integer index, String name, Double cuboidFilledIn, String symmetricIdx) {
+	public BeanShape(Integer index, String name, Double cuboidFilledIn, Integer symmetricIdx) {
 		this.index = index;
 		this.name = name;
 		this.cuboidFilledIn = cuboidFilledIn;
@@ -24,7 +24,7 @@ public class BeanShape {
 
 	public Double getCuboidFilledIn() { return cuboidFilledIn; }
 
-	public String getSymmetric() { return symmetricIdx; }
+	public Integer getSymmetricIndex() { return symmetricIdx; }
 
 	@Override
 	public int hashCode() {

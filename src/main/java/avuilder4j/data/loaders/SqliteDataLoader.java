@@ -150,7 +150,7 @@ public class SqliteDataLoader extends DataLoader {
 			Integer i = getWrapper(r, "idx");
 			String n = r.getString("name");
 			Double v = getWrapper(r, "cuboidFilledIn");
-			String s = r.getString("symmetricIdx");
+			Integer s = getWrapper(r, "symmetricIdx");
 			BeanShape shape = new BeanShape(i, n, v, s);
 			return new SimpleEntry<Integer, BeanShape>(shape.getIndex(), shape);
 		}));

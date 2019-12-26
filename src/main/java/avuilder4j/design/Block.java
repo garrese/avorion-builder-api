@@ -11,6 +11,6 @@ public class Block extends BlockFunctionalGeneric<Block> {
 	}
 
 	@Override
-	public Block getNewInstance() { return new Block(); }
+	public Block getCopy() { return BlockPlan.copy(this, new Block()); }
 
 }

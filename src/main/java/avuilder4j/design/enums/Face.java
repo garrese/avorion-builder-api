@@ -2,6 +2,7 @@ package avuilder4j.design.enums;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import avuilder4j.error.AvErrors;
 import avuilder4j.error.Avuilder4jRuntimeException;
@@ -21,20 +22,28 @@ public enum Face {
 		this.index = index;
 	}
 
-	public static Face[] getFacesByAxis(Axis axis) {
+	public static List<Face> getFacesByAxis(Axis axis) {
+		ArrayList<Face> list = new ArrayList<>();
 		switch (axis) {
 		case X:
-			return new Face[] { XL, XU };
+			list.add(XL);
+			list.add(XU);
+			break;
 		case Y:
-			return new Face[] { YL, YU };
+			list.add(YL);
+			list.add(YU);
+			break;
 		case Z:
-			return new Face[] { ZL, ZU };
+			list.add(ZL);
+			list.add(ZU);
+			break;
 		default:
 			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
 		}
+		return list;
 	}
 
-	public static ArrayList<Face> getFacesInvolvedInBlockRotation(Rotation rotation) {
+	public static ArrayList<Face> getFacesInvolvedInRotation(Rotation rotation) {
 		Face[] faces;
 		switch (rotation) {
 		case AROUND_X:
@@ -60,7 +69,7 @@ public enum Face {
 	}
 
 	private static ArrayList<Face> reverseFacesInvolvedInBlockRotation(Rotation rotation) {
-		ArrayList<Face> facesIn = getFacesInvolvedInBlockRotation(rotation);
+		ArrayList<Face> facesIn = getFacesInvolvedInRotation(rotation);
 		ArrayList<Face> faces = new ArrayList<Face>();
 		for (int i = facesIn.size(); i > 0; i--) {
 			faces.add(facesIn.get(i - 1));

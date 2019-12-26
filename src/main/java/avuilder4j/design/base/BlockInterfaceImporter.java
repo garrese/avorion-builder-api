@@ -1,7 +1,7 @@
 package avuilder4j.design.base;
 
 @SuppressWarnings("rawtypes")
-public interface BlockPlanInterfaceImporter<B extends BlockPlanInterfaceImporter> {
+public interface BlockInterfaceImporter<B extends BlockInterfaceImporter> {
 
 	public B setIndex(Integer index);
 
