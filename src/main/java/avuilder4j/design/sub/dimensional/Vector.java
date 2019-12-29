@@ -14,19 +14,19 @@ public class Vector extends Xyz<Vector> implements Serializable {
 	}
 
 	public static Vector pointDiff(Point a, Point b) {
-		return new Vector().copyXyz(a.getXyzSub(b));
+		return new Vector().copyXyz(a.getSubCopy(b));
 	}
 
 	public static Vector pointSum(Point a, Point b) {
-		return new Vector().copyXyz(a.getXyzSum(b));
+		return new Vector().copyXyz(a.getSumCopy(b));
 	}
 
 	public static Vector vectorDiff(Vector a, Vector b) {
-		return new Vector().copyXyz(a.getXyzSub(b));
+		return new Vector().copyXyz(a.getSubCopy(b));
 	}
 
 	public static Vector vectorSum(Vector a, Vector b) {
-		return new Vector().copyXyz(a.getXyzSum(b));
+		return new Vector().copyXyz(a.getSumCopy(b));
 	}
 
 	@Override

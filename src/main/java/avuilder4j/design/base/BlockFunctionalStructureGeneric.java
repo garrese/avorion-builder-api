@@ -3,12 +3,13 @@ package avuilder4j.design.base;
 import java.util.Collection;
 
 import avuilder4j.data.DataMaps;
+import avuilder4j.design.sub.functional.HangarSpace;
+import avuilder4j.design.sub.functional.PropulsionForces;
 import avuilder4j.util.java.Nullable;
 import avuilder4j.util.keys.Cons;
 
 @SuppressWarnings("rawtypes")
-public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric, S extends BlockFunctionalStructureGeneric>
-		extends BlockPlanStructureGeneric<B, S> {
+public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric, S extends BlockFunctionalStructureGeneric> extends BlockPlanStructureGeneric<B, S> {
 	private static final long serialVersionUID = 8757900473268467596L;
 
 //	public double getVolumeBlock() { return sumFromBlocks(B::getVolumeBlock); }
@@ -42,27 +43,50 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 	}
 
 	public double getSargeantsReq() {
-		Double dividend = Nullable.run(() -> getMechanicsReq() + getEngineersReq());
-		Double divider = Nullable.run(() -> DataMaps.getConstant(Cons.CREW_RATIO_CREW_PER_SERGEANT).getValue());
-		Double result = Nullable.run(() -> dividend / divider);
+		Double dividend = Nullable.m(() -> getMechanicsReq() + getEngineersReq());
+		Double divider = Nullable.m(() -> DataMaps.getConstant(Cons.CREW_RATIO_CREW_PER_SERGEANT).getValue());
+		Double result = Nullable.m(() -> dividend / divider);
 		return result;
 
 	}
 
-	public double getLieutenantsReq() {
-		return Nullable.run(() -> getSargeantsReq()
-				/ DataMaps.getConstant(Cons.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getValue());
+	public Double getMass() { return sumFromBlocks(B::getMass); }
+
+	public Double getDurability() { return sumFromBlocks(B::getDurability); }
+
+	public Double getShieldGenerated() { return sumFromBlocks(B::getEffShieldGenerated); }
+
+	public HangarSpace getEffHangarSpace() {
+		Double value = sumFromBlocks(b -> Nullable.m(() -> b.getEffHangarSpace().getValue()));
+		if (value != null)
+			return new HangarSpace(value);
+		else
+			return null;
 	}
 
-	public double getCommandersReq() {
-		return Nullable.run(() -> getLieutenantsReq()
-				/ DataMaps.getConstant(Cons.CREW_RATIO_LIEUTENANTS_PER_COMMANDER).getValue());
+	public PropulsionForces getEffPropulsionForces(Integer... typeFilter) {
+//		Integer typeIndex = Nullable.m(() -> getBlockArchetype().getTypeIndex());
+//		if (typeIndex != null && (typeFilter == null || isTypeOf(typeFilter))) {
+//
+//			switch (typeIndex) {
+//			case Types.ENGINE:
+//				return getEffEngineForces();
+//			case Types.THRUSTER:
+//				return getEffThrusterForces();
+//			case Types.DIRECTIONAL_THRUSTER:
+//				return getEffDirectionalThrusterForces();
+//			case Types.INERTIA_DAMPENER:
+//				return getEffInertiaDampenerForces();
+//			}
+//		}
+		return null;
 	}
 
-	public double getGeneralsReq() {
-		return Nullable.run(() -> getCommandersReq()
-				/ DataMaps.getConstant(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue());
-	}
+	public double getLieutenantsReq() { return Nullable.m(() -> getSargeantsReq() / DataMaps.getConstant(Cons.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getValue()); }
+
+	public double getCommandersReq() { return Nullable.m(() -> getLieutenantsReq() / DataMaps.getConstant(Cons.CREW_RATIO_LIEUTENANTS_PER_COMMANDER).getValue()); }
+
+	public double getGeneralsReq() { return Nullable.m(() -> getCommandersReq() / DataMaps.getConstant(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue()); }
 
 //	protected Double truncateIfFinal(Double v) {
 //		return NullSafe.go(() -> retrieveFinalStats ? Math.floor(v) : v);

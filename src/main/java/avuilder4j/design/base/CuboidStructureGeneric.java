@@ -21,8 +21,7 @@ import avuilder4j.util.java.Tagable;
 import avuilder4j.util.java.Tagator;
 
 @SuppressWarnings("rawtypes")
-public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric>
-		extends ArrayList<B> implements Serializable, Tagable, Chainable<S> {
+public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric> extends ArrayList<B> implements Serializable, Tagable, Chainable<S> {
 	private static final long serialVersionUID = 3084475335938461639L;
 
 	protected Tagator tagsAdministrator = new Tagator();
@@ -93,12 +92,12 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		escalateByVolumeCuboid(finalVolume, (Axis[]) null);
 	}
 
-	public void escalateByVolumeCuboid(double finalVolume, Axis... axesIds) {
+	public void escalateByVolumeCuboid(double finalVolume, Axis... axes) {
 		AvValidations.volumes(finalVolume);
-		AvValidations.validateAxesRepetition(axesIds);
-		if (axesIds == null || axesIds.length == 0) {
-			axesIds = Axis.values();
+		if (axes == null || axes.length == 0) {
+			axes = Axis.values();
 		}
+		AvValidations.validateAxesRepetition(axes);
 
 		for (B cuboid : this) {
 			cuboid.validateCuboid();
@@ -109,7 +108,7 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		}
 
 		double ratio;
-		switch (axesIds.length) {
+		switch (axes.length) {
 		case 0:
 		case 3:
 			ratio = Math.cbrt(finalVolume / currentVol);
@@ -123,12 +122,11 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		default:
 			throw new Avuilder4jRuntimeException(AvErrors.AXIS_AMOUNT);
 		}
-		escalate(ratio, axesIds);
+		escalate(ratio, axes);
 	}
 
 	public B findByIndex(Integer index) {
-		return this.stream().filter(b -> Nullable.run(() -> b.getIndex().equals(index), false)).findFirst()
-				.orElse(null);
+		return this.stream().filter(b -> Nullable.m(() -> b.getIndex().equals(index), false)).findFirst().orElse(null);
 	}
 
 	public void rotate(Rotation rotationId) {
@@ -159,7 +157,7 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		}
 	}
 
-	public void attachTo(B attacher, B destinationCuboid, Face destinationFace) {
+	public void attach(B attacher, B destinationCuboid, Face destinationFace) {
 
 		if (attacher == destinationCuboid)
 			throw new IllegalArgumentException("The destination cuboid can not be the cuboid itself.");
@@ -187,11 +185,14 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		return sumFromBlocks(B::getVolumeCuboid);
 	}
 
-	public double sumFromBlocks(Function<B, Double> getAttributeFunction) {
-		double r = 0;
+	public Double sumFromBlocks(Function<B, Double> getAttributeFunction) {
+		Double r = null;
 		for (B block : this) {
-			if (getAttributeFunction.apply(block) != null)
+			if (getAttributeFunction.apply(block) != null) {
+				if (r == null)
+					r = 0d;
 				r += getAttributeFunction.apply(block);
+			}
 		}
 		return r;
 	}

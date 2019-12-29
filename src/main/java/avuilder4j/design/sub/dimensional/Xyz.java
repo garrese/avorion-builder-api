@@ -61,17 +61,17 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, Chainable<T> {
 		}
 	}
 
-	public T getXyzNegation() {
+	public T getNegationCopy() {
 		T r = getCopy();
 		r.negateXYZ();
 		return r;
 	}
 
-	public T getXyzSub(Xyz b) {
+	public T getSubCopy(Xyz b) {
 		return (T) getCopy().subXyz(b);
 	}
 
-	public T getXyzSum(Xyz b) {
+	public T getSumCopy(Xyz b) {
 		return (T) getCopy().sumXyz(b);
 	}
 
@@ -89,7 +89,7 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, Chainable<T> {
 
 	public T negateXYZ() {
 		for (Axis axis : Axis.values()) {
-			Nullable.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) * -1));
+			Nullable.m(() -> setXyzByAxis(axis, getXyzByAxis(axis) * -1));
 		}
 		return chain();
 	}
@@ -128,22 +128,26 @@ public abstract class Xyz<T extends Xyz> implements Copyable<T>, Chainable<T> {
 	}
 
 	public T subXyz(Xyz b) {
-		for (Axis axis : Axis.values()) {
-			Nullable.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) - b.getXyzByAxis(axis)));
+		if (b != null) {
+			sumXyz(b.getNegationCopy());
 		}
 		return chain();
 	}
 
 	public T sumXyz(Xyz b) {
-		for (Axis axis : Axis.values()) {
-			Nullable.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) + b.getXyzByAxis(axis)));
+		if (b != null) {
+			for (Axis axis : Axis.values()) {
+				Double thisValue = getXyzByAxis(axis);
+				Double bValue = b.getXyzByAxis(axis);
+				setXyzByAxis(axis, Nullable.sum(thisValue, bValue, () -> thisValue + bValue));
+			}
 		}
 		return chain();
 	}
 
 	public T multiply(Double factor) {
 		for (Axis axis : Axis.values()) {
-			Nullable.run(() -> setXyzByAxis(axis, getXyzByAxis(axis) * factor));
+			Nullable.m(() -> setXyzByAxis(axis, getXyzByAxis(axis) * factor));
 		}
 		return chain();
 	}

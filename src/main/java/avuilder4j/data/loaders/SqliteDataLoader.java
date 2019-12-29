@@ -76,7 +76,7 @@ public class SqliteDataLoader extends DataLoader {
 
 	public static Boolean getBoolean(ResultSet r, String columnName) throws SQLException {
 		Integer i = getWrapper(r, columnName);
-		return Nullable.run(() -> i == 1 ? true : false, null);
+		return Nullable.m(() -> i == 1 ? true : false, null);
 	}
 
 	@Override

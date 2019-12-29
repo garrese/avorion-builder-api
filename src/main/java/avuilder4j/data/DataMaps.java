@@ -46,38 +46,36 @@ public class DataMaps {
 
 	public static BlockArchetype getBlockArchetype(Integer typeIndex, Integer materialIndex) {
 		BlockArchetype.MapIndex index = new BlockArchetype.MapIndex(typeIndex, materialIndex);
-		return Nullable.run(() -> getBlockArchetypesMap().get(index));
+		return Nullable.m(() -> getBlockArchetypesMap().get(index));
 	}
 
 	public static Map<BlockArchetype.MapIndex, BlockArchetype> getBlockArchetypesMap() { return blockArchetypesMap; }
 
 	public static BeanConstant getConstant(String constantName) {
-		return Nullable.run(() -> getConstantsMap().get(constantName));
+		return Nullable.m(() -> getConstantsMap().get(constantName));
 	}
 
 	public static Map<String, BeanConstant> getConstantsMap() { return constantsMap; }
 
 	public static Double getConstantValue(String constantName) {
-		return Nullable.run(() -> getConstant(constantName).getValue());
+		return Nullable.m(() -> getConstant(constantName).getValue());
 	}
 
 	public static BeanCrew getCrew(Integer crewIndex) {
-		return Nullable.run(() -> crewMap.get(crewIndex));
+		return Nullable.m(() -> crewMap.get(crewIndex));
 	}
 
 	public static BeanCrewCommand getCrewCommand(BeanCrewCommand.MapIndex index) {
-		return Nullable.run(() -> crewCommandMap.get(index));
+		return Nullable.m(() -> crewCommandMap.get(index));
 	}
 
 	public static BeanCrewCommand getCrewCommand(Integer commander, Integer commanded) {
 		BeanCrewCommand.MapIndex index = new BeanCrewCommand.MapIndex(commander, commanded);
-		return Nullable.run(() -> crewCommandMap.get(index));
+		return Nullable.m(() -> crewCommandMap.get(index));
 	}
 
 	public static List<BeanCrewCommand> getCrewCommandListByCommander(Integer commander) {
-		return getCrewCommandMap().values().stream()
-				.filter((c) -> Nullable.run(() -> c.getIndex().getCommander().equals(commander), false))
-				.collect(Collectors.toList());
+		return getCrewCommandMap().values().stream().filter((c) -> Nullable.m(() -> c.getIndex().getCommander().equals(commander), false)).collect(Collectors.toList());
 	}
 
 	public static Map<BeanCrewCommand.MapIndex, BeanCrewCommand> getCrewCommandMap() { return crewCommandMap; }
@@ -85,7 +83,7 @@ public class DataMaps {
 	public static Map<Integer, BeanCrew> getCrewMap() { return crewMap; }
 
 	public static BeanEffect getEffect(BeanEffect.MapIndex mapIndex) {
-		return Nullable.run(() -> getEffectsMap().get(mapIndex));
+		return Nullable.m(() -> getEffectsMap().get(mapIndex));
 	}
 
 	public static BeanEffect getEffect(Integer typeModelIndex, Integer materialIndex, Integer n) {
@@ -94,7 +92,7 @@ public class DataMaps {
 	}
 
 	public static List<BeanEffect> getEffects(Integer typeModelIndex, Integer materialIndex) {
-		return getEffectsMap().values().stream().filter((e) -> Nullable.run(() -> {
+		return getEffectsMap().values().stream().filter((e) -> Nullable.m(() -> {
 			boolean type = e.getIndex().getTypeModelIndex().equals(typeModelIndex);
 			boolean material = e.getIndex().getMaterialIndex().equals(materialIndex);
 			return type && material;
@@ -104,20 +102,19 @@ public class DataMaps {
 	public static Map<BeanEffect.MapIndex, BeanEffect> getEffectsMap() { return effectsMap; }
 
 	public static List<Double> getEffectsValue(Integer typeModelIndex, Integer materialIndex) {
-		return DataMaps.getEffects(typeModelIndex, materialIndex).stream().map(BeanEffect::getValue)
-				.collect(Collectors.toList());
+		return DataMaps.getEffects(typeModelIndex, materialIndex).stream().map(BeanEffect::getValue).collect(Collectors.toList());
 	}
 
 	public static Double getEffectValue(BeanEffect.MapIndex mapIndex) {
-		return Nullable.run(() -> getEffectsMap().get(mapIndex).getValue());
+		return Nullable.m(() -> getEffectsMap().get(mapIndex).getValue());
 	}
 
 	public static Double getEffectValue(Integer typeModelIndex, Integer materialIndex, Integer n) {
-		return Nullable.run(() -> getEffect(typeModelIndex, materialIndex, n).getValue());
+		return Nullable.m(() -> getEffect(typeModelIndex, materialIndex, n).getValue());
 	}
 
 	public static BeanMaterial getMaterial(Integer materialIndex) {
-		return Nullable.run(() -> getMaterialsMap().get(materialIndex));
+		return Nullable.m(() -> getMaterialsMap().get(materialIndex));
 	}
 
 	public static Map<Integer, BeanMaterial> getMaterialsMap() { return materialsMap; }
@@ -140,21 +137,21 @@ public class DataMaps {
 	}
 
 	public static BeanShape getShape(Integer shapeIndex) {
-		return Nullable.run(() -> getShapesMap().get(shapeIndex));
+		return Nullable.m(() -> getShapesMap().get(shapeIndex));
 	}
 
 	public static Map<Integer, BeanShape> getShapesMap() { return shapesMap; }
 
 	public static BeanType getType(Integer typeIndex) {
-		return Nullable.run(() -> getTypesMap().get(typeIndex));
+		return Nullable.m(() -> getTypesMap().get(typeIndex));
 	}
 
 	public static BeanTypeModel getTypeModel(Integer typeModelIndex) {
-		return Nullable.run(() -> getTypeModelsMap().get(typeModelIndex));
+		return Nullable.m(() -> getTypeModelsMap().get(typeModelIndex));
 	}
 
 	public static BeanTypeModelByMaterial getTypeModelByMaterial(BeanTypeModelByMaterial.MapIndex mapIndex) {
-		return Nullable.run(() -> getTypeModelsByMaterialsMap().get(mapIndex));
+		return Nullable.m(() -> getTypeModelsByMaterialsMap().get(mapIndex));
 	}
 
 	public static BeanTypeModelByMaterial getTypeModelByMaterial(Integer typeModelIndex, Integer materialIndex) {
@@ -162,47 +159,31 @@ public class DataMaps {
 		return getTypeModelByMaterial(idx);
 	}
 
-	public static Map<BeanTypeModelByMaterial.MapIndex, BeanTypeModelByMaterial> getTypeModelsByMaterialsMap() {
-		return typeModelsByMaterialsMap;
-	}
+	public static Map<BeanTypeModelByMaterial.MapIndex, BeanTypeModelByMaterial> getTypeModelsByMaterialsMap() { return typeModelsByMaterialsMap; }
 
 	public static Map<Integer, BeanTypeModel> getTypeModelsMap() { return typeModelsMap; }
 
 	public static Map<Integer, BeanType> getTypesMap() { return typesMap; }
 
-	public static void setBlockArchetypesMap(Map<BlockArchetype.MapIndex, BlockArchetype> blockArchetypesMap) {
-		DataMaps.blockArchetypesMap = blockArchetypesMap;
-	}
+	public static void setBlockArchetypesMap(Map<BlockArchetype.MapIndex, BlockArchetype> blockArchetypesMap) { DataMaps.blockArchetypesMap = blockArchetypesMap; }
 
 	public static void setConstantsMap(Map<String, BeanConstant> metaValueMap) { DataMaps.constantsMap = metaValueMap; }
 
-	public static void setCrewCommandMap(Map<BeanCrewCommand.MapIndex, BeanCrewCommand> crewCommandMap) {
-		DataMaps.crewCommandMap = crewCommandMap;
-	}
+	public static void setCrewCommandMap(Map<BeanCrewCommand.MapIndex, BeanCrewCommand> crewCommandMap) { DataMaps.crewCommandMap = crewCommandMap; }
 
 	public static void setCrewMap(Map<Integer, BeanCrew> crewMap) { DataMaps.crewMap = crewMap; }
 
-	public static void setEffectsMap(Map<BeanEffect.MapIndex, BeanEffect> effectsMap) {
-		DataMaps.effectsMap = effectsMap;
-	}
+	public static void setEffectsMap(Map<BeanEffect.MapIndex, BeanEffect> effectsMap) { DataMaps.effectsMap = effectsMap; }
 
 	public static void setMaterialsMap(Map<Integer, BeanMaterial> materialMap) { DataMaps.materialsMap = materialMap; }
 
 	public static void setShapesMap(Map<Integer, BeanShape> shapeMap) { DataMaps.shapesMap = shapeMap; }
 
-	public static void setTypeModelsByMaterialsEffectsMap(
-			Map<BeanEffect.MapIndex, BeanEffect> typeModelsByMaterialsEffectsMap) {
-		DataMaps.effectsMap = typeModelsByMaterialsEffectsMap;
-	}
+	public static void setTypeModelsByMaterialsEffectsMap(Map<BeanEffect.MapIndex, BeanEffect> typeModelsByMaterialsEffectsMap) { DataMaps.effectsMap = typeModelsByMaterialsEffectsMap; }
 
-	public static void setTypeModelsByMaterialsMap(
-			Map<BeanTypeModelByMaterial.MapIndex, BeanTypeModelByMaterial> typeModelByMaterialMap) {
-		DataMaps.typeModelsByMaterialsMap = typeModelByMaterialMap;
-	}
+	public static void setTypeModelsByMaterialsMap(Map<BeanTypeModelByMaterial.MapIndex, BeanTypeModelByMaterial> typeModelByMaterialMap) { DataMaps.typeModelsByMaterialsMap = typeModelByMaterialMap; }
 
-	public static void setTypeModelsMap(Map<Integer, BeanTypeModel> typeModelMap) {
-		DataMaps.typeModelsMap = typeModelMap;
-	}
+	public static void setTypeModelsMap(Map<Integer, BeanTypeModel> typeModelMap) { DataMaps.typeModelsMap = typeModelMap; }
 
 	public static void setTypesMap(Map<Integer, BeanType> typeMap) { DataMaps.typesMap = typeMap; }
 

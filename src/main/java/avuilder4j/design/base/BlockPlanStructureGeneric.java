@@ -24,7 +24,7 @@ public abstract class BlockPlanStructureGeneric<T extends BlockPlanGeneric, S ex
 	}
 
 	public List<T> findByColor(String color) {
-		return this.stream().filter(b -> Nullable.run(() -> b.getColor().equals(color), false))
+		return this.stream().filter(b -> Nullable.m(() -> b.getColor().equals(color), false))
 				.collect(Collectors.toList());
 	}
 

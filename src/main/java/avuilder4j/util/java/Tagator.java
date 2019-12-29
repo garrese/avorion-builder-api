@@ -30,17 +30,17 @@ public class Tagator implements Serializable, Copyable<Tagator> {
 	}
 
 	public static <T extends Tagable> T findFirstInList(List<T> list, String tags) {
-		return list.stream().filter(t -> Nullable.run(() -> t.getTagator().hasTags(tags), false)).findFirst()
+		return list.stream().filter(t -> Nullable.m(() -> t.getTagator().hasTags(tags), false)).findFirst()
 				.orElse(null);
 	}
 
 	public static <T extends Tagable> T findFirstInListByRegex(List<T> list, String regex) {
-		return list.stream().filter(t -> Nullable.run(() -> t.getTagator().hasRegex(regex), false)).findFirst()
+		return list.stream().filter(t -> Nullable.m(() -> t.getTagator().hasRegex(regex), false)).findFirst()
 				.orElse(null);
 	}
 
 	public static <T extends Tagable> List<T> findInList(List<T> list, List<String> tags) {
-		return list.stream().filter(t -> Nullable.run(() -> t.getTagator().hasTags(tags), false))
+		return list.stream().filter(t -> Nullable.m(() -> t.getTagator().hasTags(tags), false))
 				.collect(Collectors.toList());
 	}
 
@@ -49,7 +49,7 @@ public class Tagator implements Serializable, Copyable<Tagator> {
 	}
 
 	public static <T extends Tagable> List<T> findInListByRegex(List<T> list, String regex) {
-		return list.stream().filter(t -> Nullable.run(() -> t.getTagator().hasRegex(regex), false))
+		return list.stream().filter(t -> Nullable.m(() -> t.getTagator().hasRegex(regex), false))
 				.collect(Collectors.toList());
 	}
 
@@ -99,13 +99,13 @@ public class Tagator implements Serializable, Copyable<Tagator> {
 	}
 
 	public String getFirstTagByRegex(String regex) {
-		return getTagList().stream().filter(t -> Nullable.run(() -> t.matches(regex), false)).findFirst().orElse(null);
+		return getTagList().stream().filter(t -> Nullable.m(() -> t.matches(regex), false)).findFirst().orElse(null);
 	}
 
 	public List<String> getTagList() { return tagList; }
 
 	public List<String> getTagListByRegex(String regex) {
-		return getTagList().stream().filter(t -> Nullable.run(() -> t.matches(regex), false))
+		return getTagList().stream().filter(t -> Nullable.m(() -> t.matches(regex), false))
 				.collect(Collectors.toList());
 	}
 
@@ -118,7 +118,7 @@ public class Tagator implements Serializable, Copyable<Tagator> {
 
 	public boolean hasRegex(String regex) {
 		for (String thisTag : tagList) {
-			if (Nullable.run(() -> thisTag.matches(regex), false)) {
+			if (Nullable.m(() -> thisTag.matches(regex), false)) {
 				return true;
 			}
 		}
@@ -128,7 +128,7 @@ public class Tagator implements Serializable, Copyable<Tagator> {
 	public boolean hasTags(List<String> tags) {
 		for (String tag : tags) {
 			for (String thisTag : tagList) {
-				if (Nullable.run(() -> thisTag.equals(tag), false)) {
+				if (Nullable.m(() -> thisTag.equals(tag), false)) {
 					return true;
 				}
 			}

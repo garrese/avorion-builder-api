@@ -81,7 +81,7 @@ public abstract class DataLoader {
 							p.setShapeName(shape.getName());
 							p.setCuboidFilledIn(shape.getCuboidFilledIn());
 							p.setSymmetricTypeIndex(DataMaps.getTypesMap().values().stream()
-									.filter(t -> Nullable.run(() -> {
+									.filter(t -> Nullable.m(() -> {
 										boolean modelFound = t.getTypeModelIndex().equals(type.getTypeModelIndex());
 										boolean shapeFound = t.getShapeIdx().equals(shape.getSymmetricIndex());
 										return modelFound && shapeFound;
@@ -90,13 +90,13 @@ public abstract class DataLoader {
 							List<Double> es = DataMaps.getEffectsValue(typeModel.getIndex(), mat.getIndex());
 							p.setEffects(Collections.unmodifiableList(es));
 
-							Double cCost = Nullable.run(() -> tmbm.getCreditCostMod() * mat.getCreditCost());
+							Double cCost = Nullable.m(() -> tmbm.getCreditCostMod() * mat.getCreditCost());
 							p.setCreditCost(Utils.round(cCost, 6));
-							Double mCost = Nullable.run(() -> typeModel.getMaterialCostMod() * mat.getMaterialCost());
+							Double mCost = Nullable.m(() -> typeModel.getMaterialCostMod() * mat.getMaterialCost());
 							p.setMaterialCost(Utils.round(mCost, 6));
-							Double dur = Nullable.run(() -> typeModel.getDurabilityMod() * mat.getDurability());
+							Double dur = Nullable.m(() -> typeModel.getDurabilityMod() * mat.getDurability());
 							p.setDurability(Utils.round(dur, 6));
-							Double dens = Nullable.run(() -> typeModel.getDensityMod() * mat.getDensity());
+							Double dens = Nullable.m(() -> typeModel.getDensityMod() * mat.getDensity());
 							p.setDensity(Utils.round(dens, 6));
 
 							BlockArchetype a = new BlockArchetype(p);

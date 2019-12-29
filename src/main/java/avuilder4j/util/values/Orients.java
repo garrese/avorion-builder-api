@@ -62,7 +62,7 @@ public class Orients {
 	}
 
 	protected static Axis getDefaultAxisOfEffectByOrientation(Orientation orientation) {
-		return Nullable.run(() -> {
+		return Nullable.m(() -> {
 			return Axis.getAxisByFace(orientation.getLook());
 		});
 	}

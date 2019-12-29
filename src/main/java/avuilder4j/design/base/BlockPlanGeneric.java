@@ -62,7 +62,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric<T>> extends Cu
 			copyTo.setMaterialIndex(copyFrom.getMaterialIndex());
 			copyTo.setTypeIndex(copyFrom.getTypeIndex());
 			copyTo.setColor(copyFrom.getColor());
-			copyTo.setOrientation(Nullable.run(() -> copyFrom.getOrientation().getCopy()));
+			copyTo.setOrientation(Nullable.m(() -> copyFrom.getOrientation().getCopy()));
 		}
 		return copyTo;
 	}
@@ -89,7 +89,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric<T>> extends Cu
 	public String getColor() { return color; }
 
 	@Override
-	public Integer getLook() { return Nullable.run(() -> getOrientation().getLook().getIndex()); }
+	public Integer getLook() { return Nullable.m(() -> getOrientation().getLook().getIndex()); }
 
 	@Override
 	public Integer getMaterialIndex() { return materialIndex; }
@@ -113,7 +113,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric<T>> extends Cu
 	public Integer getTypeIndex() { return typeIndex; }
 
 	@Override
-	public Integer getUp() { return Nullable.run(() -> getOrientation().getUp().getIndex()); }
+	public Integer getUp() { return Nullable.m(() -> getOrientation().getUp().getIndex()); }
 
 	@Override
 	public Double getXL() {
@@ -196,7 +196,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric<T>> extends Cu
 
 	@Override
 	public T setLook(Integer look) {
-		Nullable.run(() -> getOrientation().setLook(look));
+		Nullable.m(() -> getOrientation().setLook(look));
 		return chain();
 	}
 
@@ -224,7 +224,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric<T>> extends Cu
 
 	@Override
 	public T setUp(Integer up) {
-		Nullable.run(() -> getOrientation().setUp(up));
+		Nullable.m(() -> getOrientation().setUp(up));
 		return chain();
 	}
 

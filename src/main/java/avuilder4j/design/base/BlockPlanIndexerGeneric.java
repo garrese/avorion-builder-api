@@ -8,8 +8,7 @@ import avuilder4j.util.values.Colors;
 import avuilder4j.util.values.Orients;
 
 @SuppressWarnings("rawtypes")
-public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S extends BlockPlanStructureGeneric<B, S>, I extends BlockPlanIndexerGeneric>
-		extends CuboidIndexerGeneric<B, S, I> {
+public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S extends BlockPlanStructureGeneric<B, S>, I extends BlockPlanIndexerGeneric> extends CuboidIndexerGeneric<B, S, I> {
 
 	protected String defaultColor = Colors.MATERIAL_00_IRON;
 	protected Integer defaultMaterial = Mats.IRON;
@@ -22,7 +21,7 @@ public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S exte
 		block.setColor(defaultColor);
 		block.setMaterialIndex(defaultMaterial);
 		block.setTypeIndex(defaultType);
-		block.setOrientation(defaultOrientation);
+		block.setOrientation(Nullable.m(() -> getDefaultOrientation().getCopy()));
 		return block;
 	}
 
@@ -31,7 +30,7 @@ public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S exte
 		block.setColor(defaultColor);
 		block.setMaterialIndex(material);
 		block.setTypeIndex(type);
-		block.setOrientation(defaultOrientation);
+		block.setOrientation((Nullable.m(() -> getDefaultOrientation().getCopy())));
 		return block;
 	}
 
@@ -40,7 +39,7 @@ public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S exte
 		block.setColor(defaultColor);
 		block.setMaterialIndex(defaultMaterial);
 		block.setTypeIndex(type);
-		block.setOrientation(defaultOrientation);
+		block.setOrientation((Nullable.m(() -> getDefaultOrientation().getCopy())));
 		return block;
 	}
 
@@ -91,15 +90,13 @@ public abstract class BlockPlanIndexerGeneric<B extends BlockPlanGeneric, S exte
 	 * 
 	 * @return the {@link #defaultOrientation}.
 	 */
-	public Orientation getDefaultOrientation() { return Nullable.run(() -> defaultOrientation.getCopy()); }
+	public Orientation getDefaultOrientation() { return defaultOrientation; }
 
 	/**
 	 * Sets the {@link #defaultOrientation}.
 	 * 
 	 * @param defaultOrientation the {@link #defaultOrientation} to set.
 	 */
-	public void setDefaultOrientation(Orientation defaultOrientation) {
-		this.defaultOrientation = defaultOrientation;
-	}
+	public void setDefaultOrientation(Orientation defaultOrientation) { this.defaultOrientation = defaultOrientation; }
 
 }

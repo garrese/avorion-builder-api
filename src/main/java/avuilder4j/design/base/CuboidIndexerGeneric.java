@@ -42,7 +42,7 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 
 	public B createBlock() {
 		B cuboid = createBlanckBlock();
-		cuboid.setLengths(Nullable.run(() -> getDefaultLengths().getCopy()));
+		cuboid.setLengths(Nullable.m(() -> getDefaultLengths().getCopy()));
 		return cuboid;
 	}
 

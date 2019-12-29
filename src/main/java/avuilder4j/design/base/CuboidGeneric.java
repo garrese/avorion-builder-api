@@ -29,8 +29,7 @@ import avuilder4j.util.java.Tagator;
  * The cuboid is defined by one {@link AxisEnds} in each of the three coordinate axis.
  */
 @SuppressWarnings("rawtypes")
-public abstract class CuboidGeneric<T extends CuboidGeneric<T>>
-		implements Serializable, Tagable, Chainable<T>, Copyable<T> {
+public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Serializable, Tagable, Chainable<T>, Copyable<T> {
 	private static final long serialVersionUID = -5598838939653504628L;
 
 	/**
@@ -80,7 +79,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>>
 	public static <T extends CuboidGeneric> T copy(T copyFrom, T copyTo) {
 		if (copyFrom != null && copyTo != null) {
 			for (Axis axis : Axis.values()) {
-				copyTo.setAxis(axis, Nullable.run(() -> copyFrom.getAxis(axis).getCopy()));
+				copyTo.setAxis(axis, Nullable.m(() -> copyFrom.getAxis(axis).getCopy()));
 			}
 			Tagator.copy(copyFrom.getTagator(), copyTo.getTagator());
 		}
@@ -105,6 +104,16 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>>
 		Vector vector = Vector.pointDiff(destinationFacePoint, originFacePoint);
 		this.moveCenterByVector(vector);
 
+//		Point originFacePoint = null;
+//		Point destinyFacePoint = null;
+//
+//		destinyFacePoint = destinationCuboid.getFaceCenter(destinationFace);
+//		originFacePoint = getFaceCenter(Face.getOpposite(destinationFace));
+//		Vector centerToOwnFace = Vector.pointDiff(getCenter(), originFacePoint);
+//
+//		moveCenterToPoint(destinyFacePoint);
+//		moveCenterByVector(centerToOwnFace);
+
 		setParent(destinationCuboid);
 		return chain();
 	}
@@ -121,9 +130,8 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>>
 		if (!(obj instanceof CuboidGeneric))
 			return false;
 		CuboidGeneric other = (CuboidGeneric) obj;
-		return Objects.equals(axisX, other.axisX) && Objects.equals(axisY, other.axisY)
-				&& Objects.equals(axisZ, other.axisZ) && Objects.equals(indexInStructure, other.indexInStructure)
-				&& Objects.equals(parent, other.parent) && Objects.equals(tagator, other.tagator);
+		return Objects.equals(axisX, other.axisX) && Objects.equals(axisY, other.axisY) && Objects.equals(axisZ, other.axisZ) && Objects.equals(indexInStructure, other.indexInStructure) && Objects.equals(parent, other.parent)
+				&& Objects.equals(tagator, other.tagator);
 	}
 
 	public T escalate(double ratio) {
@@ -404,7 +412,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>>
 	}
 
 	public Double getSurfaceArea() {
-		return Nullable.run(() -> {
+		return Nullable.m(() -> {
 			Double face1 = axisX.getLength() * axisY.getLength();
 			Double face2 = axisX.getLength() * axisZ.getLength();
 			Double face3 = axisY.getLength() * axisZ.getLength();
@@ -518,9 +526,9 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>>
 		return rotateCuboid(rotation, new Face[0]);
 	}
 
-	public T rotateCuboid(Rotation rotation, Face... fixedFacesIds) {
-		AvValidations.validateFixedFacesMaxNumber(fixedFacesIds);
-		AvValidations.validateFixedFacesAxes(fixedFacesIds);
+	public T rotateCuboid(Rotation rotation, Face... fixedFaces) {
+		AvValidations.validateFixedFacesMaxNumber(fixedFaces);
+		AvValidations.validateFixedFacesAxes(fixedFaces);
 
 		List<Axis> axesIds = Axis.getAxesInvolvedInCuboidRotation(rotation);
 		try {
@@ -531,7 +539,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>>
 
 			End axis0FixedEnd = null;
 			End axis1FixedEnd = null;
-			for (Face faceId : fixedFacesIds) {
+			for (Face faceId : fixedFaces) {
 				if (axesIds.get(0) == Axis.getAxisByFace(faceId)) {
 					axis0FixedEnd = End.getEndIdByFaceId(faceId);
 				}
@@ -767,7 +775,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>>
 		builder.append(", index=");
 		builder.append(getIndex());
 		builder.append(", parent=");
-		builder.append(Nullable.run(() -> parent.getIndex()));
+		builder.append(Nullable.m(() -> parent.getIndex()));
 		return builder.toString();
 	}
 
