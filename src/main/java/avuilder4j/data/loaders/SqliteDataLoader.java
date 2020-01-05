@@ -33,7 +33,9 @@ public class SqliteDataLoader extends DataLoader {
 
 	protected Connection getConnection() throws SQLException {
 		Connection connection = null;
-		connection = DriverManager.getConnection("jdbc:sqlite:" + getClass().getClassLoader().getResource(dbFilePath));
+//		connection = DriverManager.getConnection("jdbc:sqlite:" + getClass().getClassLoader().getResource(dbFilePath)); // TODO limpiar
+//		System.out.println(getClass().getClassLoader().getResource(dbFilePath));
+		connection = DriverManager.getConnection("jdbc:sqlite:" + "src/main/resources/db/avorion-db.sqlite3");
 		return connection;
 	}
 
@@ -41,8 +43,7 @@ public class SqliteDataLoader extends DataLoader {
 
 	public void setDbFilePath(String dbFilePath) { this.dbFilePath = dbFilePath; }
 
-	public <K, V> Map<K, V> connectAndSelect(String select,
-			SqlFunction<ResultSet, AbstractMap.SimpleEntry<K, V>> mapper) throws Avuilder4jException {
+	public <K, V> Map<K, V> connectAndSelect(String select, SqlFunction<ResultSet, AbstractMap.SimpleEntry<K, V>> mapper) throws Avuilder4jException {
 		Connection c = null;
 		Map<K, V> map = new HashMap<>();
 		ResultSet r = null;

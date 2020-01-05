@@ -4,7 +4,7 @@ import avuilder4j.design.sub.dimensional.Vector;
 import avuilder4j.util.java.Chainable;
 import avuilder4j.util.java.Nullable;
 
-public abstract class SpeedingUpBraking<T extends SpeedingUpBraking<T>> implements Chainable<T> {
+public abstract class Linear<T extends Linear<T>> implements Chainable<T> {
 
 	protected Vector speedingUp = new Vector().setXyz(0d);
 	protected Vector braking = new Vector().setXyz(0d);

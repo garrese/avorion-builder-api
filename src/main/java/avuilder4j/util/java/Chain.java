@@ -2,9 +2,9 @@ package avuilder4j.util.java;
 
 import java.util.function.Consumer;
 
-public class RunAndReturn {
+public class Chain {
 
-	public static <T> T run(T t, Consumer<T> c) {
+	public static <T> T m(T t, Consumer<T> c) {
 		c.accept(t);
 		return t;
 	}

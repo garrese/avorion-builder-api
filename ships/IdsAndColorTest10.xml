@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ship_design>
+	<plan accumulateHealth="true" convex="false">
+		<item parent="-1" index="1">
+			<block lx="-0.5" ly="-2.5" lz="-0.5" ux="0.5" uy="-1.50000012" uz="0.5" index="102" material="4" look="5" up="3" color="ffbfaea3"/>
+		</item>
+		<item parent="1" index="0">
+			<block lx="-0.5" ly="-1.5" lz="-0.49999994" ux="0.5" uy="-0.500000477" uz="0.49999994" index="102" material="4" look="1" up="4" color="ffbfaea3"/>
+		</item>
+		<item parent="0" index="2">
+			<block lx="-0.5" ly="-0.500000477" lz="-0.499999821" ux="0.5" uy="0.499999166" uz="0.499999821" index="102" material="4" look="1" up="4" color="ffbfaea3"/>
+		</item>
+		<item parent="3" index="4">
+			<block lx="-0.499999762" ly="1.49999905" lz="-0.499999732" ux="0.499999762" uy="2.49999857" uz="0.499999732" index="102" material="4" look="5" up="3" color="ffbfaea3"/>
+		</item>
+		<item parent="2" index="3">
+			<block lx="-0.499999762" ly="0.499999285" lz="-0.499999821" ux="0.499999762" uy="1.49999893" uz="0.499999821" index="102" material="4" look="2" up="0" color="ffbfaea3"/>
+		</item>
+	</plan>
+</ship_design>

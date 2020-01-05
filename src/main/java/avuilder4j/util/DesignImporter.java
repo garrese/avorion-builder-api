@@ -22,11 +22,9 @@ public class DesignImporter {
 
 	protected String importRoute = "ships/";
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public <B extends BlockInterfaceImporter> List<B> importDesign(String shipName, Supplier<B> supplier)
-			throws Avuilder4jException {
+	public <B extends BlockInterfaceImporter<B>> List<B> importDesign(String shipName, Supplier<B> supplier) throws Avuilder4jException {
 
-		HashMap<Integer, BlockInterfaceImporter> blocksMap = new LinkedHashMap<>();
+		HashMap<Integer, B> blocksMap = new LinkedHashMap<>();
 		HashMap<Integer, Integer> parentsMap = new HashMap<>();
 
 		try {
@@ -46,7 +44,7 @@ public class DesignImporter {
 				Integer parentIndex = getIntegerAtt(item, "parent");
 
 				Element xmlBlock = (Element) item.getElementsByTagName("block").item(0);
-				BlockInterfaceImporter importer = supplier.get();
+				B importer = supplier.get();
 
 				importer.setIndex(index);
 				importer.setXL(getDoubleAttRounded(xmlBlock, "lx"));
@@ -67,8 +65,8 @@ public class DesignImporter {
 
 			for (Map.Entry<Integer, Integer> parentRegistry : parentsMap.entrySet()) {
 
-				BlockInterfaceImporter block = blocksMap.get(parentRegistry.getKey());
-				BlockInterfaceImporter parent = blocksMap.get(parentRegistry.getValue());
+				B block = blocksMap.get(parentRegistry.getKey());
+				B parent = blocksMap.get(parentRegistry.getValue());
 				block.setParent(parent);
 			}
 

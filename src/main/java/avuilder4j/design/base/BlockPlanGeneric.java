@@ -11,8 +11,7 @@ import avuilder4j.util.java.Nullable;
  * Represents an Avorion full functional block in a structure.
  */
 @SuppressWarnings("rawtypes")
-public abstract class BlockPlanGeneric<T extends BlockPlanGeneric<T>> extends CuboidGeneric<T>
-		implements BlockInterfaceExporter, BlockInterfaceImporter<T> {
+public abstract class BlockPlanGeneric<T extends BlockPlanGeneric<T>> extends CuboidGeneric<T> implements BlockInterfaceExporter, BlockInterfaceImporter<T> {
 	private static final long serialVersionUID = -1896528590585386376L;
 
 	/**
@@ -76,8 +75,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric<T>> extends Cu
 		if (!(obj instanceof BlockPlanGeneric))
 			return false;
 		BlockPlanGeneric other = (BlockPlanGeneric) obj;
-		return Objects.equals(color, other.color) && Objects.equals(materialIndex, other.materialIndex)
-				&& Objects.equals(orientation, other.orientation) && Objects.equals(typeIndex, other.typeIndex);
+		return Objects.equals(color, other.color) && Objects.equals(materialIndex, other.materialIndex) && Objects.equals(orientation, other.orientation) && Objects.equals(typeIndex, other.typeIndex);
 	}
 
 	/**
@@ -243,7 +241,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric<T>> extends Cu
 		return builder.toString();
 	}
 
-	protected String toStringBodyPlanIndexes() {
+	public String toStringBodyPlanIndexes() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("materialIndex=");
 		builder.append(materialIndex);
@@ -252,7 +250,7 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric<T>> extends Cu
 		return builder.toString();
 	}
 
-	protected String toStringBodyPlanValues() {
+	public String toStringBodyPlanValues() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("color=");
 		builder.append(color);

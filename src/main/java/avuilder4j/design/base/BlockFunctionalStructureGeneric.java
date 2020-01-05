@@ -3,8 +3,10 @@ package avuilder4j.design.base;
 import java.util.Collection;
 
 import avuilder4j.data.DataMaps;
+import avuilder4j.design.sub.functional.AmountByMaterial;
+import avuilder4j.design.sub.functional.Crew;
 import avuilder4j.design.sub.functional.HangarSpace;
-import avuilder4j.design.sub.functional.PropulsionForces;
+import avuilder4j.design.sub.functional.LinearForces;
 import avuilder4j.util.java.Nullable;
 import avuilder4j.util.keys.Cons;
 
@@ -50,6 +52,24 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 
 	}
 
+	public AmountByMaterial getMaterialCost() {
+		AmountByMaterial am = new AmountByMaterial();
+		for (B b : this) {
+			am.add(b.getMaterialIndex(), b.getMaterialCost());
+		}
+		return am;
+	}
+
+	public Crew getCrew() {
+		Crew crew = new Crew();
+		for (B block : this) {
+			crew.add(block.getCrewReq());
+		}
+		return crew;
+	}
+
+	public Double getCreditCost() { return sumFromBlocks(B::getCreditCost); }
+
 	public Double getMass() { return sumFromBlocks(B::getMass); }
 
 	public Double getDurability() { return sumFromBlocks(B::getDurability); }
@@ -64,7 +84,7 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 			return null;
 	}
 
-	public PropulsionForces getEffPropulsionForces(Integer... typeFilter) {
+	public LinearForces getEffPropulsionForces(Integer... typeFilter) {
 //		Integer typeIndex = Nullable.m(() -> getBlockArchetype().getTypeIndex());
 //		if (typeIndex != null && (typeFilter == null || isTypeOf(typeFilter))) {
 //

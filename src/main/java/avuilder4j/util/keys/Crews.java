@@ -2,8 +2,8 @@ package avuilder4j.util.keys;
 
 public class Crews {
 
-	public static final String MECHANICS = "Mechanics";
-	public static final String ENGINEERS = "Engineers";
+	public static final Integer MECHANICS = 1;
+	public static final Integer ENGINEERS = 2;
 	public static final String MINERS = "Miners";
 	public static final String GUNERS = "Guners";
 	public static final String SERGEANTS = "Sergeants";

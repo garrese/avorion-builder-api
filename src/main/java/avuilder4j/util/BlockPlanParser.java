@@ -12,15 +12,13 @@ import avuilder4j.design.base.BlockInterfaceImporter;
 
 public class BlockPlanParser {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static <T extends BlockInterfaceImporter> List<T> parse(
-			List<? extends BlockInterfaceExporter> listToParse, Supplier<T> supplier) {
+	public static <T extends BlockInterfaceImporter<T>> List<T> parse(List<? extends BlockInterfaceExporter> listToParse, Supplier<T> supplier) {
 
-		HashMap<Integer, BlockInterfaceImporter> blocksMap = new LinkedHashMap<>();
+		HashMap<Integer, T> blocksMap = new LinkedHashMap<>();
 		HashMap<Integer, Integer> parentsMap = new HashMap<>();
 
 		for (BlockInterfaceExporter exporter : listToParse) {
-			BlockInterfaceImporter importer = supplier.get();
+			T importer = supplier.get();
 
 			importer.setIndex(exporter.getIndex());
 			importer.setXL(exporter.getXL());
@@ -41,8 +39,8 @@ public class BlockPlanParser {
 
 		for (Map.Entry<Integer, Integer> parentRegistry : parentsMap.entrySet()) {
 
-			BlockInterfaceImporter block = blocksMap.get(parentRegistry.getKey());
-			BlockInterfaceImporter parent = blocksMap.get(parentRegistry.getValue());
+			T block = blocksMap.get(parentRegistry.getKey());
+			T parent = blocksMap.get(parentRegistry.getValue());
 			block.setParent(parent);
 		}
 

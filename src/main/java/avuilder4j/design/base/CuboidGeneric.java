@@ -750,7 +750,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 		return builder.toString();
 	}
 
-	protected String toStringBodyCuboid() {
+	public String toStringBodyCuboid() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("lengths=");
 		builder.append(getLengths());
@@ -767,7 +767,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 		return builder.toString();
 	}
 
-	protected String toStringHeader() {
+	public String toStringHeader() {
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("tags=");

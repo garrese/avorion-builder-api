@@ -6,13 +6,15 @@ import avuilder4j.data.DataMaps;
 import avuilder4j.data.dtos.BlockArchetype;
 import avuilder4j.design.enums.Axis;
 import avuilder4j.design.sub.dimensional.AxisEnds;
+import avuilder4j.design.sub.functional.Crew;
 import avuilder4j.design.sub.functional.HangarSpace;
 import avuilder4j.design.sub.functional.IFGAura;
-import avuilder4j.design.sub.functional.PropulsionForces;
+import avuilder4j.design.sub.functional.LinearForces;
 import avuilder4j.design.sub.functional.RotationForces;
+import avuilder4j.util.java.Chain;
 import avuilder4j.util.java.Nullable;
-import avuilder4j.util.java.RunAndReturn;
 import avuilder4j.util.keys.Cons;
+import avuilder4j.util.keys.Crews;
 import avuilder4j.util.keys.Types;
 import avuilder4j.util.values.Orients;
 
@@ -23,31 +25,18 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 
 	public BlockArchetype getBlockArchetype() { return blockArchetype; }
 
-	public Double getCreditCost() { return Nullable.m(() -> getBlockArchetype().getCreditCost() * getVolumeBlock()); }
+	public Double getCreditCost() { return Nullable.m(() -> Math.ceil(getBlockArchetype().getCreditCost() * getVolumeBlock())); }
 
-	private Double getCrewReqCommanders() { return Nullable.m(() -> getCrewReqLieutenants() / DataMaps.getConstantValue(Cons.CREW_RATIO_LIEUTENANTS_PER_COMMANDER)); }
-
-	private Double getCrewReq(Integer crewIndex) {
-		return null;
+	public Crew getCrewReq() {
+		Crew ac = new Crew();
+		ac.add(Crews.MECHANICS, getCrewReqMechanics());
+		ac.add(Crews.ENGINEERS, getCrewReqEngineers());
+		return ac;
 	}
 
-	private Double getCrewReqEngineers() {
-		return null;// NullSafe.run(() -> getVolumeBlock() * typeModel.getEngineers());
-	}
+	public Double getCrewReqEngineers() { return Nullable.m(() -> getBlockArchetype().getEngineers() * getVolumeBlock()); }
 
-	private Double getCrewReqGenerals() { return Nullable.m(() -> getCrewReqCommanders() / DataMaps.getConstantsMap().get(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue()); }
-
-	private Double getCrewReqLieutenants() { return Nullable.m(() -> getCrewSergeantsReq() / DataMaps.getConstantsMap().get(Cons.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getValue()); }
-
-	private Double getCrewReqMechanics() { return Nullable.m(() -> getBlockArchetype().getMechanics() * getVolumeBlock()); };
-
-	private Double getCrewSergeantsReq() {
-		return Nullable.m(() -> {
-			Double crew = (getCrewReqMechanics() + getCrewReqEngineers());
-			Double ratio = DataMaps.getConstantsMap().get(Cons.CREW_RATIO_CREW_PER_SERGEANT).getValue();
-			return crew / ratio;
-		});
-	}
+	public Double getCrewReqMechanics() { return Nullable.m(() -> getBlockArchetype().getMechanics() * getVolumeBlock()); };
 
 	public Double getDensity() { return Nullable.m(() -> getBlockArchetype().getDensity() * getVolumeBlock()); }
 
@@ -63,18 +52,18 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 
 	public Double getEffComputerCoreProcessingPower() { return getEffectByVolumeIfType(Types.COMPUTER_CORE); }
 
-	protected Axis getEffDirectionalThrusterAxis() {
+	public Axis getEffDirectionalThrusterAxis() {
 		if (isTypeOf(Types.DIRECTIONAL_THRUSTER))
 			return Orients.getDirectionalThrusterAxisThrustByOrientation(getOrientation());
 		else
 			return null;
 	}
 
-	public PropulsionForces getEffDirectionalThrusterForces() {
+	public LinearForces getEffDirectionalThrusterForces() {
 		Double f = getEffectByVolumeIfType(Types.DIRECTIONAL_THRUSTER);
 		if (f != null) {
 			Axis a = getEffDirectionalThrusterAxis();
-			PropulsionForces pfs = new PropulsionForces();
+			LinearForces pfs = new LinearForces();
 			pfs.getSpeedingUp().setXyzByAxis(a, f);
 			pfs.getBraking().setXyzByAxis(a, f);
 			if (a.equals(Axis.Z)) {
@@ -105,6 +94,12 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		});
 	}
 
+	public Double getEffComputerCoreProcessing() {
+		Double e = getEffectByVolumeIfType(Types.DIRECTIONAL_THRUSTER);
+		Double p = getProcessingPowerBase();
+		return Nullable.m(() -> p * e);
+	}
+
 	protected Double getEffectStorageVolume() {
 		return Nullable.m(() -> {
 			Double vol = 1d;
@@ -117,17 +112,17 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 
 	public Double getEffEnergyContainerECap() { return getEffectByVolumeIfType(Types.ENERGY_CONTAINER); }
 
-	public PropulsionForces getEffEngineForces() {
+	public LinearForces getEffEngineForces() {
 		Double f = getEffectByVolumeIfType(Types.ENGINE);
 		if (f != null)
-			return RunAndReturn.run(new PropulsionForces(), (p) -> p.getSpeedingUp().setZ(f));
+			return Chain.m(new LinearForces(), (p) -> p.getSpeedingUp().setZ(f));
 		else
 			return null;
 	}
 
 	public Double getEffGeneratorGeneratedEnergy() { return getEffectByVolumeIfType(Types.GENERATOR); }
 
-	protected Axis getEffGyroArrayAxis() {
+	public Axis getEffGyroArrayAxis() {
 		if (isTypeOf(Types.GYRO_ARRAY))
 			return Orients.getGyroArrayAxisOfRotationByOrientation(getOrientation());
 		else
@@ -156,10 +151,10 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 
 	public Double getEffHyperspaceCorePower() { return getEffectByVolumeIfType(Types.HYPERSPACE_CORE); }
 
-	public PropulsionForces getEffInertiaDampenerForces() {
+	public LinearForces getEffInertiaDampenerForces() {
 		Double f = getEffectByVolumeIfType(Types.INERTIA_DAMPENER);
 		if (f != null)
-			return RunAndReturn.run(new PropulsionForces(), (p) -> p.getBraking().setZ(f));
+			return Chain.m(new LinearForces(), (p) -> p.getBraking().setZ(f));
 		else
 			return null;
 	}
@@ -175,9 +170,9 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		});
 	}
 
-	public PropulsionForces getEffPropulsionForces() { return getEffPropulsionForces((Integer[]) null); }
+	public LinearForces getEffLinearForces() { return getEffPropulsionForces((Integer[]) null); }
 
-	public PropulsionForces getEffPropulsionForces(Integer... typeFilter) {
+	public LinearForces getEffPropulsionForces(Integer... typeFilter) {
 		Integer typeIndex = Nullable.m(() -> getBlockArchetype().getTypeIndex());
 		if (typeIndex != null && (typeFilter == null || isTypeOf(typeFilter))) {
 
@@ -206,10 +201,10 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		});
 	}
 
-	public PropulsionForces getEffThrusterForces() {
+	public LinearForces getEffThrusterForces() {
 		Double f = getEffectByVolumeIfType(Types.THRUSTER);
 		if (f != null) {
-			PropulsionForces p = new PropulsionForces();
+			LinearForces p = new LinearForces();
 			p.getSpeedingUp().setX(f).setY(f);
 			p.getBraking().setXyz(f);
 			return p;
@@ -221,7 +216,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 
 	public Double getMass() { return Nullable.m(() -> getDensity() * getVolumeBlock()); }
 
-	public Double getMaterialCost() { return Nullable.m(() -> getBlockArchetype().getMaterialCost() * getVolumeBlock()); }
+	public Double getMaterialCost() { return Nullable.m(() -> Math.ceil(getBlockArchetype().getMaterialCost() * getVolumeBlock())); }
 
 	public Double getProcessingPowerBase() {
 		if (Nullable.m(() -> getBlockArchetype().getProcess(), false)) {
@@ -239,8 +234,8 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 			return 0d;
 	}
 
-	public boolean isTypeOf(Integer index) {
-		return Nullable.m(() -> getBlockArchetype().getTypeIndex().equals(index), false);
+	public boolean isTypeOf(Integer typeIndex) {
+		return Nullable.m(() -> getBlockArchetype().getTypeIndex().equals(typeIndex), false);
 	}
 
 	public boolean isTypeOf(Integer[] indexes) {
@@ -292,7 +287,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		return builder.toString();
 	}
 
-	protected String toStringBodyFunctionalNames() {
+	public String toStringBodyFunctionalNames() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("block=");
 		builder.append(Nullable.m(() -> getBlockArchetype().getTypeName()));
@@ -301,7 +296,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		return builder.toString();
 	}
 
-	protected String toStringBodyFunctionalValues() {
+	public String toStringBodyFunctionalValues() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("mass=");
 		builder.append(getMass());

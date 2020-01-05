@@ -56,8 +56,17 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public S add(B... blocks) {
+	public B addBlock(B block) {
+		super.add(block);
+		return block;
+	}
+
+	public S addBlockAndChain(B block) {
+		super.add(block);
+		return chain();
+	}
+
+	public S addBlocks(@SuppressWarnings("unchecked") B... blocks) {
 		if (blocks != null)
 			for (B b : blocks) {
 				add(b);
@@ -65,7 +74,7 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		return chain();
 	}
 
-	public S add(Collection<B> blocks) {
+	public S addBlocks(Collection<B> blocks) {
 		super.addAll(blocks);
 		return chain();
 	}
