@@ -6,14 +6,21 @@ import java.util.stream.Collectors;
 
 public enum Axis {
 
-	X,
-	Y,
-	Z;
+	X(0),
+	Y(1),
+	Z(2);
+
+	private int index;
+
+	private Axis(int index) {
+		this.index = index;
+	}
+
+	public int getIndex() { return index; }
 
 	public static List<Axis> getAxesInvolvedInCuboidRotation(Rotation rotation) {
 		if (rotation != null)
-			return Arrays.stream(Axis.values()).filter((axis) -> !axis.equals(getAxisOfRotation(rotation)))
-					.collect(Collectors.toList());
+			return Arrays.stream(Axis.values()).filter((axis) -> !axis.equals(getAxisOfRotation(rotation))).collect(Collectors.toList());
 		else
 			return null;
 	}

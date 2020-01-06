@@ -2,23 +2,29 @@ package avuilder4j.design.sub.dimensional;
 
 import java.io.Serializable;
 
-public class Vector extends Xyz<Vector> implements Serializable {
+public class Vector extends DimensionalValuesInAxes<Vector> implements Serializable {
 	private static final long serialVersionUID = 130413434793924395L;
 
 	public Vector() {
 		super();
 	}
 
+	public Vector(DimensionalValuesInAxes<Vector> dimensional) {
+		super(dimensional);
+	}
+
 	public Vector(Double x, Double y, Double z) {
-		super(x, y, z);
+		set(x, y, z);
 	}
 
 	public static Vector pointDiff(Point a, Point b) {
-		return new Vector().copyXyz(a.getSubCopy(b));
+		Point copy = a.getCopy();
+		return new Vector().copyDimensions(copy.sub(b));
 	}
 
 	public static Vector pointSum(Point a, Point b) {
-		return new Vector().copyXyz(a.getSumCopy(b));
+		Point copy = a.getCopy();
+		return new Vector().copyDimensions(copy.sum(b));
 	}
 
 	public static Vector vectorDiff(Vector a, Vector b) {
@@ -29,12 +35,6 @@ public class Vector extends Xyz<Vector> implements Serializable {
 		return new Vector().copyXyz(a.getSumCopy(b));
 	}
 
-	@Override
-	public Vector getCopy() { return new Vector().copyXyz(this); }
-
-	@Override
-	public Vector chain() {
-		return this;
-	}
+	public Vector getCopy() { return new Vector(this); }
 
 }

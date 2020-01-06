@@ -5,31 +5,29 @@ import java.io.Serializable;
 /**
  * Represents a point in a Cartesian coordinate system.
  */
-public class Point extends Xyz<Point> implements Serializable {
+public class Point extends DimensionalValuesInAxes<Point> implements Serializable {
 	private static final long serialVersionUID = -8385581038463928346L;
 
 	public Point() {
 		super();
 	}
 
-	public Point(Double x, Double y, Double z) {
-		super(x, y, z);
+	public Point(DimensionalValuesInAxes<Point> dimensional) {
+		super(dimensional);
+	}
+
+	public Point(Number x, Number y, Number z) {
+		set(x, y, z);
 	}
 
 	public void sumVector(Vector v) {
-		sumXyz(v);
+		// TODO
 	}
 
 	public void subVector(Vector v) {
-		subXyz(v);
+		// TODO
 	}
 
-	@Override
-	public Point getCopy() { return new Point().copyXyz(this); }
-
-	@Override
-	public Point chain() {
-		return this;
-	}
+	public Point getCopy() { return new Point(this); }
 
 }
