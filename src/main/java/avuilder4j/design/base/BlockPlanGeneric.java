@@ -114,54 +114,6 @@ public abstract class BlockPlanGeneric<T extends BlockPlanGeneric<T>> extends Cu
 	public Integer getUp() { return Nullable.m(() -> getOrientation().getUp().getIndex()); }
 
 	@Override
-	public Double getXL() {
-		if (getAxisX() != null)
-			return getAxisX().getLowerEnd();
-		else
-			return null;
-	}
-
-	@Override
-	public Double getXU() {
-		if (getAxisX() != null)
-			return getAxisX().getUpperEnd();
-		else
-			return null;
-	}
-
-	@Override
-	public Double getYL() {
-		if (getAxisY() != null)
-			return getAxisY().getLowerEnd();
-		else
-			return null;
-	}
-
-	@Override
-	public Double getYU() {
-		if (getAxisY() != null)
-			return getAxisY().getUpperEnd();
-		else
-			return null;
-	}
-
-	@Override
-	public Double getZL() {
-		if (getAxisZ() != null)
-			return getAxisZ().getLowerEnd();
-		else
-			return null;
-	}
-
-	@Override
-	public Double getZU() {
-		if (getAxisZ() != null)
-			return getAxisZ().getUpperEnd();
-		else
-			return null;
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();

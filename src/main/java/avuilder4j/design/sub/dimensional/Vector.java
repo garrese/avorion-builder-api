@@ -9,28 +9,33 @@ public class Vector extends Xyz<Vector> implements Serializable {
 		super();
 	}
 
-	public Vector(Double x, Double y, Double z) {
+	public Vector(Number x, Number y, Number z) {
 		super(x, y, z);
 	}
 
+	public Vector(Number xyz) {
+		super(xyz);
+	}
+
+	public Vector(Vector xyz) {
+		super(xyz);
+	}
+
 	public static Vector pointDiff(Point a, Point b) {
-		return new Vector().copyXyz(a.getSubCopy(b));
+		return new Vector().copyXyz(a).subXyz(b);
 	}
 
 	public static Vector pointSum(Point a, Point b) {
-		return new Vector().copyXyz(a.getSumCopy(b));
+		return new Vector().copyXyz(a).sumXyz(b);
 	}
 
 	public static Vector vectorDiff(Vector a, Vector b) {
-		return new Vector().copyXyz(a.getSubCopy(b));
+		return new Vector(a).subXyz(b);
 	}
 
 	public static Vector vectorSum(Vector a, Vector b) {
-		return new Vector().copyXyz(a.getSumCopy(b));
+		return new Vector(a).sumXyz(b);
 	}
-
-	@Override
-	public Vector getCopy() { return new Vector().copyXyz(this); }
 
 	@Override
 	public Vector chain() {

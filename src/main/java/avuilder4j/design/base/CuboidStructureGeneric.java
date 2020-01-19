@@ -3,10 +3,13 @@ package avuilder4j.design.base;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import avuilder4j.design.enums.Axis;
+import avuilder4j.design.enums.End;
 import avuilder4j.design.enums.Face;
 import avuilder4j.design.enums.Rotation;
 import avuilder4j.design.sub.dimensional.AxisEnds;
@@ -17,6 +20,7 @@ import avuilder4j.error.AvValidations;
 import avuilder4j.error.Avuilder4jRuntimeException;
 import avuilder4j.util.java.Chainable;
 import avuilder4j.util.java.Nullable;
+import avuilder4j.util.java.NumberUtils;
 import avuilder4j.util.java.Tagable;
 import avuilder4j.util.java.Tagator;
 
@@ -142,28 +146,131 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		rotate(rotationId, 1);
 	}
 
-	public void rotate(Rotation rotationId, int times) {
+	@SuppressWarnings("incomplete-switch")
+	public void rotate(Rotation rotation, int times) {
 		if (times < 0)
 			throw new IllegalArgumentException("Rotation times cannot be lower than 0.");
 
-		List<Axis> axesIds = Axis.getAxesInvolvedInCuboidRotation(rotationId);
-		try {
-			for (int i = 0; i < times; i++) {
-				for (B cuboid : this) {
-					AxisEnds axis0 = cuboid.getAxis(axesIds.get(0));
-					AxisEnds axis1 = cuboid.getAxis(axesIds.get(1));
-					axis0.validateAxisEnds();
-					axis1.validateAxisEnds();
+//		double[][] rx = new double[3][3];
+//		rx[0] = new double[] { 1, 0, 0 };
+//		rx[1] = new double[] { 0, cos, sinN };
+//		rx[2] = new double[] { 0, sin, cos };
+//
+//		double[][] ry = new double[3][3];
+//		ry[0] = new double[] { cos, 0, sin };
+//		ry[1] = new double[] { 0, 1, 0 };
+//		ry[2] = new double[] { sinN, 0, cos };
+//
+//		double[][] rz = new double[3][3];
+//		rz[0] = new double[] { cos, sinN, 0 };
+//		rz[1] = new double[] { sin, cos, 0 };
+//		rz[2] = new double[] { 0, 0, 1 };
 
-					AxisEnds axis0Aux = axis0;
-					AxisEnds axis1Aux = axis1;
-					cuboid.setAxis(axesIds.get(0), axis1Aux);
-					cuboid.setAxis(axesIds.get(1), axis0Aux);
+//		Map<Axis, double[]> mx = new HashMap<>();
+//		mx.put(Axis.X, new double[] { 1, 0, 0 });
+//		mx.put(Axis.Y, new double[] { 0, cos, sinN });
+//		mx.put(Axis.Z, new double[] { 0, sin, cos });
+//
+//		Map<Axis, double[]> my = new HashMap<>();
+//		my.put(Axis.X, new double[] { cos, 0, sin });
+//		my.put(Axis.Y, new double[] { 0, 1, 0 });
+//		my.put(Axis.Z, new double[] { sinN, 0, cos });
+//
+//		Map<Axis, double[]> mz = new HashMap<>();
+//		mz.put(Axis.X, new double[] { cos, sinN, 0 });
+//		mz.put(Axis.Y, new double[] { sin, cos, 0 });
+//		mz.put(Axis.Z, new double[] { 0, 0, 1 });
+
+//		Map<Axis, double[]> mx = new HashMap<>();
+//		mx.put(Axis.Y, new double[] { cos, sinN });
+//		mx.put(Axis.Z, new double[] { sin, cos });
+//		
+//		Map<Axis, double[]> my = new HashMap<>();
+//		my.put(Axis.X, new double[] { cos, sin });
+//		my.put(Axis.Z, new double[] { sinN, cos });
+//
+//		Map<Axis, double[]> mz = new HashMap<>();
+//		mz.put(Axis.X, new double[] { cos, sinN });
+//		mz.put(Axis.Y, new double[] { sin, cos });
+
+		double grades = 90 * times;
+
+		switch (rotation) {
+		case AROUND_X_INVERSE:
+		case AROUND_Y_INVERSE:
+		case AROUND_Z_INVERSE:
+			grades = NumberUtils.negate(grades);
+		}
+
+		double cos = NumberUtils.round(Math.cos(Math.toRadians(grades)), 3);
+		double sin = NumberUtils.round(Math.sin(Math.toRadians(grades)), 3);
+		double cosN = NumberUtils.negate(cos);
+		double sinN = NumberUtils.negate(sin);
+
+		Map<Axis, Map<Axis, Double>> matrix = new HashMap<Axis, Map<Axis, Double>>();
+		Map<Axis, Double> mx1 = new HashMap<Axis, Double>();
+		Map<Axis, Double> mx2 = new HashMap<Axis, Double>();
+		switch (rotation) {
+
+		case AROUND_X:
+			mx1.put(Axis.Y, cos);
+			mx1.put(Axis.Z, sinN);
+			mx2.put(Axis.Y, sin);
+			mx2.put(Axis.Z, cos);
+			matrix.put(Axis.Y, mx1);
+			matrix.put(Axis.Z, mx2);
+			break;
+
+		case AROUND_Y:
+			mx1.put(Axis.X, cos);
+			mx1.put(Axis.Z, sinN);
+			mx2.put(Axis.X, sin);
+			mx2.put(Axis.Z, cos);
+			matrix.put(Axis.X, mx1);
+			matrix.put(Axis.Z, mx2);
+			break;
+
+		case AROUND_Z:
+			mx1.put(Axis.X, cos);
+			mx1.put(Axis.Y, sinN);
+			mx2.put(Axis.X, sin);
+			mx2.put(Axis.Y, cos);
+			matrix.put(Axis.X, mx1);
+			matrix.put(Axis.Y, mx2);
+			break;
+
+		}
+
+		for (B b : this) {
+
+			Map<Axis, AxisEnds> savedEnds = new HashMap<>();
+			List<Axis> axisRotating = Axis.getAxisInvolvedInRotation(rotation);
+			for (Axis axis : axisRotating) {
+				savedEnds.put(axis, b.getAxis(axis).getCopy());
+				b.setAxis(axis, new AxisEnds());
+			}
+
+			for (Axis matrixRowAxis : axisRotating) {
+				for (End end : End.values()) {
+					double calc = 0;
+					for (Axis matrixLineAxis : axisRotating) {
+						Double savedEnd = savedEnds.get(matrixLineAxis).getEnd(end);
+						calc += savedEnd * matrix.get(matrixRowAxis).get(matrixLineAxis);
+					}
+					b.getAxis(matrixRowAxis).setEnd(end, calc);
 				}
 			}
-		} catch (Exception e) {
-			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED, e);
+
 		}
+
+	}
+
+	protected Double applyRotationMatrix(Map<Axis, double[]> m, Axis axis, Double value) {
+		Double result = null;
+		for (int i = 0; i < m.size(); i++) {
+
+		}
+		return result;
 	}
 
 	public void attach(B attacher, B destinationCuboid, Face destinationFace) {

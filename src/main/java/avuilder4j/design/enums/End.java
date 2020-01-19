@@ -7,7 +7,7 @@ public enum End {
 	UPPER,
 	LOWER;
 
-	public static End getOppositeEndId(End end) {
+	public static End getOppositeEnd(End end) {
 		switch (end) {
 		case UPPER:
 			return LOWER;
@@ -18,7 +18,7 @@ public enum End {
 		}
 	}
 
-	public static End getEndIdByFaceId(Face faceId) {
+	public static End getEndByFace(Face faceId) {
 		switch (faceId) {
 		case XU:
 		case YU:

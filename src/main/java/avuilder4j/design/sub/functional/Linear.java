@@ -1,13 +1,19 @@
 package avuilder4j.design.sub.functional;
 
 import avuilder4j.design.sub.dimensional.Vector;
-import avuilder4j.util.java.Chainable;
 import avuilder4j.util.java.Nullable;
 
-public abstract class Linear<T extends Linear<T>> implements Chainable<T> {
+public abstract class Linear<T extends Linear<T>> {
 
 	protected Vector speedingUp = new Vector().setXyz(0d);
 	protected Vector braking = new Vector().setXyz(0d);
+
+	public Linear() {}
+
+	public Linear(Linear<T> linear) {
+		setSpeedingUp(new Vector(Nullable.m(() -> linear.getSpeedingUp())));
+		setBraking(new Vector(Nullable.m(() -> linear.getBraking())));
+	}
 
 	public Vector getSpeedingUp() { return speedingUp; }
 
@@ -24,12 +30,9 @@ public abstract class Linear<T extends Linear<T>> implements Chainable<T> {
 	}
 
 	@Override
-	public abstract T chain();
-
-	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("[speedingUp=");
+		builder.append(getClass().getSimpleName()).append(" [speedingUp=");
 		builder.append(speedingUp);
 		builder.append(", braking=");
 		builder.append(braking);
@@ -37,12 +40,20 @@ public abstract class Linear<T extends Linear<T>> implements Chainable<T> {
 		return builder.toString();
 	}
 
-	public T sum(T other) {
-		if (other != null) {
-			Vector speedingUp = Nullable.m(() -> (Vector) null);
-			setSpeedingUp(speedingUp);
-		}
+	public T sumLinear(T other) {
+		Nullable.m(() -> getSpeedingUp().sumXyz(other.getSpeedingUp()));
+		Nullable.m(() -> getBraking().sumXyz(other.getBraking()));
 		return chain();
+	}
+
+	public T subLinear(T other) {
+		Nullable.m(() -> getSpeedingUp().subXyz(other.getSpeedingUp()));
+		Nullable.m(() -> getBraking().subXyz(other.getBraking()));
+		return chain();
+	}
+
+	public T chain() {
+		return (T) this;
 	}
 
 }

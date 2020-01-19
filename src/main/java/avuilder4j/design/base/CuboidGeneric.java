@@ -161,7 +161,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 			for (Face faceId : fixedFaces) {
 				Axis faceIdAxisId = Axis.getAxisByFace(faceId);
 				if (axisId == faceIdAxisId) {
-					End endId = End.getEndIdByFaceId(faceId);
+					End endId = End.getEndByFace(faceId);
 					axis.escalateStatic(ratio, endId);
 					axisCompleted = true;
 				}
@@ -530,7 +530,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 		AvValidations.validateFixedFacesMaxNumber(fixedFaces);
 		AvValidations.validateFixedFacesAxes(fixedFaces);
 
-		List<Axis> axesIds = Axis.getAxesInvolvedInCuboidRotation(rotation);
+		List<Axis> axesIds = Axis.getAxisInvolvedInRotation(rotation);
 		try {
 			AxisEnds axis0 = getAxis(axesIds.get(0));
 			AxisEnds axis1 = getAxis(axesIds.get(1));
@@ -541,10 +541,10 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 			End axis1FixedEnd = null;
 			for (Face faceId : fixedFaces) {
 				if (axesIds.get(0) == Axis.getAxisByFace(faceId)) {
-					axis0FixedEnd = End.getEndIdByFaceId(faceId);
+					axis0FixedEnd = End.getEndByFace(faceId);
 				}
 				if (axesIds.get(1) == Axis.getAxisByFace(faceId)) {
-					axis1FixedEnd = End.getEndIdByFaceId(faceId);
+					axis1FixedEnd = End.getEndByFace(faceId);
 				}
 			}
 
@@ -651,7 +651,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 			boolean notFixedZ = true;
 			for (int i = 0; i < fixedFacesIds.length; i++) {
 				Axis axisId = Axis.getAxisByFace(fixedFacesIds[i]);
-				End endId = End.getEndIdByFaceId(fixedFacesIds[i]);
+				End endId = End.getEndByFace(fixedFacesIds[i]);
 				getAxis(axisId).setLength(lengths.getXyzByAxis(axisId), endId);
 
 				if (axisId == Axis.X) {
@@ -782,6 +782,48 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	public void validateCuboid() {
 		if (!isCuboidDefined())
 			throw new Avuilder4jRuntimeException(AvErrors.NOT_SUFFICIENTLY_DEFINED);
+	}
+
+	public Double getXL() {
+		if (getAxisX() != null)
+			return getAxisX().getLowerEnd();
+		else
+			return null;
+	}
+
+	public Double getXU() {
+		if (getAxisX() != null)
+			return getAxisX().getUpperEnd();
+		else
+			return null;
+	}
+
+	public Double getYL() {
+		if (getAxisY() != null)
+			return getAxisY().getLowerEnd();
+		else
+			return null;
+	}
+
+	public Double getYU() {
+		if (getAxisY() != null)
+			return getAxisY().getUpperEnd();
+		else
+			return null;
+	}
+
+	public Double getZL() {
+		if (getAxisZ() != null)
+			return getAxisZ().getLowerEnd();
+		else
+			return null;
+	}
+
+	public Double getZU() {
+		if (getAxisZ() != null)
+			return getAxisZ().getUpperEnd();
+		else
+			return null;
 	}
 
 }

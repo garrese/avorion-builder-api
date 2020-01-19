@@ -10,12 +10,21 @@ public enum Axis {
 	Y,
 	Z;
 
-	public static List<Axis> getAxesInvolvedInCuboidRotation(Rotation rotation) {
+	public static List<Axis> getAxisInvolvedInRotation(Rotation rotation) {
 		if (rotation != null)
 			return Arrays.stream(Axis.values()).filter((axis) -> !axis.equals(getAxisOfRotation(rotation)))
 					.collect(Collectors.toList());
 		else
 			return null;
+	}
+
+	public static Axis getAxisInvolvedInRotationPair(Rotation rotation, Axis axis) {
+		List<Axis> list = getAxisInvolvedInRotation(rotation);
+		if (list.remove(axis)) {
+			return list.get(0);
+		} else {
+			throw new IllegalArgumentException("The axis argument is not an axis involved in the rotation");
+		}
 	}
 
 	public static Axis getAxisOfRotation(Rotation rotation) {

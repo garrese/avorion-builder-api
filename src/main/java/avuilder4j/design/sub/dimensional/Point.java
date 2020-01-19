@@ -12,8 +12,16 @@ public class Point extends Xyz<Point> implements Serializable {
 		super();
 	}
 
-	public Point(Double x, Double y, Double z) {
+	public Point(Number x, Number y, Number z) {
 		super(x, y, z);
+	}
+
+	public Point(Number xyz) {
+		super(xyz);
+	}
+
+	public Point(Point xyz) {
+		super(xyz);
 	}
 
 	public void sumVector(Vector v) {
@@ -23,9 +31,6 @@ public class Point extends Xyz<Point> implements Serializable {
 	public void subVector(Vector v) {
 		subXyz(v);
 	}
-
-	@Override
-	public Point getCopy() { return new Point().copyXyz(this); }
 
 	@Override
 	public Point chain() {

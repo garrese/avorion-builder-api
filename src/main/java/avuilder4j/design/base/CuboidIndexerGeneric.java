@@ -3,24 +3,23 @@ package avuilder4j.design.base;
 import java.util.Collections;
 import java.util.List;
 
+import avuilder4j.design.Mirror;
 import avuilder4j.design.sub.dimensional.Lengths;
-import avuilder4j.util.java.Chainable;
-import avuilder4j.util.java.Nullable;
 
 @SuppressWarnings("rawtypes")
-public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric<B, S>, I extends CuboidIndexerGeneric>
-		implements Chainable<I> {
+public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends CuboidStructureGeneric<B, S>, I extends CuboidIndexerGeneric> {
 
 	protected Lengths defaultLengths = new Lengths(2.0, 2.0, 2.0);
 	protected int indexCount;
 
 	protected S structure;
 
+	protected Mirror mirror = new Mirror();
+
 	public CuboidIndexerGeneric() {
 		setStructure(getStructureInstance());
 	}
 
-	@Override
 	public abstract I chain();
 
 	public I clearBlocks() {
@@ -31,7 +30,7 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 
 	public B createBlock() {
 		B cuboid = createBlockBlanck();
-		cuboid.setLengths(Nullable.m(() -> getDefaultLengths().getCopy()));
+		cuboid.setLengths(new Lengths(getDefaultLengths()));
 		return cuboid;
 	}
 
@@ -70,6 +69,10 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 	public int getIndexCount() { return indexCount; }
 
 	public S getStructure() { return structure; }
+
+	public Mirror getMirror() { return mirror; }
+
+	public void setMirror(Mirror mirror) { this.mirror = mirror; }
 
 	protected abstract S getStructureInstance();
 
@@ -131,6 +134,21 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 	protected I setStructure(S structure) {
 		this.structure = structure;
 		return chain();
+	}
+
+	public B reflect(B block) {
+		return reflect(block, true);
+	}
+
+	public B reflect(B block, boolean findParent) {
+		B b = null;
+		if (findParent)
+			b = getMirror().<B>reflect(block, getStructure());
+		else
+			b = getMirror().<B>reflect(block);
+
+		indexBlock(b);
+		return b;
 	}
 
 }

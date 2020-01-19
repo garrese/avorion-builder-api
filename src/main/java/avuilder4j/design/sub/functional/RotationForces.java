@@ -9,7 +9,4 @@ public class RotationForces extends Xyz<RotationForces> {
 		return this;
 	}
 
-	@Override
-	public RotationForces getCopy() { return new RotationForces().copyXyz(this); }
-
 }

@@ -38,7 +38,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 
 	public Double getCrewReqMechanics() { return Nullable.m(() -> getBlockArchetype().getMechanics() * getVolumeBlock()); };
 
-	public Double getDensity() { return Nullable.m(() -> getBlockArchetype().getDensity() * getVolumeBlock()); }
+	public Double getDensity() { return Nullable.m(() -> getBlockArchetype().getDensity()); }
 
 	public Double getDurability() { return Nullable.m(() -> getBlockArchetype().getDurability() * getVolumeBlock()); }
 
@@ -49,6 +49,12 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 	public Double getEffCargoHold() { return getEffectStorageIfType(Types.CARGO_BAY); }
 
 	public Double getEffCloningCap() { return getEffectByVolumeIfType(Types.CLONING_PODS); }
+
+	public Double getEffComputerCoreProcessing() {
+		Double e = getEffectByVolumeIfType(Types.DIRECTIONAL_THRUSTER);
+		Double p = getProcessingPowerBase();
+		return Nullable.m(() -> p * e);
+	}
 
 	public Double getEffComputerCoreProcessingPower() { return getEffectByVolumeIfType(Types.COMPUTER_CORE); }
 
@@ -75,29 +81,19 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 	}
 
 	protected Double getEffectByVolumeIfType(Integer typeIndexFilter) {
-		return Nullable.m(() -> {
-			if (isTypeOf(typeIndexFilter)) {
-				return getVolumeBlock() * getBlockArchetype().getEffects().get(0);
-			} else {
-				return null;
-			}
-		});
+		if (isTypeOf(typeIndexFilter)) {
+			return Nullable.m(() -> getVolumeBlock() * getBlockArchetype().getEffects().get(0));
+		} else {
+			return null;
+		}
 	}
 
 	protected Double getEffectStorageIfType(Integer typeIndexFilter) {
-		return Nullable.m(() -> {
-			if (isTypeOf(typeIndexFilter)) {
-				return getBlockArchetype().getEffects().get(0) * getEffectStorageVolume();
-			} else {
-				return null;
-			}
-		});
-	}
-
-	public Double getEffComputerCoreProcessing() {
-		Double e = getEffectByVolumeIfType(Types.DIRECTIONAL_THRUSTER);
-		Double p = getProcessingPowerBase();
-		return Nullable.m(() -> p * e);
+		if (isTypeOf(typeIndexFilter)) {
+			return Nullable.m(() -> getBlockArchetype().getEffects().get(0) * getEffectStorageVolume());
+		} else {
+			return null;
+		}
 	}
 
 	protected Double getEffectStorageVolume() {
@@ -170,12 +166,11 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		});
 	}
 
-	public LinearForces getEffLinearForces() { return getEffPropulsionForces((Integer[]) null); }
+	public LinearForces getEffLinearForces() { return getEffLinearForces((Integer[]) null); }
 
-	public LinearForces getEffPropulsionForces(Integer... typeFilter) {
+	public LinearForces getEffLinearForces(Integer... typeFilter) {
 		Integer typeIndex = Nullable.m(() -> getBlockArchetype().getTypeIndex());
 		if (typeIndex != null && (typeFilter == null || isTypeOf(typeFilter))) {
-
 			switch (typeIndex) {
 			case Types.ENGINE:
 				return getEffEngineForces();

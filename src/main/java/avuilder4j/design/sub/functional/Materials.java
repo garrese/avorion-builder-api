@@ -8,32 +8,32 @@ import avuilder4j.data.DataMaps;
 import avuilder4j.data.beans.BeanMaterial;
 import avuilder4j.util.java.Nullable;
 
-public class AmountByMaterial extends AmountBy<AmountByMaterial, Integer, BeanMaterial> {
+public class Materials extends AmountBy<Materials, Integer, BeanMaterial> {
 	private static final long serialVersionUID = 1232491739089084616L;
 
-	public AmountByMaterial() {
+	public Materials() {
 		super();
 	}
 
-	public AmountByMaterial(Comparator<? super Integer> comparator) {
+	public Materials(Comparator<? super Integer> comparator) {
 		super(comparator);
 	}
 
-	public AmountByMaterial(Map<? extends Integer, ? extends Double> m) {
+	public Materials(Map<? extends Integer, ? extends Double> m) {
 		super(m);
 	}
 
-	public AmountByMaterial(SortedMap<Integer, ? extends Double> m) {
+	public Materials(SortedMap<Integer, ? extends Double> m) {
 		super(m);
 	}
 
 	@Override
-	public AmountByMaterial chain() {
+	public Materials chain() {
 		return this;
 	}
 
 	@Override
-	public AmountByMaterial getCopy() { return new AmountByMaterial(this); }
+	public Materials getCopy() { return new Materials(this); }
 
 	@Override
 	public String getLabelByElement(BeanMaterial element) {

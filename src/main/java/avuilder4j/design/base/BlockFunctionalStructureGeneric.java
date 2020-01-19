@@ -3,9 +3,10 @@ package avuilder4j.design.base;
 import java.util.Collection;
 
 import avuilder4j.data.DataMaps;
-import avuilder4j.design.sub.functional.AmountByMaterial;
+import avuilder4j.design.sub.functional.Materials;
 import avuilder4j.design.sub.functional.Crew;
 import avuilder4j.design.sub.functional.HangarSpace;
+import avuilder4j.design.sub.functional.LinearAccelerations;
 import avuilder4j.design.sub.functional.LinearForces;
 import avuilder4j.util.java.Nullable;
 import avuilder4j.util.keys.Cons;
@@ -52,8 +53,8 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 
 	}
 
-	public AmountByMaterial getMaterialCost() {
-		AmountByMaterial am = new AmountByMaterial();
+	public Materials getMaterialCost() {
+		Materials am = new Materials();
 		for (B b : this) {
 			am.add(b.getMaterialIndex(), b.getMaterialCost());
 		}
@@ -84,22 +85,22 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 			return null;
 	}
 
-	public LinearForces getEffPropulsionForces(Integer... typeFilter) {
-//		Integer typeIndex = Nullable.m(() -> getBlockArchetype().getTypeIndex());
-//		if (typeIndex != null && (typeFilter == null || isTypeOf(typeFilter))) {
-//
-//			switch (typeIndex) {
-//			case Types.ENGINE:
-//				return getEffEngineForces();
-//			case Types.THRUSTER:
-//				return getEffThrusterForces();
-//			case Types.DIRECTIONAL_THRUSTER:
-//				return getEffDirectionalThrusterForces();
-//			case Types.INERTIA_DAMPENER:
-//				return getEffInertiaDampenerForces();
-//			}
-//		}
-		return null;
+	public LinearForces getEffLinearForces() { return getEffLinearForces((Integer[]) null); }
+
+	public LinearForces getEffLinearForces(Integer... typeFilter) {
+		LinearForces total = new LinearForces();
+		for (B block : this) {
+			if (block != null) {
+				total.sumLinear(block.getEffLinearForces(typeFilter));
+			}
+		}
+		return total;
+	}
+
+	public LinearAccelerations getEffLinearAccelerations() { return getEffLinearAccelerations((Integer[]) null); }
+
+	public LinearAccelerations getEffLinearAccelerations(Integer... typeFilter) {
+		return new LinearAccelerations(getEffLinearForces(typeFilter), getMass());
 	}
 
 	public double getLieutenantsReq() { return Nullable.m(() -> getSargeantsReq() / DataMaps.getConstant(Cons.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getValue()); }
@@ -107,13 +108,5 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 	public double getCommandersReq() { return Nullable.m(() -> getLieutenantsReq() / DataMaps.getConstant(Cons.CREW_RATIO_LIEUTENANTS_PER_COMMANDER).getValue()); }
 
 	public double getGeneralsReq() { return Nullable.m(() -> getCommandersReq() / DataMaps.getConstant(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue()); }
-
-//	protected Double truncateIfFinal(Double v) {
-//		return NullSafe.go(() -> retrieveFinalStats ? Math.floor(v) : v);
-//	}
-//
-//	protected Double roundIfFinal(Double v, int zeros) {
-//		return retrieveFinalStats ? Utils.round(v, zeros) : v;
-//	}
 
 }

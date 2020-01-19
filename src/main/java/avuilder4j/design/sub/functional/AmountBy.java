@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import avuilder4j.util.java.Chainable;
 import avuilder4j.util.java.Copyable;
 import avuilder4j.util.java.Nullable;
+import avuilder4j.util.java.NumberUtils;
 
 public abstract class AmountBy<T, K, E> extends TreeMap<K, Double> implements Chainable<T>, Copyable<T> {
 	private static final long serialVersionUID = 8783727114370701807L;
@@ -123,7 +124,7 @@ public abstract class AmountBy<T, K, E> extends TreeMap<K, Double> implements Ch
 
 	public T sub(K key, Double amount) {
 		if (amount != null)
-			add(key, amount * -1);
+			add(key, NumberUtils.negate(amount));
 		return chain();
 	}
 
