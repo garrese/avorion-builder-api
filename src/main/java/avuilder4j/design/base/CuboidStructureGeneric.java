@@ -213,12 +213,21 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		switch (rotation) {
 
 		case AROUND_X:
-			mx1.put(Axis.Y, cos);
-			mx1.put(Axis.Z, sinN);
-			mx2.put(Axis.Y, sin);
-			mx2.put(Axis.Z, cos);
-			matrix.put(Axis.Y, mx1);
-			matrix.put(Axis.Z, mx2);
+			// t1
+//			mx1.put(Axis.Y, cos);
+//			mx1.put(Axis.Z, sinN);
+//			mx2.put(Axis.Y, sin);
+//			mx2.put(Axis.Z, cos);
+//			matrix.put(Axis.Y, mx1);
+//			matrix.put(Axis.Z, mx2);
+
+			// t2
+//			mx1.put(Axis.Y, cos);
+//			mx1.put(Axis.Z, sin);
+//			mx2.put(Axis.Y, sinN);
+//			mx2.put(Axis.Z, cos);
+//			matrix.put(Axis.Y, mx1);
+//			matrix.put(Axis.Z, mx2);
 			break;
 
 		case AROUND_Y:
@@ -243,22 +252,34 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 
 		for (B b : this) {
 
-			Map<Axis, AxisEnds> savedEnds = new HashMap<>();
+			Map<Axis, AxisEnds> endsCopy = new HashMap<>();
 			List<Axis> axisRotating = Axis.getAxisInvolvedInRotation(rotation);
 			for (Axis axis : axisRotating) {
-				savedEnds.put(axis, b.getAxis(axis).getCopy());
+				endsCopy.put(axis, b.getAxis(axis).getCopy());
 				b.setAxis(axis, new AxisEnds());
 			}
-
 			for (Axis matrixRowAxis : axisRotating) {
+				List<Double> resultEnds = new ArrayList<>();
 				for (End end : End.values()) {
-					double calc = 0;
+					double endRotated = 0;
 					for (Axis matrixLineAxis : axisRotating) {
-						Double savedEnd = savedEnds.get(matrixLineAxis).getEnd(end);
-						calc += savedEnd * matrix.get(matrixRowAxis).get(matrixLineAxis);
+						Double savedEnd = endsCopy.get(matrixLineAxis).getEnd(end);
+						endRotated += savedEnd * matrix.get(matrixRowAxis).get(matrixLineAxis);
 					}
-					b.getAxis(matrixRowAxis).setEnd(end, calc);
+					resultEnds.add(endRotated);
 				}
+
+				Double upper, lower;
+				if (resultEnds.get(0) > resultEnds.get(1)) {
+					upper = resultEnds.get(0);
+					lower = resultEnds.get(1);
+				} else {
+					upper = resultEnds.get(1);
+					lower = resultEnds.get(0);
+				}
+
+				b.getAxis(matrixRowAxis).setEnd(End.UPPER, upper);
+				b.getAxis(matrixRowAxis).setEnd(End.LOWER, lower);
 			}
 
 		}

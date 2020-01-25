@@ -209,8 +209,10 @@ public class AxisEnds implements Serializable, Copyable<AxisEnds> {
 		switch (end) {
 		case UPPER:
 			setUpperEnd(value);
+			break;
 		case LOWER:
 			setLowerEnd(value);
+			break;
 		default:
 			throw new IllegalArgumentException(AvErrors.END_NOT_RECOGNIZED);
 		}
