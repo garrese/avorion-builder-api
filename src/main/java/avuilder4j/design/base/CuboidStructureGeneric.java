@@ -210,24 +210,18 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		Map<Axis, Map<Axis, Double>> matrix = new HashMap<Axis, Map<Axis, Double>>();
 		Map<Axis, Double> mx1 = new HashMap<Axis, Double>();
 		Map<Axis, Double> mx2 = new HashMap<Axis, Double>();
+
+		List<Axis> axesRotating = Axis.getAxisInvolvedInRotation(rotation);
+
 		switch (rotation) {
 
 		case AROUND_X:
-			// t1
-//			mx1.put(Axis.Y, cos);
-//			mx1.put(Axis.Z, sinN);
-//			mx2.put(Axis.Y, sin);
-//			mx2.put(Axis.Z, cos);
-//			matrix.put(Axis.Y, mx1);
-//			matrix.put(Axis.Z, mx2);
-
-			// t2
-//			mx1.put(Axis.Y, cos);
-//			mx1.put(Axis.Z, sin);
-//			mx2.put(Axis.Y, sinN);
-//			mx2.put(Axis.Z, cos);
-//			matrix.put(Axis.Y, mx1);
-//			matrix.put(Axis.Z, mx2);
+			mx1.put(Axis.Y, cos);
+			mx1.put(Axis.Z, sinN);
+			mx2.put(Axis.Y, sin);
+			mx2.put(Axis.Z, cos);
+			matrix.put(Axis.Y, mx1);
+			matrix.put(Axis.Z, mx2);
 			break;
 
 		case AROUND_Y:
@@ -253,16 +247,15 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		for (B b : this) {
 
 			Map<Axis, AxisEnds> endsCopy = new HashMap<>();
-			List<Axis> axisRotating = Axis.getAxisInvolvedInRotation(rotation);
-			for (Axis axis : axisRotating) {
+			for (Axis axis : axesRotating) {
 				endsCopy.put(axis, b.getAxis(axis).getCopy());
 				b.setAxis(axis, new AxisEnds());
 			}
-			for (Axis matrixRowAxis : axisRotating) {
+			for (Axis matrixRowAxis : axesRotating) {
 				List<Double> resultEnds = new ArrayList<>();
 				for (End end : End.values()) {
 					double endRotated = 0;
-					for (Axis matrixLineAxis : axisRotating) {
+					for (Axis matrixLineAxis : axesRotating) {
 						Double savedEnd = endsCopy.get(matrixLineAxis).getEnd(end);
 						endRotated += savedEnd * matrix.get(matrixRowAxis).get(matrixLineAxis);
 					}

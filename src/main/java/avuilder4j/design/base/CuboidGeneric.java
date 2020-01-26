@@ -616,11 +616,11 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 		return chain();
 	}
 
-	public T setLengths(Double xyz) {
+	public T setLengths(Number xyz) {
 		return setLengths(new Lengths().setXyz(xyz));
 	}
 
-	public T setLengths(Double x, Double y, Double z) {
+	public T setLengths(Number x, Number y, Number z) {
 		return setLengths(new Lengths(x, y, z));
 	}
 
