@@ -151,48 +151,6 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		if (times < 0)
 			throw new IllegalArgumentException("Rotation times cannot be lower than 0.");
 
-//		double[][] rx = new double[3][3];
-//		rx[0] = new double[] { 1, 0, 0 };
-//		rx[1] = new double[] { 0, cos, sinN };
-//		rx[2] = new double[] { 0, sin, cos };
-//
-//		double[][] ry = new double[3][3];
-//		ry[0] = new double[] { cos, 0, sin };
-//		ry[1] = new double[] { 0, 1, 0 };
-//		ry[2] = new double[] { sinN, 0, cos };
-//
-//		double[][] rz = new double[3][3];
-//		rz[0] = new double[] { cos, sinN, 0 };
-//		rz[1] = new double[] { sin, cos, 0 };
-//		rz[2] = new double[] { 0, 0, 1 };
-
-//		Map<Axis, double[]> mx = new HashMap<>();
-//		mx.put(Axis.X, new double[] { 1, 0, 0 });
-//		mx.put(Axis.Y, new double[] { 0, cos, sinN });
-//		mx.put(Axis.Z, new double[] { 0, sin, cos });
-//
-//		Map<Axis, double[]> my = new HashMap<>();
-//		my.put(Axis.X, new double[] { cos, 0, sin });
-//		my.put(Axis.Y, new double[] { 0, 1, 0 });
-//		my.put(Axis.Z, new double[] { sinN, 0, cos });
-//
-//		Map<Axis, double[]> mz = new HashMap<>();
-//		mz.put(Axis.X, new double[] { cos, sinN, 0 });
-//		mz.put(Axis.Y, new double[] { sin, cos, 0 });
-//		mz.put(Axis.Z, new double[] { 0, 0, 1 });
-
-//		Map<Axis, double[]> mx = new HashMap<>();
-//		mx.put(Axis.Y, new double[] { cos, sinN });
-//		mx.put(Axis.Z, new double[] { sin, cos });
-//		
-//		Map<Axis, double[]> my = new HashMap<>();
-//		my.put(Axis.X, new double[] { cos, sin });
-//		my.put(Axis.Z, new double[] { sinN, cos });
-//
-//		Map<Axis, double[]> mz = new HashMap<>();
-//		mz.put(Axis.X, new double[] { cos, sinN });
-//		mz.put(Axis.Y, new double[] { sin, cos });
-
 		double grades = 90 * times;
 
 		switch (rotation) {
@@ -204,45 +162,22 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 
 		double cos = NumberUtils.round(Math.cos(Math.toRadians(grades)), 3);
 		double sin = NumberUtils.round(Math.sin(Math.toRadians(grades)), 3);
-		double cosN = NumberUtils.negate(cos);
 		double sinN = NumberUtils.negate(sin);
 
-		Map<Axis, Map<Axis, Double>> matrix = new HashMap<Axis, Map<Axis, Double>>();
-		Map<Axis, Double> mx1 = new HashMap<Axis, Double>();
-		Map<Axis, Double> mx2 = new HashMap<Axis, Double>();
+		Map<Axis, Map<Axis, Double>> rotationMatrix = new HashMap<Axis, Map<Axis, Double>>();
+		Map<Axis, Double> matrixRowAxis1 = new HashMap<Axis, Double>();
+		Map<Axis, Double> matrixRowAxis2 = new HashMap<Axis, Double>();
 
 		List<Axis> axesRotating = Axis.getAxisInvolvedInRotation(rotation);
+		Axis matrixColumnAxis1 = axesRotating.get(0);
+		Axis matrixColumnAxis2 = axesRotating.get(1);
 
-		switch (rotation) {
-
-		case AROUND_X:
-			mx1.put(Axis.Y, cos);
-			mx1.put(Axis.Z, sinN);
-			mx2.put(Axis.Y, sin);
-			mx2.put(Axis.Z, cos);
-			matrix.put(Axis.Y, mx1);
-			matrix.put(Axis.Z, mx2);
-			break;
-
-		case AROUND_Y:
-			mx1.put(Axis.X, cos);
-			mx1.put(Axis.Z, sinN);
-			mx2.put(Axis.X, sin);
-			mx2.put(Axis.Z, cos);
-			matrix.put(Axis.X, mx1);
-			matrix.put(Axis.Z, mx2);
-			break;
-
-		case AROUND_Z:
-			mx1.put(Axis.X, cos);
-			mx1.put(Axis.Y, sinN);
-			mx2.put(Axis.X, sin);
-			mx2.put(Axis.Y, cos);
-			matrix.put(Axis.X, mx1);
-			matrix.put(Axis.Y, mx2);
-			break;
-
-		}
+		matrixRowAxis1.put(matrixColumnAxis1, cos);
+		matrixRowAxis1.put(matrixColumnAxis2, sinN);
+		matrixRowAxis2.put(matrixColumnAxis1, sin);
+		matrixRowAxis2.put(matrixColumnAxis2, cos);
+		rotationMatrix.put(matrixColumnAxis1, matrixRowAxis1);
+		rotationMatrix.put(matrixColumnAxis2, matrixRowAxis2);
 
 		for (B b : this) {
 
@@ -255,9 +190,9 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 				List<Double> resultEnds = new ArrayList<>();
 				for (End end : End.values()) {
 					double endRotated = 0;
-					for (Axis matrixLineAxis : axesRotating) {
-						Double savedEnd = endsCopy.get(matrixLineAxis).getEnd(end);
-						endRotated += savedEnd * matrix.get(matrixRowAxis).get(matrixLineAxis);
+					for (Axis matrixColumnAxis : axesRotating) {
+						Double savedEnd = endsCopy.get(matrixColumnAxis).getEnd(end);
+						endRotated += savedEnd * rotationMatrix.get(matrixRowAxis).get(matrixColumnAxis);
 					}
 					resultEnds.add(endRotated);
 				}
@@ -274,9 +209,7 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 				b.getAxis(matrixRowAxis).setEnd(End.UPPER, upper);
 				b.getAxis(matrixRowAxis).setEnd(End.LOWER, lower);
 			}
-
 		}
-
 	}
 
 	protected Double applyRotationMatrix(Map<Axis, double[]> m, Axis axis, Double value) {
