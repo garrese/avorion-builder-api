@@ -14,7 +14,7 @@ public abstract class V3Generic<T extends V3Generic<T>> implements Chainable<T> 
 
 	public V3Generic() {}
 
-	public V3Generic(V3Generic<T> xyz) {
+	public V3Generic(V3Generic<?> xyz) {
 		copyV3(xyz);
 	}
 
@@ -27,7 +27,9 @@ public abstract class V3Generic<T extends V3Generic<T>> implements Chainable<T> 
 	}
 
 	@Override
-	public abstract T chain();
+	public T chain() {
+		return (T) this;
+	}
 
 	public T copyV3(V3Generic<?> b) {
 		for (Axis axis : Axis.values()) {
@@ -134,9 +136,23 @@ public abstract class V3Generic<T extends V3Generic<T>> implements Chainable<T> 
 		return chain();
 	}
 
+	public T multiplyV3(V3Generic<?> v3) {
+		for (Axis axis : Axis.values()) {
+			setV3Axis(axis, getV3Axis(axis) * v3.getV3Axis(axis));
+		}
+		return chain();
+	}
+
 	public T divideV3(Number factor) {
 		for (Axis axis : Axis.values()) {
 			setV3Axis(axis, Nullable.m(() -> getV3Axis(axis) / factor.doubleValue()));
+		}
+		return chain();
+	}
+
+	public T divideV3(V3Generic<?> v3) {
+		for (Axis axis : Axis.values()) {
+			setV3Axis(axis, getV3Axis(axis) / v3.getV3Axis(axis));
 		}
 		return chain();
 	}

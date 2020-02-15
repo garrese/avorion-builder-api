@@ -6,6 +6,8 @@ import avuilder4j.data.DataMaps;
 import avuilder4j.data.dtos.BlockArchetype;
 import avuilder4j.design.enums.Axis;
 import avuilder4j.design.sub.dimensional.AxisEnds;
+import avuilder4j.design.sub.dimensional.Point;
+import avuilder4j.design.sub.dimensional.Vector;
 import avuilder4j.design.sub.functional.Crew;
 import avuilder4j.design.sub.functional.HangarSpace;
 import avuilder4j.design.sub.functional.IFGAura;
@@ -175,7 +177,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 			case Types.ENGINE:
 				return getEffEngineForces();
 			case Types.THRUSTER:
-				return getEffThrusterForces();
+				return getEffThrusterLinearForces();
 			case Types.DIRECTIONAL_THRUSTER:
 				return getEffDirectionalThrusterForces();
 			case Types.INERTIA_DAMPENER:
@@ -196,7 +198,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		});
 	}
 
-	public LinearForces getEffThrusterForces() {
+	public LinearForces getEffThrusterLinearForces() {
 		Double f = getEffectByVolumeIfType(Types.THRUSTER);
 		if (f != null) {
 			LinearForces p = new LinearForces();
@@ -207,11 +209,37 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		return null;
 	}
 
+	public Vector getEffThrusterTorque(Point massCenter) {
+		LinearForces f = getEffThrusterLinearForces();
+		if (f != null) {
+			Vector blockToMC = new Vector(getCenter().subV3(massCenter));
+			Vector torque = new Vector(f.getBraking()).multiplyV3(blockToMC);
+			return torque;
+		}
+		return null;
+	}
+
+	public Vector getEffThrusterAngularAcceleration(Point massCenter, Vector totalInertiaMoment) {
+		return getEffThrusterTorque(massCenter).divideV3(getMomentOfInertia(massCenter));
+	}
+
 	public Double getEffTorpedoStorage() { return getEffectStorageIfType(Types.TORPEDO_STORAGE); };
 
 	public Double getMass() { return Nullable.m(() -> getDensity() * getVolumeBlock()); }
 
 	public Double getMaterialCost() { return Nullable.m(() -> Math.ceil(getBlockArchetype().getMaterialCost() * getVolumeBlock())); }
+
+	public Vector getMomentOfInertia(Point massCenter) {
+		Vector blockToCenter = new Vector(getCenter().subV3(massCenter));
+		Double mass = getMass();
+
+		Vector moi = new Vector();
+		for (Axis axis : Axis.values()) {
+			double axisMoi = mass * Math.pow(blockToCenter.getV3Axis(axis), 2);
+			moi.setV3Axis(axis, axisMoi);
+		}
+		return moi;
+	}
 
 	public Double getProcessingPowerBase() {
 		if (Nullable.m(() -> getBlockArchetype().getProcess(), false)) {

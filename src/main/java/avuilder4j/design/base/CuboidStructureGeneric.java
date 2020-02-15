@@ -11,7 +11,6 @@ import java.util.function.Function;
 import avuilder4j.design.enums.Axis;
 import avuilder4j.design.enums.End;
 import avuilder4j.design.enums.Face;
-import avuilder4j.design.enums.Rotation;
 import avuilder4j.design.sub.dimensional.AxisEnds;
 import avuilder4j.design.sub.dimensional.Point;
 import avuilder4j.design.sub.dimensional.Vector;
@@ -142,21 +141,21 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		return this.stream().filter(b -> Nullable.m(() -> b.getIndex().equals(index), false)).findFirst().orElse(null);
 	}
 
-	public void rotate(Rotation rotationId) {
-		rotate(rotationId, 1);
+	public void rotate(Axis rotationAxis) {
+		rotate(rotationAxis, 1);
 	}
 
-	@SuppressWarnings("incomplete-switch")
-	public void rotate(Rotation rotation, int times) {
+	public void rotate(Axis rotationAxis, int times) {
+		rotate(rotationAxis, times, false);
+	}
+
+	public void rotate(Axis rotationAxis, int times, boolean inverse) {
 		if (times < 0)
 			throw new IllegalArgumentException("Rotation times cannot be lower than 0.");
 
 		double grades = 90 * times;
 
-		switch (rotation) {
-		case AROUND_X_INVERSE:
-		case AROUND_Y_INVERSE:
-		case AROUND_Z_INVERSE:
+		if (inverse) {
 			grades = NumberUtils.negate(grades);
 		}
 
@@ -168,7 +167,7 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		Map<Axis, Double> matrixRowAxis1 = new HashMap<Axis, Double>();
 		Map<Axis, Double> matrixRowAxis2 = new HashMap<Axis, Double>();
 
-		List<Axis> axesRotating = Axis.getAxisInvolvedInRotation(rotation);
+		List<Axis> axesRotating = Axis.getAxesInvolvedInRotation(rotationAxis);
 		Axis axisRotating1 = axesRotating.get(0);
 		Axis axisRotating2 = axesRotating.get(1);
 
@@ -179,12 +178,12 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		rotationMatrix.put(axisRotating1, matrixRowAxis1);
 		rotationMatrix.put(axisRotating2, matrixRowAxis2);
 
-		for (B b : this) {
+		for (B block : this) {
 
 			Map<Axis, AxisEnds> endsCopy = new HashMap<>();
 			for (Axis axis : axesRotating) {
-				endsCopy.put(axis, b.getAxisEnds(axis).getCopy());
-				b.setAxis(axis, new AxisEnds());
+				endsCopy.put(axis, block.getAxisEnds(axis).getCopy());
+				block.setAxisEnds(axis, new AxisEnds());
 			}
 			for (Axis matrixRowAxis : axesRotating) {
 				List<Double> resultEnds = new ArrayList<>();
@@ -206,8 +205,8 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 					lower = resultEnds.get(0);
 				}
 
-				b.getAxisEnds(matrixRowAxis).setEnd(End.UPPER, upper);
-				b.getAxisEnds(matrixRowAxis).setEnd(End.LOWER, lower);
+				block.getAxisEnds(matrixRowAxis).setUpperEnd(upper);
+				block.getAxisEnds(matrixRowAxis).setLowerEnd(lower);
 			}
 		}
 	}
@@ -230,7 +229,7 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		Point destinationFacePoint = destinationCuboid.getFaceCenter(destinationFace);
 		Point originFacePoint = attacher.getFaceCenter(Face.getOpposite(destinationFace));
 
-		Vector vector = Vector.pointDiff(destinationFacePoint, originFacePoint);
+		Vector vector = new Vector(destinationFacePoint.subV3(originFacePoint));
 		for (B b : this) {
 			b.validateCuboid();
 			b.moveCenterByVector(vector);

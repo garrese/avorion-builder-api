@@ -3,8 +3,8 @@ package avuilder4j.design.sub.dimensional;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import avuilder4j.design.enums.Axis;
 import avuilder4j.design.enums.Face;
-import avuilder4j.design.enums.Rotation;
 import avuilder4j.error.AvValidations;
 import avuilder4j.util.java.Chainable;
 import avuilder4j.util.java.Copyable;
@@ -14,10 +14,6 @@ import avuilder4j.util.java.Copyable;
  */
 public class Orientation implements Serializable, Copyable<Orientation>, Chainable<Orientation> {
 	private static final long serialVersionUID = -7559284143961816577L;
-
-	/*
-	 * Face numbers for look and up: lx 1 ux 0 ly 3 uy 2 lz 4 uz 5
-	 */
 
 	/**
 	 * Look component of the piece orientation.
@@ -69,13 +65,13 @@ public class Orientation implements Serializable, Copyable<Orientation>, Chainab
 
 	public Face getUp() { return up; }
 
-	public Orientation rotate(Rotation rotation) {
-		rotate(rotation, 1);
+	public Orientation rotate(Axis rotationAxis) {
+		rotate(rotationAxis, 1);
 		return this;
 	}
 
-	public Orientation rotate(Rotation rotation, int times) {
-		ArrayList<Face> faces = Face.getFacesInvolvedInRotation(rotation);
+	public Orientation rotate(Axis rotationAxis, int times) {
+		ArrayList<Face> faces = Face.getFacesInvolvedInRotation(rotationAxis, false);
 
 		for (int i = 0; i < times; i++) {
 			int lookPos = faces.indexOf(getLook());
@@ -153,7 +149,13 @@ public class Orientation implements Serializable, Copyable<Orientation>, Chainab
 
 	@Override
 	public String toString() {
-		return "[look=" + look + ", up=" + up + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("Orientation [look=");
+		builder.append(look);
+		builder.append(", up=");
+		builder.append(up);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

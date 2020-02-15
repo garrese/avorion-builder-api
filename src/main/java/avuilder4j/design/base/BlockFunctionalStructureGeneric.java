@@ -64,21 +64,23 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 		return am;
 	}
 
-	public Point getCenterOfMass() {
+	// P = T ω
+	// τ = Iα -> torque = (moment of inertia)(angular acceleration)
+	public Point getMassCenter() {
 		Point centerOfMass = new Point();
 
 		double totalMass = 0;
 		Vector moments = new Vector(0);
 
 		for (B b : this) {
-			double bMass = b.getMass();
-			Point bCenter = b.getCenter();
+			double blockMass = b.getMass();
+			Point blockCenter = b.getCenter();
 
-			totalMass += bMass;
+			totalMass += blockMass;
 
 			for (Axis axis : Axis.values()) {
 				double moment = moments.getV3Axis(axis);
-				moment += bMass * bCenter.getV3Axis(axis);
+				moment += blockMass * blockCenter.getV3Axis(axis);
 				moments.setV3Axis(axis, moment);
 			}
 		}
@@ -89,6 +91,17 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 		}
 
 		return centerOfMass;
+	}
+
+	public Vector getMomentOfInertia() {
+		Vector totalMoi = new Vector();
+
+		Point massCenter = getMassCenter();
+		for (B block : this) {
+			totalMoi = totalMoi.sumV3(block.getMomentOfInertia(massCenter));
+		}
+
+		return totalMoi;
 	}
 
 	public Crew getCrew() {
@@ -125,6 +138,15 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 			}
 		}
 		return total;
+	}
+
+	public Vector calcEffTorque() {
+		Point massCenter = getMassCenter();
+		Vector totalTorque = new Vector();
+		for (B block : this) {
+			totalTorque.sumV3(block.getEffThrusterTorque(massCenter));
+		}
+		return totalTorque;
 	}
 
 	public LinearAccelerations getEffLinearAccelerations() { return getEffLinearAccelerations((Integer[]) null); }

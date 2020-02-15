@@ -10,36 +10,17 @@ public enum Axis {
 	Y,
 	Z;
 
-	public static List<Axis> getAxisInvolvedInRotation(Rotation rotation) {
-		if (rotation != null)
-			return Arrays.stream(Axis.values()).filter((axis) -> !axis.equals(getAxisOfRotation(rotation)))
-					.collect(Collectors.toList());
-		else
-			return null;
+	public static List<Axis> getAxesInvolvedInRotation(Axis rotationAxis) {
+		return Arrays.stream(Axis.values()).filter((axis) -> !rotationAxis.equals(axis))
+				.collect(Collectors.toList());
 	}
 
-	public static Axis getAxisInvolvedInRotationPair(Rotation rotation, Axis axis) {
-		List<Axis> list = getAxisInvolvedInRotation(rotation);
+	public static Axis getAxesInvolvedInRotationPartner(Axis rotationAxis, Axis axis) {
+		List<Axis> list = getAxesInvolvedInRotation(rotationAxis);
 		if (list.remove(axis)) {
 			return list.get(0);
 		} else {
 			throw new IllegalArgumentException("The axis argument is not an axis involved in the rotation");
-		}
-	}
-
-	public static Axis getAxisOfRotation(Rotation rotation) {
-		switch (rotation) {
-		case AROUND_X:
-		case AROUND_X_INVERSE:
-			return X;
-		case AROUND_Y:
-		case AROUND_Y_INVERSE:
-			return Y;
-		case AROUND_Z:
-		case AROUND_Z_INVERSE:
-			return Z;
-		default:
-			return null;
 		}
 	}
 

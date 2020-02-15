@@ -32,9 +32,4 @@ public class Point extends V3Generic<Point> implements Serializable {
 		subV3(v);
 	}
 
-	@Override
-	public Point chain() {
-		return this;
-	}
-
 }

@@ -17,11 +17,6 @@ public class Lengths extends V3Generic<Lengths> implements Serializable {
 		super(xyz);
 	}
 
-	@Override
-	public Lengths chain() {
-		return this;
-	}
-
 	public Lengths() {
 		super();
 	}

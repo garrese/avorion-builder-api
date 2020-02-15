@@ -43,33 +43,41 @@ public enum Face {
 		return list;
 	}
 
-	public static ArrayList<Face> getFacesInvolvedInRotation(Rotation rotation) {
-		Face[] faces;
-		switch (rotation) {
-		case AROUND_X:
-			faces = new Face[] { YU, ZU, YL, ZL };
-			break;
-		case AROUND_X_INVERSE:
-			return reverseFacesInvolvedInBlockRotation(Rotation.AROUND_X);
-		case AROUND_Y:
-			faces = new Face[] { ZU, XU, ZL, XL };
-			break;
-		case AROUND_Y_INVERSE:
-			return reverseFacesInvolvedInBlockRotation(Rotation.AROUND_Y);
-		case AROUND_Z:
-			faces = new Face[] { YU, XL, YL, XU };
-			break;
-		case AROUND_Z_INVERSE:
-			return reverseFacesInvolvedInBlockRotation(Rotation.AROUND_Z);
-		default:
-			throw new IllegalArgumentException(AvErrors.ROTATION_NOT_RECOGNIZED);
+	public static ArrayList<Face> getFacesInvolvedInRotation(Axis rotationAxis, boolean inverse) {
+		Face[] faces = null;
+
+		if (!inverse) {
+			switch (rotationAxis) {
+			case X:
+				faces = new Face[] { YU, ZU, YL, ZL };
+				break;
+			case Y:
+				faces = new Face[] { ZU, XU, ZL, XL };
+				break;
+			case Z:
+				faces = new Face[] { YU, XL, YL, XU };
+				break;
+			default:
+				throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
+			}
+		} else {
+			switch (rotationAxis) {
+			case X:
+				return reverseFacesInvolvedInBlockRotation(Axis.X);
+			case Y:
+				return reverseFacesInvolvedInBlockRotation(Axis.Y);
+			case Z:
+				return reverseFacesInvolvedInBlockRotation(Axis.Z);
+			default:
+				throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
+			}
 		}
 
 		return new ArrayList<>(Arrays.asList(faces));
 	}
 
-	private static ArrayList<Face> reverseFacesInvolvedInBlockRotation(Rotation rotation) {
-		ArrayList<Face> facesIn = getFacesInvolvedInRotation(rotation);
+	private static ArrayList<Face> reverseFacesInvolvedInBlockRotation(Axis rotationAxis) {
+		ArrayList<Face> facesIn = getFacesInvolvedInRotation(rotationAxis, false);
 		ArrayList<Face> faces = new ArrayList<Face>();
 		for (int i = facesIn.size(); i > 0; i--) {
 			faces.add(facesIn.get(i - 1));

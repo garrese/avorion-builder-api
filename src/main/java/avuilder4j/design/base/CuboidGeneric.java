@@ -9,7 +9,6 @@ import avuilder4j.design.enums.Axis;
 import avuilder4j.design.enums.Corner;
 import avuilder4j.design.enums.End;
 import avuilder4j.design.enums.Face;
-import avuilder4j.design.enums.Rotation;
 import avuilder4j.design.sub.dimensional.AxisEnds;
 import avuilder4j.design.sub.dimensional.Lengths;
 import avuilder4j.design.sub.dimensional.Point;
@@ -79,7 +78,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	public static <T extends CuboidGeneric> T copy(T copyFrom, T copyTo) {
 		if (copyFrom != null && copyTo != null) {
 			for (Axis axis : Axis.values()) {
-				copyTo.setAxis(axis, Nullable.m(() -> copyFrom.getAxisEnds(axis).getCopy()));
+				copyTo.setAxisEnds(axis, Nullable.m(() -> copyFrom.getAxisEnds(axis).getCopy()));
 			}
 			Tagator.copy(copyFrom.getTagator(), copyTo.getTagator());
 		}
@@ -101,7 +100,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 		Point destinationFacePoint = destinationCuboid.getFaceCenter(destinationFace);
 		Point originFacePoint = this.getFaceCenter(Face.getOpposite(destinationFace));
 
-		Vector vector = Vector.pointDiff(destinationFacePoint, originFacePoint);
+		Vector vector = new Vector(destinationFacePoint.subV3(originFacePoint));
 		this.moveCenterByVector(vector);
 
 //		Point originFacePoint = null;
@@ -546,7 +545,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	 * @param destinyRefPoint
 	 */
 	public T moveByPointsOfReference(Point originRefPoint, Point destinyRefPoint) {
-		Vector v = Vector.pointDiff(destinyRefPoint, originRefPoint);
+		Vector v = new Vector(destinyRefPoint.subV3(originRefPoint));
 		moveCenterByVector(v);
 		return chain();
 	}
@@ -571,15 +570,15 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 		return chain();
 	}
 
-	public T rotateCuboid(Rotation rotation) {
-		return rotateCuboid(rotation, new Face[0]);
+	public T rotateCuboid(Axis rotationAxis) {
+		return rotateCuboid(rotationAxis, new Face[0]);
 	}
 
-	public T rotateCuboid(Rotation rotation, Face... fixedFaces) {
+	public T rotateCuboid(Axis rotationAxis, Face... fixedFaces) {
 		AvValidations.validateFixedFacesMaxNumber(fixedFaces);
 		AvValidations.validateFixedFacesAxes(fixedFaces);
 
-		List<Axis> axesIds = Axis.getAxisInvolvedInRotation(rotation);
+		List<Axis> axesIds = Axis.getAxesInvolvedInRotation(rotationAxis);
 		try {
 			AxisEnds axis0 = getAxisEnds(axesIds.get(0));
 			AxisEnds axis1 = getAxisEnds(axesIds.get(1));
@@ -607,19 +606,17 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 		return chain();
 	}
 
-	public T setAxis(Axis axis, AxisEnds axisEnds) {
+	public T setAxisEnds(Axis axis, AxisEnds axisEnds) {
 		switch (axis) {
 		case X:
-			setAxisX(axisEnds);
+			setAxisEndsX(axisEnds);
 			break;
 		case Y:
-			setAxisY(axisEnds);
+			setAxisEndsY(axisEnds);
 			break;
 		case Z:
-			setAxisZ(axisEnds);
+			setAxisEndsZ(axisEnds);
 			break;
-		default:
-			throw new IllegalArgumentException(AvErrors.AXIS_NOT_RECOGNIZED);
 		}
 		return chain();
 	}
@@ -629,7 +626,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	 * 
 	 * @param lineX the {@link #axisX} to set.
 	 */
-	public T setAxisX(AxisEnds lineX) {
+	public T setAxisEndsX(AxisEnds lineX) {
 		this.axisX = lineX;
 		return chain();
 	}
@@ -639,7 +636,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	 * 
 	 * @param lineY the {@link #axisY} to set.
 	 */
-	public T setAxisY(AxisEnds lineY) {
+	public T setAxisEndsY(AxisEnds lineY) {
 		this.axisY = lineY;
 		return chain();
 	}
@@ -649,7 +646,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	 * 
 	 * @param lineZ the {@link #axisZ} to set.
 	 */
-	public T setAxisZ(AxisEnds lineZ) {
+	public T setAxisEndsZ(AxisEnds lineZ) {
 		this.axisZ = lineZ;
 		return chain();
 	}
@@ -681,7 +678,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 			if (getAxisEnds(axis) != null) {
 				getAxisEnds(axis).setLength(len);
 			} else {
-				setAxis(axis, new AxisEnds().setLength(len));
+				setAxisEnds(axis, new AxisEnds().setLength(len));
 			}
 		}
 		return chain();
