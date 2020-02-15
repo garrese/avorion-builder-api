@@ -3,11 +3,14 @@ package avuilder4j.design.base;
 import java.util.Collection;
 
 import avuilder4j.data.DataMaps;
-import avuilder4j.design.sub.functional.Materials;
+import avuilder4j.design.enums.Axis;
+import avuilder4j.design.sub.dimensional.Point;
+import avuilder4j.design.sub.dimensional.Vector;
 import avuilder4j.design.sub.functional.Crew;
 import avuilder4j.design.sub.functional.HangarSpace;
 import avuilder4j.design.sub.functional.LinearAccelerations;
 import avuilder4j.design.sub.functional.LinearForces;
+import avuilder4j.design.sub.functional.Materials;
 import avuilder4j.util.java.Nullable;
 import avuilder4j.util.keys.Cons;
 
@@ -59,6 +62,33 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 			am.add(b.getMaterialIndex(), b.getMaterialCost());
 		}
 		return am;
+	}
+
+	public Point getCenterOfMass() {
+		Point centerOfMass = new Point();
+
+		double totalMass = 0;
+		Vector moments = new Vector(0);
+
+		for (B b : this) {
+			double bMass = b.getMass();
+			Point bCenter = b.getCenter();
+
+			totalMass += bMass;
+
+			for (Axis axis : Axis.values()) {
+				double moment = moments.getV3Axis(axis);
+				moment += bMass * bCenter.getV3Axis(axis);
+				moments.setV3Axis(axis, moment);
+			}
+		}
+
+		for (Axis axis : Axis.values()) {
+			double cmComponent = moments.getV3Axis(axis) / totalMass;
+			centerOfMass.setV3Axis(axis, cmComponent);
+		}
+
+		return centerOfMass;
 	}
 
 	public Crew getCrew() {

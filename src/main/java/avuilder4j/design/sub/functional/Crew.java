@@ -14,7 +14,7 @@ import avuilder4j.data.beans.BeanCrew;
 import avuilder4j.data.beans.BeanCrewCommand;
 import avuilder4j.util.java.Nullable;
 
-public class Crew extends AmountBy<Crew, Integer, BeanCrew> {
+public class Crew extends AmountByGeneric<Crew, Integer, BeanCrew> {
 	private static final long serialVersionUID = 3107430597404840632L;
 
 	public Crew() {

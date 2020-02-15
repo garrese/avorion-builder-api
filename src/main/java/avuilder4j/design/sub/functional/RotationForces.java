@@ -1,8 +1,8 @@
 package avuilder4j.design.sub.functional;
 
-import avuilder4j.design.sub.dimensional.Xyz;
+import avuilder4j.design.sub.dimensional.V3Generic;
 
-public class RotationForces extends Xyz<RotationForces> {
+public class RotationForces extends V3Generic<RotationForces> {
 
 	@Override
 	public RotationForces chain() {

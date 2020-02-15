@@ -8,7 +8,7 @@ import avuilder4j.data.DataMaps;
 import avuilder4j.data.beans.BeanCrew;
 import avuilder4j.util.java.Nullable;
 
-public class AmountByCrew extends AmountBy<AmountByCrew, Integer, BeanCrew> {
+public class AmountByCrew extends AmountByGeneric<AmountByCrew, Integer, BeanCrew> {
 	private static final long serialVersionUID = -4590237918985288882L;
 
 	public AmountByCrew() {

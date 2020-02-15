@@ -63,9 +63,9 @@ public class Mirror {
 	public Point reflect(Point point) {
 		Point p = new Point(point);
 		for (Axis axis : getMirroringAxes()) {
-			double aux = p.getXyzByAxis(axis);
+			double aux = p.getV3Axis(axis);
 			double newCoord = NumberUtils.negate(aux);
-			p.setXyzByAxis(axis, newCoord);
+			p.setV3Axis(axis, newCoord);
 		}
 		return p;
 	}

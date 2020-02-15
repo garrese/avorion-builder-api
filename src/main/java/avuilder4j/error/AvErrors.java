@@ -15,7 +15,7 @@ public class AvErrors {
 	public static final String END_NOT_EXISTS = "Invalid end ID. End ID does not exist.";
 	public static final String END_NOT_LOWER = "Lower point must be lower than upper point.";
 	public static final String END_NOT_NULLABLES = "End points are not nullable.";
-	public static final String END_NOT_RECOGNIZED = "End ID not recognized.";
+	public static final String END_NOT_RECOGNIZED = "End not recognized.";
 	public static final String END_NOT_UPPER = "Upper point must be higher than lower point.";
 	public static final String FACE_FIXED_AXES = "Can not be more than one fixed face in the same axis";
 	public static final String FACE_FIXED_MAX_NUMBER = "Invalid fixed faces ammount. Maximum is "

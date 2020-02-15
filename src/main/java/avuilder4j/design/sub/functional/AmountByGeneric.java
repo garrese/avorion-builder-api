@@ -11,28 +11,28 @@ import avuilder4j.util.java.Copyable;
 import avuilder4j.util.java.Nullable;
 import avuilder4j.util.java.NumberUtils;
 
-public abstract class AmountBy<T, K, E> extends TreeMap<K, Double> implements Chainable<T>, Copyable<T> {
+public abstract class AmountByGeneric<T, K, E> extends TreeMap<K, Double> implements Chainable<T>, Copyable<T> {
 	private static final long serialVersionUID = 8783727114370701807L;
 
 	public boolean removeWhenZero = true;
 
-	public AmountBy() {
+	public AmountByGeneric() {
 		super();
 	}
 
-	public AmountBy(Comparator<? super K> comparator) {
+	public AmountByGeneric(Comparator<? super K> comparator) {
 		super(comparator);
 	}
 
-	public AmountBy(Map<? extends K, ? extends Double> m) {
+	public AmountByGeneric(Map<? extends K, ? extends Double> m) {
 		super(m);
 	}
 
-	public AmountBy(SortedMap<K, ? extends Double> m) {
+	public AmountByGeneric(SortedMap<K, ? extends Double> m) {
 		super(m);
 	}
 
-	public T add(AmountBy<T, K, E> amounts) {
+	public T add(AmountByGeneric<T, K, E> amounts) {
 		amounts.entrySet().stream().forEach(e -> add(e.getKey(), e.getValue()));
 		return chain();
 	}
@@ -73,7 +73,7 @@ public abstract class AmountBy<T, K, E> extends TreeMap<K, Double> implements Ch
 		return chain();
 	}
 
-	public T set(AmountBy<T, K, E> amounts) {
+	public T set(AmountByGeneric<T, K, E> amounts) {
 		amounts.entrySet().stream().forEach(e -> set(e.getKey(), e.getValue()));
 		return chain();
 	}
@@ -117,7 +117,7 @@ public abstract class AmountBy<T, K, E> extends TreeMap<K, Double> implements Ch
 
 	public void setRemoveWhenZero(boolean removeWhenZero) { this.removeWhenZero = removeWhenZero; }
 
-	public T sub(AmountBy<T, K, E> amounts) {
+	public T sub(AmountByGeneric<T, K, E> amounts) {
 		amounts.entrySet().stream().forEach(e -> sub(e.getKey(), e.getValue()));
 		return chain();
 	}

@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Represents a point in a Cartesian coordinate system.
  */
-public class Point extends Xyz<Point> implements Serializable {
+public class Point extends V3Generic<Point> implements Serializable {
 	private static final long serialVersionUID = -8385581038463928346L;
 
 	public Point() {
@@ -25,11 +25,11 @@ public class Point extends Xyz<Point> implements Serializable {
 	}
 
 	public void sumVector(Vector v) {
-		sumXyz(v);
+		sumV3(v);
 	}
 
 	public void subVector(Vector v) {
-		subXyz(v);
+		subV3(v);
 	}
 
 	@Override

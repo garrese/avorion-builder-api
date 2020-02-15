@@ -70,8 +70,8 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		if (f != null) {
 			Axis a = getEffDirectionalThrusterAxis();
 			LinearForces pfs = new LinearForces();
-			pfs.getSpeedingUp().setXyzByAxis(a, f);
-			pfs.getBraking().setXyzByAxis(a, f);
+			pfs.getSpeedingUp().setV3Axis(a, f);
+			pfs.getBraking().setV3Axis(a, f);
 			if (a.equals(Axis.Z)) {
 				pfs.getSpeedingUp().setZ(0d);
 			}
@@ -99,7 +99,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 	protected Double getEffectStorageVolume() {
 		return Nullable.m(() -> {
 			Double vol = 1d;
-			for (AxisEnds ends : getAllAxes()) {
+			for (AxisEnds ends : getAllAxisEnds()) {
 				vol *= ends.getLength() - DataMaps.getConstantValue(Cons.CONTAINERS_WALL_THICKNESS);
 			}
 			return vol;
@@ -130,8 +130,8 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		if (f != null) {
 			Axis a = getEffGyroArrayAxis();
 			RotationForces rfs = new RotationForces();
-			rfs.setXyzByAxis(a, f);
-			rfs.setXyzByAxis(a, f);
+			rfs.setV3Axis(a, f);
+			rfs.setV3Axis(a, f);
 			return rfs;
 		} else
 			return null;
@@ -160,7 +160,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 			Double effect = getBlockArchetype().getEffects().get(0);
 			IFGAura aura = new IFGAura();
 			for (Axis axis : Axis.values()) {
-				aura.setXyzByAxis(axis, getAxis(axis).getLength() * effect);
+				aura.setV3Axis(axis, getAxisEnds(axis).getLength() * effect);
 			}
 			return aura;
 		});
@@ -201,7 +201,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		if (f != null) {
 			LinearForces p = new LinearForces();
 			p.getSpeedingUp().setX(f).setY(f);
-			p.getBraking().setXyz(f);
+			p.getBraking().setV3(f);
 			return p;
 		}
 		return null;
@@ -226,7 +226,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		if (Nullable.m(() -> getBlockArchetype().getHasVolume(), false)) {
 			return getVolumeBlock();
 		} else
-			return 0d;
+			return null;
 	}
 
 	public boolean isTypeOf(Integer typeIndex) {

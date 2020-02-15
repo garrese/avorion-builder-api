@@ -68,6 +68,10 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 
 	public int getIndexCount() { return indexCount; }
 
+	public B getLast() { return getStructure().getLast(); }
+
+	public B getPenultimate() { return getStructure().getPenultimate(); }
+
 	public S getStructure() { return structure; }
 
 	public Mirror getMirror() { return mirror; }

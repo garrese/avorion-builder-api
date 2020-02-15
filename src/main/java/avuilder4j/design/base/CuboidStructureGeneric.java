@@ -54,9 +54,9 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		}
 
 		for (B cuboid : this) {
-			cuboid.getAxisX().escalateRelative(ratioX);
-			cuboid.getAxisY().escalateRelative(ratioY);
-			cuboid.getAxisZ().escalateRelative(ratioZ);
+			cuboid.getAxisEndsX().escalateRelative(ratioX);
+			cuboid.getAxisEndsY().escalateRelative(ratioY);
+			cuboid.getAxisEndsZ().escalateRelative(ratioZ);
 		}
 	}
 
@@ -96,7 +96,7 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 
 		for (B cuboid : this) {
 			for (Axis axisId : axesIds) {
-				cuboid.getAxis(axisId).escalateRelative(ratio);
+				cuboid.getAxisEnds(axisId).escalateRelative(ratio);
 			}
 		}
 	}
@@ -169,21 +169,21 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		Map<Axis, Double> matrixRowAxis2 = new HashMap<Axis, Double>();
 
 		List<Axis> axesRotating = Axis.getAxisInvolvedInRotation(rotation);
-		Axis matrixColumnAxis1 = axesRotating.get(0);
-		Axis matrixColumnAxis2 = axesRotating.get(1);
+		Axis axisRotating1 = axesRotating.get(0);
+		Axis axisRotating2 = axesRotating.get(1);
 
-		matrixRowAxis1.put(matrixColumnAxis1, cos);
-		matrixRowAxis1.put(matrixColumnAxis2, sinN);
-		matrixRowAxis2.put(matrixColumnAxis1, sin);
-		matrixRowAxis2.put(matrixColumnAxis2, cos);
-		rotationMatrix.put(matrixColumnAxis1, matrixRowAxis1);
-		rotationMatrix.put(matrixColumnAxis2, matrixRowAxis2);
+		matrixRowAxis1.put(axisRotating1, cos);
+		matrixRowAxis1.put(axisRotating2, sinN);
+		matrixRowAxis2.put(axisRotating1, sin);
+		matrixRowAxis2.put(axisRotating2, cos);
+		rotationMatrix.put(axisRotating1, matrixRowAxis1);
+		rotationMatrix.put(axisRotating2, matrixRowAxis2);
 
 		for (B b : this) {
 
 			Map<Axis, AxisEnds> endsCopy = new HashMap<>();
 			for (Axis axis : axesRotating) {
-				endsCopy.put(axis, b.getAxis(axis).getCopy());
+				endsCopy.put(axis, b.getAxisEnds(axis).getCopy());
 				b.setAxis(axis, new AxisEnds());
 			}
 			for (Axis matrixRowAxis : axesRotating) {
@@ -206,8 +206,8 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 					lower = resultEnds.get(0);
 				}
 
-				b.getAxis(matrixRowAxis).setEnd(End.UPPER, upper);
-				b.getAxis(matrixRowAxis).setEnd(End.LOWER, lower);
+				b.getAxisEnds(matrixRowAxis).setEnd(End.UPPER, upper);
+				b.getAxisEnds(matrixRowAxis).setEnd(End.LOWER, lower);
 			}
 		}
 	}
@@ -240,6 +240,10 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 	}
 
 	public List<B> getBlocks() { return this; }
+
+	public B getLast() { return Nullable.m(() -> get(size() - 1)); }
+
+	public B getPenultimate() { return Nullable.m(() -> get(size() - 2)); }
 
 	@Override
 	public Tagator getTagator() { return tagsAdministrator; }

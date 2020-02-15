@@ -5,8 +5,8 @@ import avuilder4j.util.java.Nullable;
 
 public abstract class Linear<T extends Linear<T>> {
 
-	protected Vector speedingUp = new Vector().setXyz(0d);
-	protected Vector braking = new Vector().setXyz(0d);
+	protected Vector speedingUp = new Vector().setV3(0d);
+	protected Vector braking = new Vector().setV3(0d);
 
 	public Linear() {}
 
@@ -41,14 +41,14 @@ public abstract class Linear<T extends Linear<T>> {
 	}
 
 	public T sumLinear(T other) {
-		Nullable.m(() -> getSpeedingUp().sumXyz(other.getSpeedingUp()));
-		Nullable.m(() -> getBraking().sumXyz(other.getBraking()));
+		Nullable.m(() -> getSpeedingUp().sumV3(other.getSpeedingUp()));
+		Nullable.m(() -> getBraking().sumV3(other.getBraking()));
 		return chain();
 	}
 
 	public T subLinear(T other) {
-		Nullable.m(() -> getSpeedingUp().subXyz(other.getSpeedingUp()));
-		Nullable.m(() -> getBraking().subXyz(other.getBraking()));
+		Nullable.m(() -> getSpeedingUp().subV3(other.getSpeedingUp()));
+		Nullable.m(() -> getBraking().subV3(other.getBraking()));
 		return chain();
 	}
 

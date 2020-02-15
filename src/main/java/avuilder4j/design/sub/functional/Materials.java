@@ -8,7 +8,7 @@ import avuilder4j.data.DataMaps;
 import avuilder4j.data.beans.BeanMaterial;
 import avuilder4j.util.java.Nullable;
 
-public class Materials extends AmountBy<Materials, Integer, BeanMaterial> {
+public class Materials extends AmountByGeneric<Materials, Integer, BeanMaterial> {
 	private static final long serialVersionUID = 1232491739089084616L;
 
 	public Materials() {

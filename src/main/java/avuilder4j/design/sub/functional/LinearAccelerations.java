@@ -18,8 +18,8 @@ public class LinearAccelerations extends Linear<LinearAccelerations> {
 	}
 
 	public void set(LinearForces forces, Number mass) {
-		setBraking(Nullable.m(() -> new Vector(forces.getBraking()).divide(mass)));
-		setSpeedingUp(Nullable.m(() -> new Vector(forces.getSpeedingUp()).divide(mass)));
+		setBraking(Nullable.m(() -> new Vector(forces.getBraking()).divideV3(mass)));
+		setSpeedingUp(Nullable.m(() -> new Vector(forces.getSpeedingUp()).divideV3(mass)));
 	}
 
 }
