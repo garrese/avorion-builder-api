@@ -40,9 +40,9 @@ public class Mirror {
 	}
 
 	public <T extends CuboidGeneric<T>> T findRefectedParent(T cuboid, List<T> structureContext) {
-		Point reflectedParentCenter = Nullable.m(() -> reflect(cuboid.getParent().getCenter()));
+		Point reflectedParentCenter = Nullable.m(() -> reflect(cuboid.getParent().calcCenter()));
 		for (T t : structureContext) {
-			if (Nullable.m(() -> t.getCenter().equals(reflectedParentCenter), false)) {
+			if (Nullable.m(() -> t.calcCenter().equals(reflectedParentCenter), false)) {
 				return t;
 			}
 		}
@@ -55,7 +55,7 @@ public class Mirror {
 
 	public <T extends CuboidGeneric<T>> T move(T cuboid) {
 		validateActiveAxes();
-		Point newCenter = reflect(cuboid.getCenter());
+		Point newCenter = reflect(cuboid.calcCenter());
 		cuboid.moveCenterToPoint(newCenter);
 		return cuboid;
 	}
@@ -63,9 +63,9 @@ public class Mirror {
 	public Point reflect(Point point) {
 		Point p = new Point(point);
 		for (Axis axis : getMirroringAxes()) {
-			double aux = p.getV3Axis(axis);
+			double aux = p.getXyzAxis(axis);
 			double newCoord = NumberUtils.negate(aux);
-			p.setV3Axis(axis, newCoord);
+			p.setXyzAxis(axis, newCoord);
 		}
 		return p;
 	}

@@ -2,7 +2,6 @@ package avuilder4j.design.base;
 
 import java.util.Collection;
 
-import avuilder4j.data.DataMaps;
 import avuilder4j.design.enums.Axis;
 import avuilder4j.design.sub.dimensional.Point;
 import avuilder4j.design.sub.dimensional.Vector;
@@ -12,7 +11,6 @@ import avuilder4j.design.sub.functional.LinearAccelerations;
 import avuilder4j.design.sub.functional.LinearForces;
 import avuilder4j.design.sub.functional.Materials;
 import avuilder4j.util.java.Nullable;
-import avuilder4j.util.keys.Cons;
 
 @SuppressWarnings("rawtypes")
 public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalGeneric, S extends BlockFunctionalStructureGeneric> extends BlockPlanStructureGeneric<B, S> {
@@ -40,23 +38,7 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 		super(initialCapacity);
 	}
 
-	private Double getMechanicsReq() {
-		return null;// sumFromBlocks(B::getCrewReqMechanics);
-	}
-
-	private Double getEngineersReq() {
-		return null;// sumFromBlocks(B::getCrewReqEngineers);
-	}
-
-	public double getSargeantsReq() {
-		Double dividend = Nullable.m(() -> getMechanicsReq() + getEngineersReq());
-		Double divider = Nullable.m(() -> DataMaps.getConstant(Cons.CREW_RATIO_CREW_PER_SERGEANT).getValue());
-		Double result = Nullable.m(() -> dividend / divider);
-		return result;
-
-	}
-
-	public Materials getMaterialCost() {
+	public Materials calcMaterialCost() {
 		Materials am = new Materials();
 		for (B b : this) {
 			am.add(b.getMaterialIndex(), b.getMaterialCost());
@@ -66,7 +48,7 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 
 	// P = T ω
 	// τ = Iα -> torque = (moment of inertia)(angular acceleration)
-	public Point getMassCenter() {
+	public Point calcMassCenter() {
 		Point centerOfMass = new Point();
 
 		double totalMass = 0;
@@ -74,37 +56,37 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 
 		for (B b : this) {
 			double blockMass = b.getMass();
-			Point blockCenter = b.getCenter();
+			Point blockCenter = b.calcCenter();
 
 			totalMass += blockMass;
 
 			for (Axis axis : Axis.values()) {
-				double moment = moments.getV3Axis(axis);
-				moment += blockMass * blockCenter.getV3Axis(axis);
-				moments.setV3Axis(axis, moment);
+				double moment = moments.getXyzAxis(axis);
+				moment += blockMass * blockCenter.getXyzAxis(axis);
+				moments.setXyzAxis(axis, moment);
 			}
 		}
 
 		for (Axis axis : Axis.values()) {
-			double cmComponent = moments.getV3Axis(axis) / totalMass;
-			centerOfMass.setV3Axis(axis, cmComponent);
+			double cmComponent = moments.getXyzAxis(axis) / totalMass;
+			centerOfMass.setXyzAxis(axis, cmComponent);
 		}
 
 		return centerOfMass;
 	}
 
-	public Vector getMomentOfInertia() {
+	public Vector calcMomentOfInertia() {
 		Vector totalMoi = new Vector();
 
-		Point massCenter = getMassCenter();
+		Point massCenter = calcMassCenter();
 		for (B block : this) {
-			totalMoi = totalMoi.sumV3(block.getMomentOfInertia(massCenter));
+			totalMoi = totalMoi.sumXyz(block.getMomentOfInertia(massCenter));
 		}
 
 		return totalMoi;
 	}
 
-	public Crew getCrew() {
+	public Crew calcCrew() {
 		Crew crew = new Crew();
 		for (B block : this) {
 			crew.add(block.getCrewReq());
@@ -112,15 +94,23 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 		return crew;
 	}
 
-	public Double getCreditCost() { return sumFromBlocks(B::getCreditCost); }
+	public Double calcCreditCost() {
+		return sumFromBlocks(B::getCreditCost);
+	}
 
-	public Double getMass() { return sumFromBlocks(B::getMass); }
+	public Double calcMass() {
+		return sumFromBlocks(B::getMass);
+	}
 
-	public Double getDurability() { return sumFromBlocks(B::getDurability); }
+	public Double calcDurability() {
+		return sumFromBlocks(B::getDurability);
+	}
 
-	public Double getShieldGenerated() { return sumFromBlocks(B::getEffShieldGenerated); }
+	public Double calcEffShieldGenerated() {
+		return sumFromBlocks(B::getEffShieldGenerated);
+	}
 
-	public HangarSpace getEffHangarSpace() {
+	public HangarSpace calcEffHangarSpace() {
 		Double value = sumFromBlocks(b -> Nullable.m(() -> b.getEffHangarSpace().getValue()));
 		if (value != null)
 			return new HangarSpace(value);
@@ -128,9 +118,11 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 			return null;
 	}
 
-	public LinearForces getEffLinearForces() { return getEffLinearForces((Integer[]) null); }
+	public LinearForces calcEffLinearForces() {
+		return calcEffLinearForces((Integer[]) null);
+	}
 
-	public LinearForces getEffLinearForces(Integer... typeFilter) {
+	public LinearForces calcEffLinearForces(Integer... typeFilter) {
 		LinearForces total = new LinearForces();
 		for (B block : this) {
 			if (block != null) {
@@ -141,24 +133,20 @@ public abstract class BlockFunctionalStructureGeneric<B extends BlockFunctionalG
 	}
 
 	public Vector calcEffTorque() {
-		Point massCenter = getMassCenter();
+		Point massCenter = calcMassCenter();
 		Vector totalTorque = new Vector();
 		for (B block : this) {
-			totalTorque.sumV3(block.getEffThrusterTorque(massCenter));
+			totalTorque.sumXyz(block.getEffThrusterTorque(massCenter));
 		}
 		return totalTorque;
 	}
 
-	public LinearAccelerations getEffLinearAccelerations() { return getEffLinearAccelerations((Integer[]) null); }
-
-	public LinearAccelerations getEffLinearAccelerations(Integer... typeFilter) {
-		return new LinearAccelerations(getEffLinearForces(typeFilter), getMass());
+	public LinearAccelerations calcEffLinearAccelerations() {
+		return calcEffLinearAccelerations((Integer[]) null);
 	}
 
-	public double getLieutenantsReq() { return Nullable.m(() -> getSargeantsReq() / DataMaps.getConstant(Cons.CREW_RATIO_SERGEANTS_PER_LIEUTENANT).getValue()); }
-
-	public double getCommandersReq() { return Nullable.m(() -> getLieutenantsReq() / DataMaps.getConstant(Cons.CREW_RATIO_LIEUTENANTS_PER_COMMANDER).getValue()); }
-
-	public double getGeneralsReq() { return Nullable.m(() -> getCommandersReq() / DataMaps.getConstant(Cons.CREW_RATIO_COMMANDERS_PER_GENERAL).getValue()); }
+	public LinearAccelerations calcEffLinearAccelerations(Integer... typeFilter) {
+		return new LinearAccelerations(calcEffLinearForces(typeFilter), calcMass());
+	}
 
 }

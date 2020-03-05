@@ -72,8 +72,8 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		if (f != null) {
 			Axis a = getEffDirectionalThrusterAxis();
 			LinearForces pfs = new LinearForces();
-			pfs.getSpeedingUp().setV3Axis(a, f);
-			pfs.getBraking().setV3Axis(a, f);
+			pfs.getSpeedingUp().setXyzAxis(a, f);
+			pfs.getBraking().setXyzAxis(a, f);
 			if (a.equals(Axis.Z)) {
 				pfs.getSpeedingUp().setZ(0d);
 			}
@@ -101,7 +101,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 	protected Double getEffectStorageVolume() {
 		return Nullable.m(() -> {
 			Double vol = 1d;
-			for (AxisEnds ends : getAllAxisEnds()) {
+			for (AxisEnds ends : getAxisEndsList()) {
 				vol *= ends.getLength() - DataMaps.getConstantValue(Cons.CONTAINERS_WALL_THICKNESS);
 			}
 			return vol;
@@ -132,8 +132,8 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		if (f != null) {
 			Axis a = getEffGyroArrayAxis();
 			RotationForces rfs = new RotationForces();
-			rfs.setV3Axis(a, f);
-			rfs.setV3Axis(a, f);
+			rfs.setXyzAxis(a, f);
+			rfs.setXyzAxis(a, f);
 			return rfs;
 		} else
 			return null;
@@ -162,7 +162,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 			Double effect = getBlockArchetype().getEffects().get(0);
 			IFGAura aura = new IFGAura();
 			for (Axis axis : Axis.values()) {
-				aura.setV3Axis(axis, getAxisEnds(axis).getLength() * effect);
+				aura.setXyzAxis(axis, getAxisEnds(axis).getLength() * effect);
 			}
 			return aura;
 		});
@@ -192,7 +192,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 	public Double getEffSolarPanelGeneratedE() {
 		return Nullable.m(() -> {
 			if (isTypeOf(Types.SOLAR_PANEL)) {
-				return getSurfaceArea() * getBlockArchetype().getEffects().get(0);
+				return calcSurfaceArea() * getBlockArchetype().getEffects().get(0);
 			} else
 				return null;
 		});
@@ -203,7 +203,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 		if (f != null) {
 			LinearForces p = new LinearForces();
 			p.getSpeedingUp().setX(f).setY(f);
-			p.getBraking().setV3(f);
+			p.getBraking().setXyz(f);
 			return p;
 		}
 		return null;
@@ -212,15 +212,15 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 	public Vector getEffThrusterTorque(Point massCenter) {
 		LinearForces f = getEffThrusterLinearForces();
 		if (f != null) {
-			Vector blockToMC = new Vector(getCenter().subV3(massCenter));
-			Vector torque = new Vector(f.getBraking()).multiplyV3(blockToMC);
+			Vector blockToMC = new Vector(calcCenter().subXyz(massCenter));
+			Vector torque = new Vector(f.getBraking()).multiplyXyz(blockToMC);
 			return torque;
 		}
 		return null;
 	}
 
 	public Vector getEffThrusterAngularAcceleration(Point massCenter, Vector totalInertiaMoment) {
-		return getEffThrusterTorque(massCenter).divideV3(getMomentOfInertia(massCenter));
+		return getEffThrusterTorque(massCenter).divideXyz(getMomentOfInertia(massCenter));
 	}
 
 	public Double getEffTorpedoStorage() { return getEffectStorageIfType(Types.TORPEDO_STORAGE); };
@@ -230,13 +230,13 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 	public Double getMaterialCost() { return Nullable.m(() -> Math.ceil(getBlockArchetype().getMaterialCost() * getVolumeBlock())); }
 
 	public Vector getMomentOfInertia(Point massCenter) {
-		Vector blockToCenter = new Vector(getCenter().subV3(massCenter));
+		Vector blockToCenter = new Vector(calcCenter().subXyz(massCenter));
 		Double mass = getMass();
 
 		Vector moi = new Vector();
 		for (Axis axis : Axis.values()) {
-			double axisMoi = mass * Math.pow(blockToCenter.getV3Axis(axis), 2);
-			moi.setV3Axis(axis, axisMoi);
+			double axisMoi = mass * Math.pow(blockToCenter.getXyzAxis(axis), 2);
+			moi.setXyzAxis(axis, axisMoi);
 		}
 		return moi;
 	}
@@ -248,7 +248,7 @@ public abstract class BlockFunctionalGeneric<T extends BlockFunctionalGeneric<T>
 			return 0d;
 	}
 
-	public Double getVolumeBlock() { return Nullable.m(() -> getVolumeCuboid() * getBlockArchetype().getCuboidFilledIn()); }
+	public Double getVolumeBlock() { return Nullable.m(() -> calcVolumeCuboid() * getBlockArchetype().getCuboidFilledIn()); }
 
 	public Double getVolumeStat() {
 		if (Nullable.m(() -> getBlockArchetype().getHasVolume(), false)) {

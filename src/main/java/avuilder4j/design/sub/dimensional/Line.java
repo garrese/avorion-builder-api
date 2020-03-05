@@ -20,7 +20,7 @@ public class Line implements Serializable {
 	}
 
 	public boolean isLineDefined() {
-		if (p1 != null && p2 != null && p1.isV3Defined() && p2.isV3Defined())
+		if (p1 != null && p2 != null && p1.isXyzDefined() && p2.isXyzDefined())
 			return true;
 		else
 			return false;

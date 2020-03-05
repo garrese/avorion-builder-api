@@ -41,24 +41,6 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		super(initialCapacity);
 	}
 
-	public void escalate(double ratio) {
-		escalate(ratio, (Axis[]) null);
-	}
-
-	public void escalate(double ratioX, double ratioY, double ratioZ) {
-		AvValidations.ratios(ratioX, ratioY, ratioZ);
-
-		for (B cuboid : this) {
-			cuboid.validateCuboid();
-		}
-
-		for (B cuboid : this) {
-			cuboid.getAxisEndsX().escalateRelative(ratioX);
-			cuboid.getAxisEndsY().escalateRelative(ratioY);
-			cuboid.getAxisEndsZ().escalateRelative(ratioZ);
-		}
-	}
-
 	public B addBlock(B block) {
 		super.add(block);
 		return block;
@@ -82,6 +64,41 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		return chain();
 	}
 
+	protected Double applyRotationMatrix(Map<Axis, double[]> m, Axis axis, Double value) {
+		Double result = null;
+		for (int i = 0; i < m.size(); i++) {
+
+		}
+		return result;
+	}
+
+	public void attach(B attacher, B destinationCuboid, Face destinationFace) {
+
+		if (attacher == destinationCuboid)
+			throw new IllegalArgumentException("The destination cuboid can not be the cuboid itself.");
+		attacher.validateCuboid();
+		destinationCuboid.validateCuboid();
+
+		Point destinationFacePoint = destinationCuboid.calcFaceCenter(destinationFace);
+		Point originFacePoint = attacher.calcFaceCenter(Face.getOpposite(destinationFace));
+
+		Vector vector = new Vector(destinationFacePoint.subXyz(originFacePoint));
+		for (B b : this) {
+			b.validateCuboid();
+			b.moveCenterByVector(vector);
+		}
+
+		attacher.setParent(destinationCuboid, true);
+	}
+
+	public double calcVolumeCuboid(List<? extends CuboidGeneric> blocks) {
+		return sumFromBlocks(B::calcVolumeCuboid);
+	}
+
+	public void escalate(double ratio) {
+		escalate(ratio, (Axis[]) null);
+	}
+
 	public void escalate(double ratio, Axis... axesIds) {
 		if (axesIds == null || axesIds.length == 0) {
 			axesIds = Axis.values();
@@ -97,6 +114,20 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 			for (Axis axisId : axesIds) {
 				cuboid.getAxisEnds(axisId).escalateRelative(ratio);
 			}
+		}
+	}
+
+	public void escalate(double ratioX, double ratioY, double ratioZ) {
+		AvValidations.ratios(ratioX, ratioY, ratioZ);
+
+		for (B cuboid : this) {
+			cuboid.validateCuboid();
+		}
+
+		for (B cuboid : this) {
+			cuboid.getAxisEndsX().escalateRelative(ratioX);
+			cuboid.getAxisEndsY().escalateRelative(ratioY);
+			cuboid.getAxisEndsZ().escalateRelative(ratioZ);
 		}
 	}
 
@@ -116,7 +147,7 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 		}
 		double currentVol = 0;
 		for (B cuboid : this) {
-			currentVol += cuboid.getVolumeCuboid();
+			currentVol += cuboid.calcVolumeCuboid();
 		}
 
 		double ratio;
@@ -140,6 +171,15 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 	public B findByIndex(Integer index) {
 		return this.stream().filter(b -> Nullable.m(() -> b.getIndex().equals(index), false)).findFirst().orElse(null);
 	}
+
+	public List<B> getBlocks() { return this; }
+
+	public B getLast() { return Nullable.m(() -> get(size() - 1)); }
+
+	public B getPenultimate() { return Nullable.m(() -> get(size() - 2)); }
+
+	@Override
+	public Tagator getTagator() { return tagsAdministrator; }
 
 	public void rotate(Axis rotationAxis) {
 		rotate(rotationAxis, 1);
@@ -209,46 +249,6 @@ public abstract class CuboidStructureGeneric<B extends CuboidGeneric, S extends 
 				block.getAxisEnds(matrixRowAxis).setLowerEnd(lower);
 			}
 		}
-	}
-
-	protected Double applyRotationMatrix(Map<Axis, double[]> m, Axis axis, Double value) {
-		Double result = null;
-		for (int i = 0; i < m.size(); i++) {
-
-		}
-		return result;
-	}
-
-	public void attach(B attacher, B destinationCuboid, Face destinationFace) {
-
-		if (attacher == destinationCuboid)
-			throw new IllegalArgumentException("The destination cuboid can not be the cuboid itself.");
-		attacher.validateCuboid();
-		destinationCuboid.validateCuboid();
-
-		Point destinationFacePoint = destinationCuboid.getFaceCenter(destinationFace);
-		Point originFacePoint = attacher.getFaceCenter(Face.getOpposite(destinationFace));
-
-		Vector vector = new Vector(destinationFacePoint.subV3(originFacePoint));
-		for (B b : this) {
-			b.validateCuboid();
-			b.moveCenterByVector(vector);
-		}
-
-		attacher.setParent(destinationCuboid, true);
-	}
-
-	public List<B> getBlocks() { return this; }
-
-	public B getLast() { return Nullable.m(() -> get(size() - 1)); }
-
-	public B getPenultimate() { return Nullable.m(() -> get(size() - 2)); }
-
-	@Override
-	public Tagator getTagator() { return tagsAdministrator; }
-
-	public double getVolumeCuboid(List<? extends CuboidGeneric> blocks) {
-		return sumFromBlocks(B::getVolumeCuboid);
 	}
 
 	public Double sumFromBlocks(Function<B, Double> getAttributeFunction) {

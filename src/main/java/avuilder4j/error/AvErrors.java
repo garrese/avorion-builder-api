@@ -5,7 +5,7 @@ public class AvErrors {
 	public static final String ARGUMENT_CASE_NOT_RECOGNIZED = "Argument case not recognized.";
 	public static final String AXIS_AMOUNT = "Error solving axes amount.";
 	public static final String AXIS_NOT_EXISTS = "Invalid axis ID. Axis ID does not exist.";
-	public static final String AXIS_NOT_RECOGNIZED = "Axis ID not recognized.";
+	public static final String AXIS_NOT_RECOGNIZED = "Axis not recognized.";
 	public static final String AXIS_REPEATED = "Invalid axes. Some axis is repeated.";
 	public static final String COLOR_INVALID_FORMAT = "Invalid color format. Color must be in 8 digit color hex format "
 			+ AvValidations.COLOR_REGEX + ".";

@@ -34,17 +34,17 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	/**
 	 * X axis line.
 	 */
-	private AxisEnds axisX = new AxisEnds();
+	private AxisEnds axisEndsX = new AxisEnds();
 
 	/**
 	 * Y axis line.
 	 */
-	private AxisEnds axisY = new AxisEnds();
+	private AxisEnds axisEndsY = new AxisEnds();
 
 	/**
 	 * Z axis line.
 	 */
-	private AxisEnds axisZ = new AxisEnds();
+	private AxisEnds axisEndsZ = new AxisEnds();
 
 	/**
 	 * Cuboid's index in structure.
@@ -97,24 +97,158 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 		this.validateCuboid();
 		destinationCuboid.validateCuboid();
 
-		Point destinationFacePoint = destinationCuboid.getFaceCenter(destinationFace);
-		Point originFacePoint = this.getFaceCenter(Face.getOpposite(destinationFace));
+		Point destinationFacePoint = destinationCuboid.calcFaceCenter(destinationFace);
+		Point originFacePoint = this.calcFaceCenter(Face.getOpposite(destinationFace));
 
-		Vector vector = new Vector(destinationFacePoint.subV3(originFacePoint));
+		Vector vector = new Vector(destinationFacePoint).subXyz(originFacePoint);
 		this.moveCenterByVector(vector);
-
-//		Point originFacePoint = null;
-//		Point destinyFacePoint = null;
-//
-//		destinyFacePoint = destinationCuboid.getFaceCenter(destinationFace);
-//		originFacePoint = getFaceCenter(Face.getOpposite(destinationFace));
-//		Vector centerToOwnFace = Vector.pointDiff(getCenter(), originFacePoint);
-//
-//		moveCenterToPoint(destinyFacePoint);
-//		moveCenterByVector(centerToOwnFace);
 
 		setParent(destinationCuboid);
 		return chain();
+	}
+
+	/**
+	 * Calculates the central point of the cuboid.
+	 * 
+	 * @return the central point of the cuboid.
+	 */
+	public Point calcCenter() {
+		Point p = new Point();
+		p.x = axisEndsX.getCenter();
+		p.y = axisEndsY.getCenter();
+		p.z = axisEndsZ.getCenter();
+
+		return p;
+	}
+
+	public Point calcCorner(Corner corner) {
+		Point p = new Point();
+		switch (corner) {
+		case BASE_1:
+			p.x = getAxisEndsX().getLowerEnd();
+			p.y = getAxisEndsY().getLowerEnd();
+			p.z = getAxisEndsZ().getLowerEnd();
+			break;
+		case BASE_2:
+			p.x = getAxisEndsX().getUpperEnd();
+			p.y = getAxisEndsY().getLowerEnd();
+			p.z = getAxisEndsZ().getLowerEnd();
+			break;
+		case BASE_3:
+			p.x = getAxisEndsX().getUpperEnd();
+			p.y = getAxisEndsY().getLowerEnd();
+			p.z = getAxisEndsZ().getUpperEnd();
+			break;
+		case BASE_4:
+			p.x = getAxisEndsX().getLowerEnd();
+			p.y = getAxisEndsY().getLowerEnd();
+			p.z = getAxisEndsZ().getUpperEnd();
+			break;
+		case TOP_1:
+			p.x = getAxisEndsX().getLowerEnd();
+			p.y = getAxisEndsY().getUpperEnd();
+			p.z = getAxisEndsZ().getLowerEnd();
+			break;
+		case TOP_2:
+			p.x = getAxisEndsX().getUpperEnd();
+			p.y = getAxisEndsY().getUpperEnd();
+			p.z = getAxisEndsZ().getLowerEnd();
+			break;
+		case TOP_3:
+			p.x = getAxisEndsX().getUpperEnd();
+			p.y = getAxisEndsY().getUpperEnd();
+			p.z = getAxisEndsZ().getUpperEnd();
+			break;
+		case TOP_4:
+			p.x = getAxisEndsX().getLowerEnd();
+			p.y = getAxisEndsY().getUpperEnd();
+			p.z = getAxisEndsZ().getUpperEnd();
+			break;
+		default:
+			throw new IllegalArgumentException(AvErrors.CORNER_NOT_RECOGNIZED);
+		}
+
+		return p;
+	}
+
+	public Point calcFaceCenter(Face faceId) {
+		Point p = null;
+
+		if (isCuboidDefined()) {
+			p = calcCenter();
+			switch (faceId) {
+			case XU:
+				p.x = getAxisEndsX().getUpperEnd();
+				break;
+			case XL:
+				p.x = getAxisEndsX().getLowerEnd();
+				break;
+			case YU:
+				p.y = getAxisEndsY().getUpperEnd();
+				break;
+			case YL:
+				p.y = getAxisEndsY().getLowerEnd();
+				break;
+			case ZU:
+				p.z = getAxisEndsZ().getUpperEnd();
+				break;
+			case ZL:
+				p.z = getAxisEndsZ().getLowerEnd();
+				break;
+			default:
+				throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
+			}
+		}
+
+		return p;
+	}
+
+	public Lengths calcLengths() {
+		return new Lengths(axisEndsX.getLength(), axisEndsY.getLength(), axisEndsZ.getLength());
+	}
+
+	public T calcRoot() {
+		List<T> chain = calcRootChain();
+		return chain.get(chain.size() - 1);
+	}
+
+	/**
+	 * Si no es circular: result.get(result.size()-1).getParent() == null; si no, no es nulo.
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> calcRootChain() {
+		List<T> parents = new ArrayList<>();
+		boolean terminate = false;
+
+		parents.add((T) this);
+		T checking = parents.get(0);
+		T lastParent = null;
+		do {
+			lastParent = checking.getParent();
+			final T lastParentAuxFinal = lastParent;
+			if (lastParent == null || parents.stream().anyMatch(x -> x == lastParentAuxFinal)) {
+				terminate = true;
+			} else {
+				lastParent = checking.getParent();
+				parents.add(lastParent);
+			}
+			checking = lastParent;
+		} while (!terminate);
+
+		return parents;
+	}
+
+	public Double calcSurfaceArea() {
+		Double face1 = axisEndsX.getLength() * axisEndsY.getLength();
+		Double face2 = axisEndsX.getLength() * axisEndsZ.getLength();
+		Double face3 = axisEndsY.getLength() * axisEndsZ.getLength();
+		return 2 * (face1 + face2 + face3);
+	}
+
+	public Double calcVolumeCuboid() {
+		return axisEndsX.getLength() * axisEndsY.getLength() * axisEndsZ.getLength();
 	}
 
 	@Override
@@ -129,7 +263,8 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 		if (!(obj instanceof CuboidGeneric))
 			return false;
 		CuboidGeneric other = (CuboidGeneric) obj;
-		return Objects.equals(axisX, other.axisX) && Objects.equals(axisY, other.axisY) && Objects.equals(axisZ, other.axisZ) && Objects.equals(indexInStructure, other.indexInStructure) && Objects.equals(parent, other.parent)
+		return Objects.equals(axisEndsX, other.axisEndsX) && Objects.equals(axisEndsY, other.axisEndsY) && Objects.equals(axisEndsZ, other.axisEndsZ) && Objects.equals(indexInStructure, other.indexInStructure)
+				&& Objects.equals(parent, other.parent)
 				&& Objects.equals(tagator, other.tagator);
 	}
 
@@ -180,38 +315,30 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 		return escalateByVolume(finalVolume, fixedFacesIds, null);
 	}
 
-	public T escalateByVolume(double finalVolume, Face[] fixedFacesIds, Axis[] axesIds) {
-		if (axesIds == null) {
-			axesIds = Axis.values();
+	public T escalateByVolume(double finalVolume, Face[] fixedFaces, Axis[] axes) {
+		if (axes == null) {
+			axes = Axis.values();
 		}
 		validateCuboid();
-		AvValidations.validateAxesRepetition(axesIds);
+		AvValidations.validateAxesRepetition(axes);
 
 		double ratio;
-		switch (axesIds.length) {
+		switch (axes.length) {
 		case 0:
 		case 3:
-			ratio = Math.cbrt(finalVolume / getVolumeCuboid());
+			ratio = Math.cbrt(finalVolume / calcVolumeCuboid());
 			break;
 		case 2:
-			ratio = Math.sqrt(finalVolume / getVolumeCuboid());
+			ratio = Math.sqrt(finalVolume / calcVolumeCuboid());
 			break;
 		case 1:
-			ratio = finalVolume / getVolumeCuboid();
+			ratio = finalVolume / calcVolumeCuboid();
 			break;
 		default:
 			throw new Avuilder4jRuntimeException(AvErrors.AXIS_AMOUNT);
 		}
-		escalate(ratio, fixedFacesIds, axesIds);
+		escalate(ratio, fixedFaces, axes);
 		return chain();
-	}
-
-	public List<AxisEnds> getAllAxisEnds() {
-		ArrayList<AxisEnds> list = new ArrayList<AxisEnds>();
-		list.add(getAxisEndsX());
-		list.add(getAxisEndsY());
-		list.add(getAxisEndsZ());
-		return list;
 	}
 
 	public AxisEnds getAxisEnds(Axis axis) {
@@ -227,6 +354,14 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 		}
 	}
 
+	public List<AxisEnds> getAxisEndsList() {
+		ArrayList<AxisEnds> list = new ArrayList<AxisEnds>();
+		list.add(getAxisEndsX());
+		list.add(getAxisEndsY());
+		list.add(getAxisEndsZ());
+		return list;
+	}
+
 	public AxisEnds getAxisEndsOrCreate(Axis axis) {
 		AxisEnds ends = getAxisEnds(axis);
 		if (ends == null)
@@ -235,127 +370,25 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	}
 
 	/**
-	 * Gets the {@link CuboidGeneric#axisX}.
+	 * Gets the {@link CuboidGeneric#axisEndsX}.
 	 * 
-	 * @return the {@link #axisX}.
+	 * @return the {@link #axisEndsX}.
 	 */
-	public AxisEnds getAxisEndsX() { return axisX; }
+	public AxisEnds getAxisEndsX() { return axisEndsX; }
 
 	/**
-	 * Gets the {@link #axisY}.
+	 * Gets the {@link #axisEndsY}.
 	 * 
-	 * @return the {@link #axisY}.
+	 * @return the {@link #axisEndsY}.
 	 */
-	public AxisEnds getAxisEndsY() { return axisY; }
+	public AxisEnds getAxisEndsY() { return axisEndsY; }
 
 	/**
-	 * Gets the {@link #axisZ}.
+	 * Gets the {@link #axisEndsZ}.
 	 * 
-	 * @return the {@link #axisZ}.
+	 * @return the {@link #axisEndsZ}.
 	 */
-	public AxisEnds getAxisEndsZ() { return axisZ; }
-
-	/**
-	 * Calculates the central point of the cuboid.
-	 * 
-	 * @return the central point of the cuboid.
-	 */
-	public Point getCenter() {
-		Point p = null;
-		if (isCuboidDefined()) {
-			p = new Point();
-			p.x = axisX.getCenter();
-			p.y = axisY.getCenter();
-			p.z = axisZ.getCenter();
-		}
-		return p;
-	}
-
-	public Point getCorner(Corner cornerId) {
-		Point p = null;
-
-		if (isCuboidDefined()) {
-			p = new Point();
-			switch (cornerId) {
-			case BASE_1:
-				p.x = getAxisEndsX().getLowerEnd();
-				p.y = getAxisEndsY().getLowerEnd();
-				p.z = getAxisEndsZ().getLowerEnd();
-				break;
-			case BASE_2:
-				p.x = getAxisEndsX().getUpperEnd();
-				p.y = getAxisEndsY().getLowerEnd();
-				p.z = getAxisEndsZ().getLowerEnd();
-				break;
-			case BASE_3:
-				p.x = getAxisEndsX().getUpperEnd();
-				p.y = getAxisEndsY().getLowerEnd();
-				p.z = getAxisEndsZ().getUpperEnd();
-				break;
-			case BASE_4:
-				p.x = getAxisEndsX().getLowerEnd();
-				p.y = getAxisEndsY().getLowerEnd();
-				p.z = getAxisEndsZ().getUpperEnd();
-				break;
-			case TOP_1:
-				p.x = getAxisEndsX().getLowerEnd();
-				p.y = getAxisEndsY().getUpperEnd();
-				p.z = getAxisEndsZ().getLowerEnd();
-				break;
-			case TOP_2:
-				p.x = getAxisEndsX().getUpperEnd();
-				p.y = getAxisEndsY().getUpperEnd();
-				p.z = getAxisEndsZ().getLowerEnd();
-				break;
-			case TOP_3:
-				p.x = getAxisEndsX().getUpperEnd();
-				p.y = getAxisEndsY().getUpperEnd();
-				p.z = getAxisEndsZ().getUpperEnd();
-				break;
-			case TOP_4:
-				p.x = getAxisEndsX().getLowerEnd();
-				p.y = getAxisEndsY().getUpperEnd();
-				p.z = getAxisEndsZ().getUpperEnd();
-				break;
-			default:
-				throw new IllegalArgumentException(AvErrors.CORNER_NOT_RECOGNIZED);
-			}
-		}
-
-		return p;
-	}
-
-	public Point getFaceCenter(Face faceId) {
-		Point p = null;
-
-		if (isCuboidDefined()) {
-			p = getCenter();
-			switch (faceId) {
-			case XU:
-				p.x = getAxisEndsX().getUpperEnd();
-				break;
-			case XL:
-				p.x = getAxisEndsX().getLowerEnd();
-				break;
-			case YU:
-				p.y = getAxisEndsY().getUpperEnd();
-				break;
-			case YL:
-				p.y = getAxisEndsY().getLowerEnd();
-				break;
-			case ZU:
-				p.z = getAxisEndsZ().getUpperEnd();
-				break;
-			case ZL:
-				p.z = getAxisEndsZ().getLowerEnd();
-				break;
-			default:
-				throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
-			}
-		}
-
-		return p;
-	}
+	public AxisEnds getAxisEndsZ() { return axisEndsZ; }
 
 	/**
 	 * Gets the {@link #indexInStructure}.
@@ -364,19 +397,6 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	 */
 	public Integer getIndex() { return indexInStructure; }
 
-	public Lengths getLengths() {
-		Double lenX = null;
-		Double lenY = null;
-		Double lenZ = null;
-		if (axisX != null)
-			lenX = axisX.getLength();
-		if (axisY != null)
-			lenY = axisY.getLength();
-		if (axisZ != null)
-			lenZ = axisZ.getLength();
-		return new Lengths(lenX, lenY, lenZ);
-	}
-
 	/**
 	 * Gets the {@link #parent}.
 	 * 
@@ -384,58 +404,8 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	 */
 	public T getParent() { return parent; }
 
-	public T getRoot() {
-		List<T> chain = getRootChain();
-		return chain.get(chain.size() - 1);
-	}
-
-	/**
-	 * Si no es circular: result.get(result.size()-1).getParent() == null; si no, no es nulo.
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<T> getRootChain() {
-		List<T> parents = new ArrayList<>();
-		boolean terminate = false;
-
-		parents.add((T) this);
-		T checking = parents.get(0);
-		T lastParent = null;
-		do {
-			lastParent = checking.getParent();
-			final T lastParentAuxFinal = lastParent;
-			if (lastParent == null || parents.stream().anyMatch(x -> x == lastParentAuxFinal)) {
-				terminate = true;
-			} else {
-				lastParent = checking.getParent();
-				parents.add(lastParent);
-			}
-			checking = lastParent;
-		} while (!terminate);
-
-		return parents;
-	}
-
-	public Double getSurfaceArea() {
-		return Nullable.m(() -> {
-			Double face1 = axisX.getLength() * axisY.getLength();
-			Double face2 = axisX.getLength() * axisZ.getLength();
-			Double face3 = axisY.getLength() * axisZ.getLength();
-			return 2 * (face1 + face2 + face3);
-		});
-	}
-
 	@Override
 	public Tagator getTagator() { return tagator; }
-
-	public Double getVolumeCuboid() {
-		if (isCuboidDefined()) {
-			return axisX.getLength() * axisY.getLength() * axisZ.getLength();
-		} else {
-			return null;
-		}
-	}
 
 	public Double getXL() {
 		if (getAxisEndsX() != null)
@@ -481,21 +451,21 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(axisX, axisY, axisZ, indexInStructure, parent, tagator);
+		return Objects.hash(axisEndsX, axisEndsY, axisEndsZ, indexInStructure, parent, tagator);
 	}
 
 	public boolean isCuboidDefined() {
-		if (axisX == null || axisY == null || axisZ == null) {
+		if (axisEndsX == null || axisEndsY == null || axisEndsZ == null) {
 			return false;
 		}
-		for (AxisEnds axis : getAllAxisEnds()) {
+		for (AxisEnds axis : getAxisEndsList()) {
 			if (!axis.isAxisEndsDefined())
 				return false;
 		}
 		return true;
 	}
 
-	public boolean isRooted() { return getRoot() != null ? true : false; }
+	public boolean isRooted() { return calcRoot() != null ? true : false; }
 
 	public T matchToFace(T reference, Face faceMatching) {
 		return matchToFace(reference, faceMatching, true);
@@ -503,28 +473,28 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 
 	public T matchToFace(T reference, Face faceMatching, boolean attach) {
 
-		Axis[] matchingAxesIds = new Axis[2];
+		Axis[] matchingAxes = new Axis[2];
 		switch (faceMatching) {
 		case YU:
 		case YL:
-			matchingAxesIds[0] = Axis.X;
-			matchingAxesIds[1] = Axis.Z;
+			matchingAxes[0] = Axis.X;
+			matchingAxes[1] = Axis.Z;
 			break;
 		case ZU:
 		case ZL:
-			matchingAxesIds[0] = Axis.X;
-			matchingAxesIds[1] = Axis.Y;
+			matchingAxes[0] = Axis.X;
+			matchingAxes[1] = Axis.Y;
 			break;
 		case XU:
 		case XL:
-			matchingAxesIds[0] = Axis.Y;
-			matchingAxesIds[1] = Axis.Z;
+			matchingAxes[0] = Axis.Y;
+			matchingAxes[1] = Axis.Z;
 			break;
 		default:
 			throw new IllegalArgumentException(AvErrors.FACE_NOT_RECOGNIZED);
 		}
 
-		for (Axis axisId : matchingAxesIds) {
+		for (Axis axisId : matchingAxes) {
 			getAxisEnds(axisId).validateAxisEnds();
 			reference.getAxisEnds(axisId).validateAxisEnds();
 
@@ -545,7 +515,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	 * @param destinyRefPoint
 	 */
 	public T moveByPointsOfReference(Point originRefPoint, Point destinyRefPoint) {
-		Vector v = new Vector(destinyRefPoint.subV3(originRefPoint));
+		Vector v = new Vector(destinyRefPoint).subXyz(originRefPoint);
 		moveCenterByVector(v);
 		return chain();
 	}
@@ -558,14 +528,14 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 
 	public T moveCenterByVector(Vector vector) {
 		for (Axis axis : Axis.values()) {
-			getAxisEnds(axis).moveCenterByVector(vector.getV3Axis(axis));
+			getAxisEnds(axis).moveCenterByVector(vector.getXyzAxis(axis));
 		}
 		return chain();
 	}
 
 	public T moveCenterToPoint(Point point) {
 		for (Axis axisId : Axis.values()) {
-			getAxisEnds(axisId).moveCenterToPoint(point.getV3Axis(axisId));
+			getAxisEnds(axisId).moveCenterToPoint(point.getXyzAxis(axisId));
 		}
 		return chain();
 	}
@@ -622,32 +592,32 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	}
 
 	/**
-	 * Sets the {@link #axisX}.
+	 * Sets the {@link #axisEndsX}.
 	 * 
-	 * @param lineX the {@link #axisX} to set.
+	 * @param lineX the {@link #axisEndsX} to set.
 	 */
 	public T setAxisEndsX(AxisEnds lineX) {
-		this.axisX = lineX;
+		this.axisEndsX = lineX;
 		return chain();
 	}
 
 	/**
-	 * Sets the {@link #axisY}.
+	 * Sets the {@link #axisEndsY}.
 	 * 
-	 * @param lineY the {@link #axisY} to set.
+	 * @param lineY the {@link #axisEndsY} to set.
 	 */
 	public T setAxisEndsY(AxisEnds lineY) {
-		this.axisY = lineY;
+		this.axisEndsY = lineY;
 		return chain();
 	}
 
 	/**
-	 * Sets the {@link #axisZ}.
+	 * Sets the {@link #axisEndsZ}.
 	 * 
-	 * @param lineZ the {@link #axisZ} to set.
+	 * @param lineZ the {@link #axisEndsZ} to set.
 	 */
 	public T setAxisEndsZ(AxisEnds lineZ) {
-		this.axisZ = lineZ;
+		this.axisEndsZ = lineZ;
 		return chain();
 	}
 
@@ -674,7 +644,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 
 	public T setLengths(Lengths lengths) {
 		for (Axis axis : Axis.values()) {
-			Double len = lengths.getV3Axis(axis);
+			Double len = lengths.getXyzAxis(axis);
 			if (getAxisEnds(axis) != null) {
 				getAxisEnds(axis).setLength(len);
 			} else {
@@ -705,7 +675,7 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 			for (int i = 0; i < fixedFacesIds.length; i++) {
 				Axis axisId = Axis.getAxisByFace(fixedFacesIds[i]);
 				End endId = End.getEndByFace(fixedFacesIds[i]);
-				getAxisEnds(axisId).setLength(lengths.getV3Axis(axisId), endId);
+				getAxisEnds(axisId).setLength(lengths.getXyzAxis(axisId), endId);
 
 				if (axisId == Axis.X) {
 					notFixedX = false;
@@ -718,17 +688,17 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 
 			// not fixed axes
 			if (notFixedX)
-				axisX.setLength(lengths.x);
+				axisEndsX.setLength(lengths.x);
 			if (notFixedY)
-				axisY.setLength(lengths.y);
+				axisEndsY.setLength(lengths.y);
 			if (notFixedZ)
-				axisZ.setLength(lengths.z);
+				axisEndsZ.setLength(lengths.z);
 		}
 		return chain();
 	}
 
 	public T setLengths(Number xyz) {
-		return setLengths(new Lengths().setV3(xyz));
+		return setLengths(new Lengths().setXyz(xyz));
 	}
 
 	public T setLengths(Number x, Number y, Number z) {
@@ -763,10 +733,10 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 		}
 
 		if (checkRoots && parent != null) {
-			List<T> rootChain = getRootChain();
+			List<T> rootChain = calcRootChain();
 			T thisRoot = rootChain.get(rootChain.size() - 1);
 
-			if (thisRoot != parent.getRoot()) {
+			if (thisRoot != parent.calcRoot()) {
 				for (int i = rootChain.size() - 1; i > 0; i--) {
 					rootChain.get(i).setParent(rootChain.get(i - 1));
 				}
@@ -809,11 +779,6 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 
 	@Override
 	public String toString() {
-
-		String parentSring = null;
-		if (parent != null)
-			parentSring = "[id=" + parent.getIndex() + "]";
-
 		StringBuilder builder = new StringBuilder();
 		builder.append("Cuboid [");
 		builder.append(toStringHeader());
@@ -826,11 +791,11 @@ public abstract class CuboidGeneric<T extends CuboidGeneric<T>> implements Seria
 	public String toStringBodyCuboid() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("lengths=");
-		builder.append(getLengths());
+		builder.append(Nullable.m(() -> calcLengths()));
 		builder.append(", volCuboid=");
-		builder.append(getVolumeCuboid());
+		builder.append(Nullable.m(() -> calcVolumeCuboid()));
 		builder.append(", center=");
-		builder.append(getCenter());
+		builder.append(Nullable.m(() -> calcCenter()));
 		builder.append(", axisX=");
 		builder.append(getAxisEndsX());
 		builder.append(", axisY=");

@@ -1,8 +1,8 @@
 package avuilder4j.design.sub.functional;
 
-import avuilder4j.design.sub.dimensional.V3Generic;
+import avuilder4j.design.sub.dimensional.Xyz;
 
-public class IFGAura extends V3Generic<IFGAura> {
+public class IFGAura extends Xyz<IFGAura> {
 
 	public IFGAura() {
 		super();
