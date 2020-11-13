@@ -13,31 +13,31 @@ import avuilder4j.data.beans.BeanTypeModel;
 import avuilder4j.data.beans.BeanTypeModelByMaterial;
 import avuilder4j.data.dtos.BlockArchetype;
 import avuilder4j.data.dtos.BlockArchetypeParams;
-import avuilder4j.error.Avuilder4jException;
+import avuilder4j.error.AvuilderException;
 import avuilder4j.util.java.Nullable;
 import avuilder4j.util.java.NumberUtils;
 
 public abstract class DataLoader {
 
-	public abstract void loadConstants() throws Avuilder4jException;
+	public abstract void loadConstants() throws AvuilderException;
 
-	public abstract void loadCrew() throws Avuilder4jException;
+	public abstract void loadCrew() throws AvuilderException;
 
-	public abstract void loadCrewCommands() throws Avuilder4jException;
+	public abstract void loadCrewCommands() throws AvuilderException;
 
-	public abstract void loadEffects() throws Avuilder4jException;
+	public abstract void loadEffects() throws AvuilderException;
 
-	public abstract void loadMaterials() throws Avuilder4jException;
+	public abstract void loadMaterials() throws AvuilderException;
 
-	public abstract void loadShapes() throws Avuilder4jException;
+	public abstract void loadShapes() throws AvuilderException;
 
-	public abstract void loadTypeModels() throws Avuilder4jException;
+	public abstract void loadTypeModels() throws AvuilderException;
 
-	public abstract void loadTypeModelsByMaterials() throws Avuilder4jException;
+	public abstract void loadTypeModelsByMaterials() throws AvuilderException;
 
-	public abstract void loadTypes() throws Avuilder4jException;
+	public abstract void loadTypes() throws AvuilderException;
 
-	public void loadAll() throws Avuilder4jException {
+	public void loadAll() throws AvuilderException {
 		loadConstants();
 		loadCrew();
 		loadCrewCommands();
@@ -51,7 +51,7 @@ public abstract class DataLoader {
 		composeBlockArchetypes();
 	}
 
-	public void composeBlockArchetypes() throws Avuilder4jException {
+	public void composeBlockArchetypes() throws AvuilderException {
 		try {
 			Map<BlockArchetype.MapIndex, BlockArchetype> map = new HashMap<BlockArchetype.MapIndex, BlockArchetype>();
 			for (BeanType type : DataMaps.getTypesMap().values()) {
@@ -106,7 +106,7 @@ public abstract class DataLoader {
 			}
 			DataMaps.setBlockArchetypesMap(map);
 		} catch (Exception e) {
-			throw new Avuilder4jException(e);
+			throw new AvuilderException(e);
 		}
 	}
 

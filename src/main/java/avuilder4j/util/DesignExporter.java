@@ -16,7 +16,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import avuilder4j.design.base.BlockInterfaceExporter;
-import avuilder4j.error.Avuilder4jException;
+import avuilder4j.error.AvuilderException;
 
 public class DesignExporter {
 
@@ -25,7 +25,7 @@ public class DesignExporter {
 	protected String exportRoute = "ships/";
 
 	public void exportDesign(List<? extends BlockInterfaceExporter> blocks, String shipName)
-			throws Avuilder4jException {
+			throws AvuilderException {
 
 		if (shipName == null || shipName.equals("")) {
 			throw new IllegalArgumentException("Ship's name can't be empty or null");
@@ -105,7 +105,7 @@ public class DesignExporter {
 			System.out.println("exported " + finalExportPath);
 
 		} catch (Exception e) {
-			throw new Avuilder4jException("Error exporting ship design.", e);
+			throw new AvuilderException("Error exporting ship design.", e);
 		}
 	}
 
@@ -116,7 +116,7 @@ public class DesignExporter {
 	}
 
 	public static void validateBlockPlanList(List<? extends BlockInterfaceExporter> blocks)
-			throws Avuilder4jException {
+			throws AvuilderException {
 		validateBlockPlanList(blocks, false);
 	}
 
@@ -131,7 +131,7 @@ public class DesignExporter {
 	}
 
 	public static void validateBlockPlanList(List<? extends BlockInterfaceExporter> blocks,
-			boolean validateRootOnly) throws Avuilder4jException {
+			boolean validateRootOnly) throws AvuilderException {
 
 		ArrayList<BlockInterfaceExporter> roots = new ArrayList<BlockInterfaceExporter>();
 		for (BlockInterfaceExporter block : blocks) {
@@ -140,12 +140,12 @@ public class DesignExporter {
 			if (block.getParentIndex() == null || block.getParentIndex().equals(-1)) {
 				roots.add(block);
 				if (roots.size() > 1) {
-					throw new Avuilder4jException("Can not be more than one root block. roots= " + roots);
+					throw new AvuilderException("Can not be more than one root block. roots= " + roots);
 				}
 			}
 		}
 		if (roots.size() == 0) {
-			throw new Avuilder4jException("Must be one root block.");
+			throw new AvuilderException("Must be one root block.");
 		}
 	}
 

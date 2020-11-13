@@ -23,7 +23,7 @@ import avuilder4j.data.beans.BeanTypeModel;
 import avuilder4j.data.beans.BeanTypeModelByMaterial;
 import avuilder4j.data.beans.BeanTypeModelByMaterial.MapIndex;
 import avuilder4j.data.beans.BeanTypeModelParams;
-import avuilder4j.error.Avuilder4jException;
+import avuilder4j.error.AvuilderException;
 import avuilder4j.util.java.Nullable;
 import avuilder4j.util.java.SqlFunction;
 
@@ -43,7 +43,7 @@ public class SqliteDataLoader extends DataLoader {
 
 	public void setDbFilePath(String dbFilePath) { this.dbFilePath = dbFilePath; }
 
-	public <K, V> Map<K, V> connectAndSelect(String select, SqlFunction<ResultSet, AbstractMap.SimpleEntry<K, V>> mapper) throws Avuilder4jException {
+	public <K, V> Map<K, V> connectAndSelect(String select, SqlFunction<ResultSet, AbstractMap.SimpleEntry<K, V>> mapper) throws AvuilderException {
 		Connection c = null;
 		Map<K, V> map = new HashMap<>();
 		ResultSet r = null;
@@ -59,12 +59,12 @@ public class SqliteDataLoader extends DataLoader {
 			}
 
 		} catch (Exception e) {
-			throw new Avuilder4jException(e);
+			throw new AvuilderException(e);
 		} finally {
 			try {
 				c.close();
 			} catch (SQLException e) {
-				throw new Avuilder4jException(e);
+				throw new AvuilderException(e);
 			}
 		}
 		return map;
@@ -81,7 +81,7 @@ public class SqliteDataLoader extends DataLoader {
 	}
 
 	@Override
-	public void loadConstants() throws Avuilder4jException {
+	public void loadConstants() throws AvuilderException {
 		DataMaps.setConstantsMap(connectAndSelect("Select * from Constant", (r) -> {
 			String n = r.getString("name");
 			String g = r.getString("category");
@@ -93,7 +93,7 @@ public class SqliteDataLoader extends DataLoader {
 	}
 
 	@Override
-	public void loadCrew() throws Avuilder4jException {
+	public void loadCrew() throws AvuilderException {
 		DataMaps.setCrewMap(connectAndSelect("Select * from Crew", (r) -> {
 			Integer idx = getWrapper(r, "idx");
 			String name = r.getString("name");
@@ -105,7 +105,7 @@ public class SqliteDataLoader extends DataLoader {
 	}
 
 	@Override
-	public void loadCrewCommands() throws Avuilder4jException {
+	public void loadCrewCommands() throws AvuilderException {
 		DataMaps.setCrewCommandMap(connectAndSelect("Select * from CrewCommand", (r) -> {
 			Integer commander = getWrapper(r, "commander");
 			Integer commanded = getWrapper(r, "commanded");
@@ -119,7 +119,7 @@ public class SqliteDataLoader extends DataLoader {
 	}
 
 	@Override
-	public void loadEffects() throws Avuilder4jException {
+	public void loadEffects() throws AvuilderException {
 		DataMaps.setTypeModelsByMaterialsEffectsMap(connectAndSelect("Select * from Effect", (r) -> {
 			Integer typeModelIndex = getWrapper(r, "typeModelIdx");
 			Integer materialIndex = getWrapper(r, "materialIdx");
@@ -132,7 +132,7 @@ public class SqliteDataLoader extends DataLoader {
 	}
 
 	@Override
-	public void loadMaterials() throws Avuilder4jException {
+	public void loadMaterials() throws AvuilderException {
 		DataMaps.setMaterialsMap(connectAndSelect("Select * from Material", (r) -> {
 			BeanMaterialParams p = new BeanMaterialParams(getWrapper(r, "idx"));
 			p.setName(r.getString("name"));
@@ -146,7 +146,7 @@ public class SqliteDataLoader extends DataLoader {
 	}
 
 	@Override
-	public void loadShapes() throws Avuilder4jException {
+	public void loadShapes() throws AvuilderException {
 		DataMaps.setShapesMap(connectAndSelect("Select * from Shape", (r) -> {
 			Integer i = getWrapper(r, "idx");
 			String n = r.getString("name");
@@ -158,7 +158,7 @@ public class SqliteDataLoader extends DataLoader {
 	}
 
 	@Override
-	public void loadTypeModels() throws Avuilder4jException {
+	public void loadTypeModels() throws AvuilderException {
 		DataMaps.setTypeModelsMap(connectAndSelect("Select * from TypeModel", (r) -> {
 			BeanTypeModelParams p = new BeanTypeModelParams(getWrapper(r, "idx"));
 			p.setName(r.getString("name"));
@@ -178,7 +178,7 @@ public class SqliteDataLoader extends DataLoader {
 	}
 
 	@Override
-	public void loadTypeModelsByMaterials() throws Avuilder4jException {
+	public void loadTypeModelsByMaterials() throws AvuilderException {
 		DataMaps.setTypeModelsByMaterialsMap(connectAndSelect("Select * from TypeModelByMaterial", (r) -> {
 			Integer typeModelIndex = getWrapper(r, "typeModelIdx");
 			Integer materialIndex = getWrapper(r, "materialIdx");
@@ -191,7 +191,7 @@ public class SqliteDataLoader extends DataLoader {
 	}
 
 	@Override
-	public void loadTypes() throws Avuilder4jException {
+	public void loadTypes() throws AvuilderException {
 		DataMaps.setTypesMap(connectAndSelect("Select * from Type", (r) -> {
 			Integer idx = getWrapper(r, "idx");
 			Integer typeModelIndex = getWrapper(r, "typeModelIdx");

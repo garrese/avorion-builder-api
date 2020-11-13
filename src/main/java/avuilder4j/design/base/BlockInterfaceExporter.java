@@ -3,7 +3,7 @@ package avuilder4j.design.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import avuilder4j.error.Avuilder4jException;
+import avuilder4j.error.AvuilderException;
 
 public interface BlockInterfaceExporter {
 
@@ -35,7 +35,7 @@ public interface BlockInterfaceExporter {
 
 	public boolean isBlockPlanDefined();
 
-	public void validateBlockPlan() throws Avuilder4jException;
+	public void validateBlockPlan() throws AvuilderException;
 
 	public static List<BlockInterfaceExporter> findRoots(List<? extends BlockInterfaceExporter> blocks) {
 		ArrayList<BlockInterfaceExporter> roots = new ArrayList<BlockInterfaceExporter>();

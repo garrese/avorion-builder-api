@@ -16,13 +16,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import avuilder4j.design.base.BlockInterfaceImporter;
-import avuilder4j.error.Avuilder4jException;
+import avuilder4j.error.AvuilderException;
 
 public class DesignImporter {
 
 	protected String importRoute = "ships/";
 
-	public <B extends BlockInterfaceImporter<B>> List<B> importDesign(String shipName, Supplier<B> supplier) throws Avuilder4jException {
+	public <B extends BlockInterfaceImporter<B>> List<B> importDesign(String shipName, Supplier<B> supplier) throws AvuilderException {
 
 		HashMap<Integer, B> blocksMap = new LinkedHashMap<>();
 		HashMap<Integer, Integer> parentsMap = new HashMap<>();
@@ -71,7 +71,7 @@ public class DesignImporter {
 			}
 
 		} catch (Exception e) {
-			throw new Avuilder4jException(e);
+			throw new AvuilderException(e);
 		}
 
 		return blocksMap.values().stream().collect(Collectors.toList());

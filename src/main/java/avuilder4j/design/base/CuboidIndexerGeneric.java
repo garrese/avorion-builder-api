@@ -140,19 +140,19 @@ public abstract class CuboidIndexerGeneric<B extends CuboidGeneric, S extends Cu
 		return chain();
 	}
 
-	public B reflect(B block) {
-		return reflect(block, true);
-	}
-
-	public B reflect(B block, boolean findParent) {
-		B b = null;
-		if (findParent)
-			b = getMirror().<B>reflect(block, getStructure());
-		else
-			b = getMirror().<B>reflect(block);
-
-		indexBlock(b);
-		return b;
-	}
+//	public B reflect(B block) {
+//		return reflect(block, true);
+//	}
+//
+//	public B reflect(B block, boolean findParent) {
+//		B b = null;
+//		if (findParent)
+//			b = getMirror().<B>reflect(block, getStructure());
+//		else
+//			b = getMirror().<B>reflect(block);
+//
+//		indexBlock(b);
+//		return b;
+//	}
 
 }
